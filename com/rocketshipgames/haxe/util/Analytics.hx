@@ -53,7 +53,29 @@ class Analytics
 
   public static function event(eventID:String, vars:Dynamic=null):Void
   {
-    if (tracker == null)
+    if (tracker == null || !tracker.isReady())
+      return;
+
+    var str:String = "";
+    if (vars != null) {
+      for (f in Reflect.fields(vars)) {
+        str += f + "=" + Reflect.field(vars, f) + "&";
+      }
+      str = str.substr(0, str.length-1);
+    }
+
+    try {
+      tracker.trackEvent(game, eventID, str);
+    } catch (e:Dynamic) {
+      trace("Could not post to analytics: " + e);
+    }
+
+    // end event
+  }
+
+  public static function pageView(eventID:String, vars:Dynamic=null):Void
+  {
+    if (tracker == null || !tracker.isReady())
       return;
 
     var str:String = "/"+game+"/"+eventID;
@@ -72,7 +94,7 @@ class Analytics
       trace("Could not post to analytics: " + e);
     }
 
-    // end event
+    // end pageView
   }
 
   // end Analytics
@@ -94,6 +116,11 @@ class Analytics
   public static function event(eventID:String):Void
   {
     // end event
+  }
+
+  public static function pageView(eventID:String):Void
+  {
+    // end page
   }
 
   // end Analytics
