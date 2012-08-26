@@ -71,6 +71,9 @@ class Asteroid
     collidesWith = RocketHaxeBasicGame.COLLIDES_PLAYER |
       RocketHaxeBasicGame.COLLIDES_BULLET;
 
+    hitXBuffer = 6; // The sprite's a bit oversized due to the
+    hitYBuffer = 6; // rotation, so cut it down a bit.
+
     init(opts);
 
     // end new
@@ -81,16 +84,11 @@ class Asteroid
   {
     super.init(_opts);
 
-    /*
     x = Math.random()*world.worldWidth;
     y = -sprite.height/2;
     physics.xvel = physics.yvel = 0;
     physics.xacc = (Math.random() * 2 * ACCELERATION) - ACCELERATION;
     physics.yacc = ACCELERATION;
-    */
-
-    x = world.worldWidth/2;
-    y = world.worldHeight/2;
 
     play(sprite.animation("tumble"));
     // end init

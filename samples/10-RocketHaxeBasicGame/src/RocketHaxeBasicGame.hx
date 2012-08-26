@@ -85,12 +85,14 @@ class RocketHaxeBasicGame
         return new Asteroid(this, collisionContainer, spriteContainer, opts);
       });
 
-    asteroidTimer = addTimer(new Timer(this, newAsteroid, 500, true));
+    asteroidTimer = addTimer(new Timer(this, newAsteroid, 500, 1500, true));
 
     addSignal
       ("player-died",
        function(id:String, msg:Dynamic):Bool
-       { addTimer(new Timer(this, newPlayer, 1000)); return false; });
+       { addTimer(new Timer(this, newPlayer, 1000));
+         trace("You died!  Respawn in 1sec...");
+         return false; });
 
     newPlayer();
 
@@ -137,14 +139,16 @@ class RocketHaxeBasicGame
       newAsteroid();
     }
 
-    /*
-    if (Keyboard.isKeyPressed(Keyboard.PLUS)) {
-      asteroidTimer.interval = asteroidTimer.interval/2;
+    if (Keyboard.isKeyPressed(Keyboard.EQUAL)) {
+      asteroidTimer.minInterval = asteroidTimer.minInterval>>2;
+      asteroidTimer.maxInterval = asteroidTimer.maxInterval>>2;
+      trace("Density increasing!");
     }
     if (Keyboard.isKeyPressed(Keyboard.MINUS)) {
-      asteroidTimer.interval = asteroidTimer.interval*2;
+      asteroidTimer.minInterval = asteroidTimer.minInterval<<2;
+      asteroidTimer.maxInterval = asteroidTimer.maxInterval<<2;
+      trace("Density decreasing...");
     }
-    */
 
     collisionContainer.collide();
 

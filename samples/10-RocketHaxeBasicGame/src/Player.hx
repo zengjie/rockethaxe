@@ -52,6 +52,7 @@ class Player
   private var enginesOffFrame:Int;
 
   private var shotClock:Int;
+  private var shields:Int;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -75,6 +76,9 @@ class Player
     collidesAs = RocketHaxeBasicGame.COLLIDES_PLAYER;
     collidesWith = RocketHaxeBasicGame.COLLIDES_ASTEROID;
 
+    hitXBuffer = 4; // Give the player a safety margin.
+    hitYBuffer = 4;
+
     this.game = game;
 
     init(opts);
@@ -92,6 +96,7 @@ class Player
     y = 3*world.worldHeight/4;
 
     shotClock = 0;
+    shields = 5;
     // end init
   }
 
@@ -136,7 +141,15 @@ class Player
   //------------------------------------------------------------
   public override function collide(collidedWith:Int, e:CollisionEntity):Void
   {
-    destroyed();
+    shields--;
+    if (shields <= 0) {
+      // Generally damage effects and removing an object should
+      // probably go in the main loop, but it won't cause a problem in
+      // the internals to remove in the middle of collision response.
+      destroyed();
+    } else {
+      trace("Shields down to " + shields + "!");
+    }
     // end collide
   }
 
