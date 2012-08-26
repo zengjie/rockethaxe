@@ -1,9 +1,15 @@
 
-The shooter sprites in this folder are from the venerable SpriteLib
-package by Ari Feldman.  They were released under the license below.
+The ship and asteroid sprites in this example are from the venerable
+SpriteLib package by Ari Feldman.  They were released and are included
+here under the license below.  The sounds and other assets are
+released under the MIT license as with the rest of RocketHaxe.
+
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
+
+                        [ SpriteLib License ]
+
 
 WHAT IS THIS????
 

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import nme.Assets;
 
 import com.rocketshipgames.haxe.World;
 import com.rocketshipgames.haxe.gfx.GameSpriteContainer;
@@ -33,6 +34,8 @@ import com.rocketshipgames.haxe.game.entities.BasicGameSpriteEntity;
 import com.rocketshipgames.haxe.physics.packages.ShooterPhysicsPackage;
 
 import com.rocketshipgames.haxe.ui.Keyboard;
+
+import com.rocketshipgames.haxe.sfx.SoundEffect;
 
 
 class Player
@@ -54,6 +57,8 @@ class Player
   private var shotClock:Int;
   private var shields:Int;
 
+  private var sfxExplosion:SoundEffect;
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(game:RocketHaxeBasicGame,
@@ -70,11 +75,13 @@ class Player
     physics.setBounds(BOUNDS_STOP, world);
     this.physics = physics;
 
-    enginesOnFrame = sprite.keyframe("engines");
-    enginesOffFrame = sprite.keyframe("idle");
-
     collidesAs = RocketHaxeBasicGame.COLLIDES_PLAYER;
     collidesWith = RocketHaxeBasicGame.COLLIDES_ASTEROID;
+
+    sfxExplosion = new SoundEffect(Assets.getSound("assets/explosion.wav"));
+
+    enginesOnFrame = sprite.keyframe("engines");
+    enginesOffFrame = sprite.keyframe("idle");
 
     hitXBuffer = 4; // Give the player a safety margin.
     hitYBuffer = 4;
@@ -100,6 +107,12 @@ class Player
     // end init
   }
 
+  public override function destroyed():Void
+  {
+    sfxExplosion.play();
+    super.destroyed();
+      // end destroyed
+  }
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import nme.Assets;
 
 import com.rocketshipgames.haxe.World;
 import com.rocketshipgames.haxe.gfx.GameSpriteContainer;
@@ -35,6 +36,7 @@ import com.rocketshipgames.haxe.game.entities.BasicGameSpriteEntity;
 
 import com.rocketshipgames.haxe.physics.packages.ShooterPhysicsPackage;
 
+import com.rocketshipgames.haxe.sfx.SoundEffect;
 
 class Asteroid
   extends BasicGameSpriteEntity
@@ -44,6 +46,8 @@ class Asteroid
   private static inline var ACCELERATION:Float = 100;
   private static inline var MIN_VELOCITY:Float = 2;
   private static inline var MAX_VELOCITY:Float = 50;
+
+  private var sfxExplosion:SoundEffect;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -74,6 +78,8 @@ class Asteroid
     hitXBuffer = 6; // The sprite's a bit oversized due to the
     hitYBuffer = 6; // rotation, so cut it down a bit.
 
+    sfxExplosion = new SoundEffect(Assets.getSound("assets/explosion.wav"));
+
     init(opts);
 
     // end new
@@ -92,6 +98,13 @@ class Asteroid
 
     play(sprite.animation("tumble"));
     // end init
+  }
+
+  public override function destroyed():Void
+  {
+    sfxExplosion.play();
+    super.destroyed();
+      // end destroyed
   }
 
   //--------------------------------------------------------------------

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import nme.Assets;
 
 import com.rocketshipgames.haxe.World;
 import com.rocketshipgames.haxe.gfx.GameSpriteContainer;
@@ -35,6 +36,7 @@ import com.rocketshipgames.haxe.game.entities.BasicGameSpriteEntity;
 
 import com.rocketshipgames.haxe.physics.packages.ShooterPhysicsPackage;
 
+import com.rocketshipgames.haxe.sfx.SoundEffect;
 
 class Bullet
   extends BasicGameSpriteEntity
@@ -44,6 +46,8 @@ class Bullet
   private static inline var ACCELERATION:Float = 8000;
   private static inline var MIN_VELOCITY:Float = 2;
   private static inline var MAX_VELOCITY:Float = 600;
+
+  private var laser:SoundEffect;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -70,6 +74,8 @@ class Bullet
     collidesAs = RocketHaxeBasicGame.COLLIDES_BULLET;
     collidesWith = RocketHaxeBasicGame.COLLIDES_ASTEROID;
 
+    laser = new SoundEffect(Assets.getSound("assets/laser.wav"));
+
     init(opts);
 
     // end new
@@ -88,6 +94,7 @@ class Bullet
     physics.yacc = -ACCELERATION;
 
     play(sprite.animation("glow"));
+    laser.play();
     // end init
   }
 
@@ -95,7 +102,7 @@ class Bullet
   //------------------------------------------------------------
   public override function collide(collidedWith:Int, e:CollisionEntity):Void
   {
-    destroyed();
+    makeDead();
     // end collide
   }
 
