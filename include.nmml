@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project>
+  <!-- Do not include trailing '/' in path! -->
+  <assets path="assets/fonts" rename="assets/fonts" include="*" />
+
+  <section if="flash">
+    <source name="lib/google/analytics_flash/hxclasses/" />
+    <haxeflag name="-swf-lib lib/google/analytics_flash/library.swf" />
+  </section>
+</project>
