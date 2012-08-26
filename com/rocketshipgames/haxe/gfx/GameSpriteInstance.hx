@@ -90,6 +90,9 @@ class GameSpriteInstance {
       // end acquired a sprite
     }
 
+    x = 0;
+    y = 0;
+
     if (enable)
       gfxContainer.addInstance(this, layer);
 

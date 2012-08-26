@@ -1,0 +1,15 @@
+<spritesheet>
+  <sprite name="asteroid" width="35" height="35">
+    <grid x="0" y="0" column="8" />
+  </sprite>
+
+  <sprite name="player" width="27" height="26">
+    <frame label="idle" x="0" y="35" />
+    <frame label="engines" x="27" y="35" />
+  </sprite>
+
+  <sprite name="bullet" width="7" height="7">
+    <frame label="wane" x="54" y="36" framewidth="5" frameheight="5"/>
+    <frame label="wax" x="60" y="35" />
+  </sprite>
+</spritesheet>

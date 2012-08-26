@@ -50,6 +50,16 @@ class GameSpriteContainer
   //------------------------------------------------------------
   public function new(spritesheet:BitmapData, descriptor:String):Void
   {
+    if (spritesheet == null) {
+      trace("GameSpriteContainer must be given spritesheet BitmapData.");
+      return;
+    }
+
+    if (descriptor == null) {
+      trace("GameSpriteContainer must be given spritesheet XML description.");
+      return;
+    }
+
     super(spritesheet);
 
     layers = new Array();
