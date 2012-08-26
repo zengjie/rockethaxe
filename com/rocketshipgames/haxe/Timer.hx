@@ -34,19 +34,18 @@ class Timer
   public var loop:Bool;
 
   //------------------------------------------------------------
-  private var world:World;
+  private var container:TimerContainer;
 
   private var clock:Int;
 
+  private var stopped:Bool;
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new(world:World,
-                      event:Void->Bool,
+  public function new(event:Void->Bool,
                       minInterval:Int, maxInterval:Int=0,
                       loop:Bool=false):Void
   {
-    this.world = world;
-
     this.event = event;
     this.minInterval = minInterval;
     if (maxInterval == 0)
@@ -59,23 +58,41 @@ class Timer
     // end new
   }
 
+  public function setContainer(container:TimerContainer):Void
+  {
+    this.container = container;
+    // end setContainer
+  }
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function reset():Void
   {
-    clock = minInterval + Std.int(Math.random()*(maxInterval - minInterval));
+    // maxInterval could be set less than minInterval by client, so
+    // the check here prevents anything really weird from happening
+    if (maxInterval > minInterval)
+    clock = minInterval +
+      Std.int(Math.random()*(maxInterval - minInterval));
+    else
+      clock = minInterval;
+
+    stopped = false;
     // end reset
   }
 
   //------------------------------------------------------------
   public function update(elapsed:Int):Void
   {
+    if (stopped)
+      return;
+
     clock -= elapsed;
     if (clock <= 0) {
-      if (event() || !loop)
-        world.removeTimer(this);
-      else
+      if (event() || !loop) {
+        stopped = true;
+        if (container != null)
+          container.removeTimer(this);
+      } else
         reset();
     }
     // end update

@@ -22,32 +22,20 @@
  * SOFTWARE.
  */
 
-package com.rocketshipgames.haxe;
+package com.rocketshipgames.haxe.ui;
 
-interface World
-  implements TimerContainer
+import nme.display.StageAlign;
+import nme.display.StageScaleMode;
+
+class StageUtils
 {
 
-  var worldWidth:Float;
-  var worldHeight:Float;
+  public static function setStandardConfiguration():Void
+  {
+    nme.Lib.current.stage.align = StageAlign.TOP_LEFT;
+    nme.Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+    // end setStandardConfiguration
+  }
 
-  var screenWidth:Int;
-  var screenHeight:Int;
-
-  var time:Int;
-  var elapsed:Int;
-
-  public function addEntity(e:Entity):Entity;
-  public function removeEntity(e:Entity):Void;
-
-  public function addSignal(id:String, signal:Signal):Signal;
-  public function removeSignal(id:String, signal:Signal):Void;
-  public function signal(id:String, msg:Dynamic):Void;
-
-  public function addState(id:String, state:State):State;
-  public function removeState(id:String):Void;
-  public function getState(id:String):State;
-  public function getStateValue(id:String):Dynamic;
-
-  // end World
+  // end StageUtils
 }

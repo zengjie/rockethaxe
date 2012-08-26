@@ -22,32 +22,21 @@
  * SOFTWARE.
  */
 
-package com.rocketshipgames.haxe;
+package com.rocketshipgames.haxe.ui;
 
-interface World
-  implements TimerContainer
-{
+class Mouse {
 
-  var worldWidth:Float;
-  var worldHeight:Float;
+  public static function hide():Void
+  {
+    nme.ui.Mouse.hide();
+    // end hide
+  }
 
-  var screenWidth:Int;
-  var screenHeight:Int;
+  public static function show():Void
+  {
+    nme.ui.Mouse.show();
+    // end show
+  }
 
-  var time:Int;
-  var elapsed:Int;
-
-  public function addEntity(e:Entity):Entity;
-  public function removeEntity(e:Entity):Void;
-
-  public function addSignal(id:String, signal:Signal):Signal;
-  public function removeSignal(id:String, signal:Signal):Void;
-  public function signal(id:String, msg:Dynamic):Void;
-
-  public function addState(id:String, state:State):State;
-  public function removeState(id:String):Void;
-  public function getState(id:String):State;
-  public function getStateValue(id:String):Dynamic;
-
-  // end World
+  // end Mouse
 }

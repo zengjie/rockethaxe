@@ -24,12 +24,6 @@
 
 import nme.Assets;
 
-import nme.display.StageAlign;
-import nme.display.StageScaleMode;
-
-import com.rocketshipgames.haxe.debug.DebugConsole;
-import com.rocketshipgames.haxe.debug.FPSDisplay;
-
 import com.rocketshipgames.haxe.World;
 import com.rocketshipgames.haxe.Timer;
 
@@ -43,6 +37,10 @@ import com.rocketshipgames.haxe.ui.Keyboard;
 
 import com.rocketshipgames.haxe.util.TimeUtils;
 
+import com.rocketshipgames.haxe.debug.DebugConsole;
+import com.rocketshipgames.haxe.debug.FPSDisplay;
+
+import com.rocketshipgames.haxe.sfx.AudioClip;
 
 class RocketHaxeBasicGame
   extends com.rocketshipgames.haxe.GameLoop
@@ -85,12 +83,12 @@ class RocketHaxeBasicGame
         return new Asteroid(this, collisionContainer, spriteContainer, opts);
       });
 
-    asteroidTimer = addTimer(new Timer(this, newAsteroid, 500, 1500, true));
+    asteroidTimer = addTimer(new Timer(newAsteroid, 250, 500, true));
 
     addSignal
       ("player-died",
        function(id:String, msg:Dynamic):Bool
-       { addTimer(new Timer(this, newPlayer, 1000));
+       { addTimer(new Timer(newPlayer, 1000));
          trace("You died!  Respawn in 1sec...");
          return false; });
 
@@ -110,7 +108,8 @@ class RocketHaxeBasicGame
   //------------------------------------------------------------
   public function newAsteroid():Bool
   {
-    asteroidPool.newObject();
+    if (Asteroid.numAsteroids < Asteroid.maxAsteroids)
+      asteroidPool.newObject();
     return false;
     // end newAsteroid
   }
@@ -135,19 +134,21 @@ class RocketHaxeBasicGame
             spriteContainer.instanceCount + " sprites");
     }
 
-    if (Keyboard.isKeyPressed(Keyboard.A)) {
-      newAsteroid();
-    }
-
     if (Keyboard.isKeyPressed(Keyboard.EQUAL)) {
-      asteroidTimer.minInterval = asteroidTimer.minInterval>>2;
-      asteroidTimer.maxInterval = asteroidTimer.maxInterval>>2;
-      trace("Density increasing!");
+      Asteroid.maxAsteroids += 10;
+      asteroidTimer.minInterval >> 2;
+      asteroidTimer.maxInterval >> 2;
+
+      while (Asteroid.numAsteroids < Asteroid.maxAsteroids)
+        newAsteroid();
+
+      trace("Density increasing!  (now " + Asteroid.maxAsteroids + "max )");
     }
     if (Keyboard.isKeyPressed(Keyboard.MINUS)) {
-      asteroidTimer.minInterval = asteroidTimer.minInterval<<2;
-      asteroidTimer.maxInterval = asteroidTimer.maxInterval<<2;
-      trace("Density decreasing...");
+      Asteroid.maxAsteroids -= 10;
+      asteroidTimer.minInterval << 2; 
+      asteroidTimer.maxInterval << 2;
+      trace("Density decreasing...  (now " + Asteroid.maxAsteroids + "max )");
     }
 
     collisionContainer.collide();
@@ -160,10 +161,12 @@ class RocketHaxeBasicGame
   //------------------------------------------------------------
   static public function main()
   {
-    nme.ui.Mouse.hide();
 
-    nme.Lib.current.stage.align = StageAlign.TOP_LEFT;
-    nme.Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+    // Play a zero volume sound to get the sound system loaded.
+    new AudioClip(Assets.getSound("assets/explosion.wav")).play(false, 0);
+
+    com.rocketshipgames.haxe.ui.StageUtils.setStandardConfiguration();
+    com.rocketshipgames.haxe.ui.Mouse.hide();
 
     var game:RocketHaxeBasicGame = new RocketHaxeBasicGame(640, 480);
     nme.Lib.current.stage.addChild(game);
@@ -174,6 +177,8 @@ class RocketHaxeBasicGame
 
     nme.Lib.current.stage.addChild
       (new com.rocketshipgames.haxe.debug.FPSDisplay(0xffffff, 540));
+
+    trace("Press T for entity count; +/- to modify asteroid density.");
 
     // end main
   }

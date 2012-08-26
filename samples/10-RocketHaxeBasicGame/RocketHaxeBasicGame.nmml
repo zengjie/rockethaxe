@@ -13,7 +13,7 @@
   <set name="BUILD_DIR" value="bin" />
   <source name="src/" />
 
-  <window background="#336699" />
+  <window background="#000000" />
 
   <window fps="60" />
   <window width="640" height="480" orientation="*" resizable="false" />

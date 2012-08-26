@@ -26,6 +26,7 @@ package com.rocketshipgames.haxe.game.entities;
 
 import com.rocketshipgames.haxe.Entity;
 import com.rocketshipgames.haxe.World;
+import com.rocketshipgames.haxe.TimerContainer;
 
 import com.rocketshipgames.haxe.gfx.GameSprite;
 import com.rocketshipgames.haxe.gfx.GameSpriteInstance;
@@ -41,7 +42,8 @@ import com.rocketshipgames.haxe.ds.DeadpoolObject;
 class BasicGameSpriteEntity
   extends GameSpriteInstance,
   implements CollisionEntity,
-  implements DeadpoolObject
+  implements DeadpoolObject,
+  implements TimerContainer
 {
 
   //------------------------------------------------------------
@@ -64,6 +66,8 @@ class BasicGameSpriteEntity
   private var hitXBuffer:Float;
   private var hitYBuffer:Float;
 
+  private var timers:List<Timer>;
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(world:World,
@@ -78,6 +82,8 @@ class BasicGameSpriteEntity
     this.world = world;
     this.collisionContainer = collisionContainer;
 
+    timers = new List();
+
     hitXBuffer = 0;
     hitYBuffer = 0;
 
@@ -86,6 +92,7 @@ class BasicGameSpriteEntity
 
     // end new
   }
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -156,12 +163,6 @@ class BasicGameSpriteEntity
 
     dead = true;
 
-    /*
-    visible = false;
-    collidesAs = 0;
-    collidesWith = 0;
-    */
-
     if (deadpool != null)
       deadpool.returnObject(this);
 
@@ -192,6 +193,24 @@ class BasicGameSpriteEntity
 
   public function getPhysics():PhysicsPackage { return physics; }
 
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function addTimer(timer:Timer):Timer
+  {
+    timers.push(timer);
+    timer.setContainer(this);
+    return timer;
+    // end addTimer
+  }
+
+  public function removeTimer(timer:Timer):Void
+  {
+    timers.remove(timer);
+    // end removeTimer
+  }
+
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function update(elapsed:Int):Void
@@ -199,10 +218,14 @@ class BasicGameSpriteEntity
     if (dead)
       return;
 
+    for (t in timers)
+      t.update(elapsed);
+
     physics.update(elapsed);
 
     // end update
   }
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------

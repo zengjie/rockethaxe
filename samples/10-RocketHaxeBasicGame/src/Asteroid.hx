@@ -42,6 +42,10 @@ class Asteroid
   extends BasicGameSpriteEntity
 {
 
+  public static var maxAsteroids:Int = 50;
+  public static var numAsteroids:Int = 0;
+
+
   //------------------------------------------------------------
   private static inline var ACCELERATION:Float = 100;
   private static inline var MIN_VELOCITY:Float = 2;
@@ -97,6 +101,8 @@ class Asteroid
     physics.yacc = ACCELERATION;
 
     play(sprite.animation("tumble"));
+
+    numAsteroids++;
     // end init
   }
 
@@ -105,6 +111,13 @@ class Asteroid
     sfxExplosion.play();
     super.destroyed();
       // end destroyed
+  }
+
+  public override function makeDead():Void
+  {
+    numAsteroids--;
+    super.makeDead();
+    // end makeDead
   }
 
   //--------------------------------------------------------------------

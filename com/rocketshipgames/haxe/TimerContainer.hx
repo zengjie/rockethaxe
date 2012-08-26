@@ -24,30 +24,11 @@
 
 package com.rocketshipgames.haxe;
 
-interface World
-  implements TimerContainer
+interface TimerContainer
 {
 
-  var worldWidth:Float;
-  var worldHeight:Float;
+  public function addTimer(timer:Timer):Timer;
+  public function removeTimer(timer:Timer):Void;
 
-  var screenWidth:Int;
-  var screenHeight:Int;
-
-  var time:Int;
-  var elapsed:Int;
-
-  public function addEntity(e:Entity):Entity;
-  public function removeEntity(e:Entity):Void;
-
-  public function addSignal(id:String, signal:Signal):Signal;
-  public function removeSignal(id:String, signal:Signal):Void;
-  public function signal(id:String, msg:Dynamic):Void;
-
-  public function addState(id:String, state:State):State;
-  public function removeState(id:String):Void;
-  public function getState(id:String):State;
-  public function getStateValue(id:String):Dynamic;
-
-  // end World
+  // end TimerContainer
 }

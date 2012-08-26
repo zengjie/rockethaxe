@@ -33,6 +33,8 @@ import com.rocketshipgames.haxe.physics.CollisionEntity;
 import com.rocketshipgames.haxe.game.entities.BasicGameSpriteEntity;
 import com.rocketshipgames.haxe.physics.packages.ShooterPhysicsPackage;
 
+import com.rocketshipgames.haxe.Timer;
+
 import com.rocketshipgames.haxe.ui.Keyboard;
 
 import com.rocketshipgames.haxe.sfx.SoundEffect;
@@ -54,7 +56,9 @@ class Player
   private var enginesOnFrame:Int;
   private var enginesOffFrame:Int;
 
-  private var shotClock:Int;
+  private var shotClock:Timer;
+  private var shotEnabled:Bool;
+
   private var shields:Int;
 
   private var sfxExplosion:SoundEffect;
@@ -86,12 +90,17 @@ class Player
     hitXBuffer = 4; // Give the player a safety margin.
     hitYBuffer = 4;
 
+    shotClock = addTimer(new Timer(enableShot, SHOT_INTERVAL, true));
+    shotEnabled = true;
+
     this.game = game;
 
     init(opts);
 
     // end new
   }
+
+  private function enableShot():Bool { shotEnabled = true; return false; }
 
   //------------------------------------------------------------
   public override function init(_opts:Array<Dynamic> = null):Void
@@ -102,7 +111,7 @@ class Player
     x = world.worldWidth/2;
     y = 3*world.worldHeight/4;
 
-    shotClock = 0;
+    shotEnabled = true;
     shields = 5;
     // end init
   }
@@ -134,9 +143,9 @@ class Player
     if (Keyboard.isKeyDown(Keyboard.DOWN))
       physics.yacc = ACCELERATION;
 
-    shotClock -= elapsed;
-    if (shotClock <= 0 && Keyboard.isKeyDown(Keyboard.SPACE)) {
-      shotClock = SHOT_INTERVAL;
+    if (shotEnabled && Keyboard.isKeyDown(Keyboard.SPACE)) {
+      shotClock.reset();
+      shotEnabled = false;
       game.newBullet(x, y-sprite.height/2,
                      physics.xvel, physics.yvel);
     }

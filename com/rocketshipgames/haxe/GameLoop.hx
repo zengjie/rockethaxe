@@ -253,6 +253,7 @@ class GameLoop
   public function addTimer(timer:Timer):Timer
   {
     timers.push(timer);
+    timer.setContainer(this);
     return timer;
     // end addTimer
   }
