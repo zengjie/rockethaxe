@@ -47,5 +47,11 @@ interface World {
   public function getState(id:String):State;
   public function getStateValue(id:String):Dynamic;
 
+  /*
+  public function addTimer(event:Void->Bool,
+                           minInterval:Int, ?maxInterval:Int,
+                           ?loop:Bool):Timer;
+  */
+
   // end World
 }

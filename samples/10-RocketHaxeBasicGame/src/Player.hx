@@ -27,6 +27,8 @@ import com.rocketshipgames.haxe.World;
 import com.rocketshipgames.haxe.gfx.GameSpriteContainer;
 import com.rocketshipgames.haxe.physics.CollisionContainer;
 
+import com.rocketshipgames.haxe.physics.CollisionEntity;
+
 import com.rocketshipgames.haxe.game.entities.BasicGameSpriteEntity;
 import com.rocketshipgames.haxe.physics.packages.ShooterPhysicsPackage;
 

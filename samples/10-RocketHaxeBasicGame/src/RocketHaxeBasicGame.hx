@@ -58,6 +58,8 @@ class RocketHaxeBasicGame
   private var bulletPool:Deadpool<Bullet>;
   private var asteroidPool:Deadpool<Asteroid>;
 
+  // private var asteroidGenerator:GameTimer;
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(width:Float, height:Float):Void
@@ -81,6 +83,8 @@ class RocketHaxeBasicGame
       (function(opts:Array<Dynamic>) {
         return new Asteroid(this, collisionContainer, spriteContainer, opts);
       });
+
+    // asteroidGenerator = addTimer(newAsteroid, 500, true);
 
     new Player(this, collisionContainer, spriteContainer);
 
@@ -116,6 +120,15 @@ class RocketHaxeBasicGame
     if (Keyboard.isKeyPressed(Keyboard.A)) {
       newAsteroid();
     }
+
+    /*
+    if (Keyboard.isKeyPressed(Keyboard.PLUS)) {
+      asteroidTimer.interval = asteroidTimer.interval/2;
+    }
+    if (Keyboard.isKeyPressed(Keyboard.MINUS)) {
+      asteroidTimer.interval = asteroidTimer.interval*2;
+    }
+    */
 
     collisionContainer.collide();
 
