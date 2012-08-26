@@ -40,7 +40,7 @@ import com.rocketshipgames.haxe.util.TimeUtils;
 import com.rocketshipgames.haxe.debug.DebugConsole;
 import com.rocketshipgames.haxe.debug.FPSDisplay;
 
-import com.rocketshipgames.haxe.sfx.AudioClip;
+import com.rocketshipgames.haxe.sfx.SoundEffect;
 
 class RocketHaxeBasicGame
   extends com.rocketshipgames.haxe.GameLoop
@@ -50,6 +50,8 @@ class RocketHaxeBasicGame
   public static inline var COLLIDES_BULLET:Int = 2;
   public static inline var COLLIDES_ASTEROID:Int = 4;
 
+  public var mute:Bool;
+
   //------------------------------------------------------------
   private var spriteContainer:GameSpriteContainer;
   private var collisionContainer:CollisionContainer;
@@ -58,6 +60,7 @@ class RocketHaxeBasicGame
   private var asteroidPool:Deadpool<Asteroid>;
 
   private var asteroidTimer:Timer;
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -72,6 +75,9 @@ class RocketHaxeBasicGame
 
     collisionContainer =
       new com.rocketshipgames.haxe.physics.collisions.SweepScanCollisionContainer();
+
+    mute = true;
+    SoundEffect.setAll(mute);
 
     bulletPool = new Deadpool
       (function(opts:Array<Dynamic>) {
@@ -128,6 +134,7 @@ class RocketHaxeBasicGame
   //------------------------------------------------------------
   public override function update():Void
   {
+
     if (Keyboard.isKeyPressed(Keyboard.T)) {
       trace("Time " + TimeUtils.getHumanTime(time) + " (" + time + "); " +
             entityCount + " entities; " +
@@ -151,6 +158,12 @@ class RocketHaxeBasicGame
       trace("Density decreasing...  (now " + Asteroid.maxAsteroids + "max )");
     }
 
+    if (Keyboard.isKeyPressed(Keyboard.M)) {
+      mute = !mute;
+      SoundEffect.setAll(mute);
+    }
+
+
     collisionContainer.collide();
 
     // end update
@@ -163,7 +176,7 @@ class RocketHaxeBasicGame
   {
 
     // Play a zero volume sound to get the sound system loaded.
-    new AudioClip(Assets.getSound("assets/explosion.wav")).play(false, 0);
+    new SoundEffect(Assets.getSound("assets/explosion.wav")).play(false, 0);
 
     com.rocketshipgames.haxe.ui.StageUtils.setStandardConfiguration();
     com.rocketshipgames.haxe.ui.Mouse.hide();
@@ -178,7 +191,10 @@ class RocketHaxeBasicGame
     nme.Lib.current.stage.addChild
       (new com.rocketshipgames.haxe.debug.FPSDisplay(0xffffff, 540));
 
-    trace("Press T for entity count; +/- to modify asteroid density.");
+    trace("Arrows move, space shoots");
+    trace("Press T for entity count");
+    trace("Press +/- to launch asteroids");
+    trace("Press M to toggle sound; default is "+((game.mute)?"":"un")+"muted");
 
     // end main
   }
