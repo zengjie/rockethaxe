@@ -1,0 +1,12 @@
+<project name="rockethaxe"
+         url="http://code.google.com/p/rockethaxe/"
+         license="Public">
+
+    <user name="tjkopena"/>
+
+    <description>A simple game library built over NME.</description>
+
+    <version name="1.0">
+      Initial release, enough components to build fairly fancy shooter games.
+    </version>
+</project>
