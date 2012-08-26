@@ -22,7 +22,15 @@
  * SOFTWARE.
  */
 
+/*
+ * This class exists rather than incorporating directly into the
+ * various collision containers so that the code is shared across
+ * them, and to help future collision containers that maintain
+ * multiple lists, e.g., divided by collision classes.
+ */
+
 package com.rocketshipgames.haxe.physics.collisions;
+
 
 class CollisionEntityList
 {
@@ -78,6 +86,14 @@ class CollisionEntityList
     i.prevCollisionEntity = i.nextCollisionEntity  = null;
 
     // end remove
+  }
+
+  public function isInGroup(i:CollisionEntity):Bool
+  {
+    return (i.nextCollisionEntity != null ||
+            i.prevCollisionEntity != null ||
+            head == i);
+    // end isInGroup
   }
 
   // end CollisionEntityList

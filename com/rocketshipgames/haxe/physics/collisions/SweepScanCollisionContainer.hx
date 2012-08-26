@@ -55,11 +55,11 @@ class SweepScanCollisionContainer
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function newSweepEvent(type:SweepEventType,
-                                y:Float,
-                                entity:CollisionEntity,
-                                next:SweepEvent,
-                                prev:SweepEvent):SweepEvent
+  private function newSweepEvent(type:SweepEventType,
+                                 y:Float,
+                                 entity:CollisionEntity,
+                                 next:SweepEvent,
+                                 prev:SweepEvent):SweepEvent
   {
     if (deadpool == null)
       return new SweepEvent(type, y, entity, next, prev);
@@ -70,6 +70,39 @@ class SweepScanCollisionContainer
 
     return d;
     // end newSweepEvent
+  }
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  private function addToScanList(e:SweepEvent):Void
+  {
+    if (scanHead != null)
+      scanHead.prev = e;
+
+    e.next = scanHead;
+    e.prev = null;
+
+    scanHead = e;
+    // end addToScanList
+  }
+
+  private function removeFromScanList(e:SweepEvent):Void
+  {
+    // If I'm not in the scan list, bail
+    if (e.prev == null && e.next == null && scanHead != e)
+      return;
+
+    if (e.prev != null)
+      e.prev.next = e.next;
+    else
+      scanHead = e.next;
+
+    if (e.next != null)
+      e.next.prev = e.prev;
+
+    e.prev = null;
+    e.next = null;
+    // end removeFromScanList
   }
 
   //--------------------------------------------------------------------
@@ -129,28 +162,39 @@ class SweepScanCollisionContainer
 
             if (outerHit)
               outer.collide(innerAs, inner);
+
+            // If the inner hit was removed, remove it from the scan list
+            if (inner.nextCollisionEntity == null &&
+                inner.prevCollisionEntity == null) {
+              removeFromScanList(scanEvent);
+            }
+
+            // If the current entity was removed, bail.  This isn't
+            // inside the outerHit check above in case the inner
+            // collision actually removes the entity.
+            if (outer.nextCollisionEntity == null &&
+                outer.prevCollisionEntity == null) {
+              break;
+            }
+
+            // end there was a hit
           }
 
           scanEvent = scanEvent.next;
           // end looping scan list
         }
 
-        if (scanHead != null)
-          scanHead.prev = event;
-        event.next = scanHead;
-        event.prev = null;
-        scanHead = event;
+        // If outer is still in the group, add to scan list.  Note
+        // that this check works because if it's still in the group
+        // but the pointers are null, there are no other entities to
+        // compare against anyway...
+        if (isInGroup(outer))
+          addToScanList(event);
 
 
       case BOTTOM:
         scanEvent = event.next;
-        if (scanEvent.prev != null)
-          scanEvent.prev.next = scanEvent.next;
-        else
-          scanHead = scanEvent.next;
-
-        if (scanEvent.next != null)
-          scanEvent.next.prev = scanEvent.prev;
+        removeFromScanList(scanEvent);
 
         event.next.next = deadpool;
         deadpool = event.next;
@@ -162,16 +206,18 @@ class SweepScanCollisionContainer
       // end while events exist
     }
 
-    /*
     if (scanHead != null) {
       trace("SCAN LIST IS CORRUPTED");
-      Sys.exit(-1);
+      #if cpp
+        Sys.exit(-1);
+      #end
     }
     if (heap.hasElements()) {
       trace("HEAP IS CORRUPTED");
-      Sys.exit(-1);
+      #if cpp
+        Sys.exit(-1);
+      #end
     }
-    */
 
     /*
     if (heap.hasElements() || scan.length > 0) {

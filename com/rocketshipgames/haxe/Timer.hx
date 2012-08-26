@@ -20,53 +20,66 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
-package com.rocketshipgames.haxe.physics.collisions;
+package com.rocketshipgames.haxe;
 
-import com.rocketshipgames.haxe.physics.CollisionEntity;
-import com.rocketshipgames.haxe.physics.CollisionEntity;
-
-class BaseCollisionContainer
-  implements CollisionContainer
+class Timer
 {
 
-  // See note in CollisionEntityList about why it exists.
-  private var group:CollisionEntityList;
+  //------------------------------------------------------------
+  public var event:Void->Bool;
+  public var minInterval:Int;
+  public var maxInterval:Int;
+  public var loop:Bool;
+
+  //------------------------------------------------------------
+  private var world:World;
+
+  private var clock:Int;
 
   //--------------------------------------------------------------------
-  public function new():Void
+  //------------------------------------------------------------
+  public function new(world:World,
+                      event:Void->Bool,
+                      minInterval:Int, maxInterval:Int=0,
+                      loop:Bool=false):Void
   {
-    group = new CollisionEntityList();
+    this.world = world;
+
+    this.event = event;
+    this.minInterval = minInterval;
+    if (maxInterval == 0)
+      this.maxInterval = minInterval;
+    else
+      this.maxInterval = minInterval;
+    this.loop = loop;
+
+    reset();
     // end new
   }
 
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function addEntity(e:CollisionEntity):Void
+  public function reset():Void
   {
-    group.add(e);
-    // end add
+    clock = minInterval + Std.int(Math.random()*(maxInterval - minInterval));
+    // end reset
   }
 
-  public function removeEntity(e:CollisionEntity):Void
-  {
-    group.remove(e);
-    // end remove
-  }
-
-  public function isInGroup(e:CollisionEntity):Bool
-  {
-    return group.isInGroup(e);
-  }
-
-  //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function collide():Void
+  public function update(elapsed:Int):Void
   {
-    // end collide
+    clock -= elapsed;
+    if (clock <= 0) {
+      if (event() || !loop)
+        world.removeTimer(this);
+      else
+        reset();
+    }
+    // end update
   }
 
-  // end BaseCollisionContainer
+  // end Timer
 }

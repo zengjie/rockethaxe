@@ -38,7 +38,9 @@ class GameSpriteInstanceList
 
   public function add(i:GameSpriteInstance):Void
   {
-    if (i.prevGameSpriteInstance != null || i.nextGameSpriteInstance != null) {
+    if (i.prevGameSpriteInstance != null ||
+        i.nextGameSpriteInstance != null ||
+        head == i) {
       trace("GameSpriteInstance already in container.");
       return;
     }

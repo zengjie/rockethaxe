@@ -31,6 +31,7 @@ import com.rocketshipgames.haxe.debug.DebugConsole;
 import com.rocketshipgames.haxe.debug.FPSDisplay;
 
 import com.rocketshipgames.haxe.World;
+import com.rocketshipgames.haxe.Timer;
 
 import com.rocketshipgames.haxe.gfx.GameSpriteContainer;
 
@@ -58,7 +59,7 @@ class RocketHaxeBasicGame
   private var bulletPool:Deadpool<Bullet>;
   private var asteroidPool:Deadpool<Asteroid>;
 
-  // private var asteroidGenerator:GameTimer;
+  private var asteroidTimer:Timer;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -84,9 +85,14 @@ class RocketHaxeBasicGame
         return new Asteroid(this, collisionContainer, spriteContainer, opts);
       });
 
-    // asteroidGenerator = addTimer(newAsteroid, 500, true);
+    asteroidTimer = addTimer(new Timer(this, newAsteroid, 500, true));
 
-    new Player(this, collisionContainer, spriteContainer);
+    addSignal
+      ("player-died",
+       function(id:String, msg:Dynamic):Bool
+       { addTimer(new Timer(this, newPlayer, 1000)); return false; });
+
+    newPlayer();
 
     // end new
   }
@@ -100,10 +106,20 @@ class RocketHaxeBasicGame
   }
 
   //------------------------------------------------------------
-  public function newAsteroid():Void
+  public function newAsteroid():Bool
   {
     asteroidPool.newObject();
+    return false;
     // end newAsteroid
+  }
+
+  //------------------------------------------------------------
+  public function newPlayer():Bool
+  {
+    new Player(this, collisionContainer, spriteContainer,
+               [{ killSignal: "player-died" }]);
+    return false;
+    // end playerDied
   }
 
 

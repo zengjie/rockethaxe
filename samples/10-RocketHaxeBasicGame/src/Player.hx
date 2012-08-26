@@ -57,9 +57,10 @@ class Player
   //------------------------------------------------------------
   public function new(game:RocketHaxeBasicGame,
                       collisionContainer:CollisionContainer,
-                      gfxContainer:GameSpriteContainer):Void
+                      gfxContainer:GameSpriteContainer,
+                      opts:Array<Dynamic>=null):Void
   {
-    super(game, collisionContainer, gfxContainer, "player");
+    super(game, collisionContainer, gfxContainer, "player", opts);
 
     var physics:ShooterPhysicsPackage = new ShooterPhysicsPackage(this);
     physics.xdrag = physics.ydrag = ACCELERATION/2;
@@ -76,7 +77,7 @@ class Player
 
     this.game = game;
 
-    init();
+    init(opts);
 
     // end new
   }

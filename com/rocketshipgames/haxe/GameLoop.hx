@@ -64,6 +64,7 @@ class GameLoop
 
   private var signals:Hash<List<Signal>>;
   private var states:Hash<State>;
+  private var timers:List<Timer>;
 
   private var paused:Bool;
 
@@ -89,6 +90,7 @@ class GameLoop
 
     signals = new Hash();
     states = new Hash();
+    timers = new List();
 
     var stage = Lib.current.stage;
     stage.addEventListener(Event.ADDED, onAdded);
@@ -128,11 +130,11 @@ class GameLoop
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function addEntity(e:Entity):Void
+  public function addEntity(e:Entity):Entity
   {
-    if (e.prevEntity != null || e.nextEntity != null) {
+    if (e.prevEntity != null || e.nextEntity != null || entitiesHead == e) {
       trace("Entity already in world.");
-      return;
+      return e;
     }
 
     if (entitiesTail == null)
@@ -146,6 +148,7 @@ class GameLoop
 
     entityCount++;
 
+    return e;
     // end addEntity
   }
 
@@ -171,14 +174,13 @@ class GameLoop
     e.prevEntity = e.nextEntity = null;
 
     entityCount--;
-
     // end removeEntity
   }
 
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function addSignal(id:String, signal:Signal):Void
+  public function addSignal(id:String, signal:Signal):Signal
   {
     var a:List<Signal> = signals.get(id);
     if (a == null) {
@@ -186,6 +188,8 @@ class GameLoop
       signals.set(id, a);
     }
     a.push(signal);
+
+    return signal;
     // end addSignal
   }
 
@@ -213,9 +217,10 @@ class GameLoop
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function addState(id:String, state:State):Void
+  public function addState(id:String, state:State):State
   {
     states.set(id, state);
+    return state;
     // end addState
   }
 
@@ -240,6 +245,22 @@ class GameLoop
     var x:State = states.get(id);
     return ((x == null) ? null : x.getValue(id));
     // end getStateValue
+  }
+
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function addTimer(timer:Timer):Timer
+  {
+    timers.push(timer);
+    return timer;
+    // end addTimer
+  }
+
+  public function removeTimer(timer:Timer):Void
+  {
+    timers.remove(timer);
+    // end removeTimer
   }
 
 
@@ -290,6 +311,9 @@ class GameLoop
       elapsed = currTime - prevFrameTimestamp;
       time += elapsed;
       prevFrameTimestamp = currTime;
+
+      for (t in timers)
+        t.update(elapsed);
 
       var curr:Entity = entitiesHead;
       var next:Entity;
