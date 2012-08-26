@@ -1,8 +1,4 @@
 <spritesheet>
-  <sprite name="asteroid" width="35" height="35">
-    <grid x="0" y="0" column="8" />
-  </sprite>
-
   <sprite name="player" width="27" height="26">
     <frame label="idle" x="0" y="35" />
     <frame label="engines" x="27" y="35" />
@@ -11,5 +7,22 @@
   <sprite name="bullet" width="7" height="7">
     <frame label="wane" x="54" y="36" framewidth="5" frameheight="5"/>
     <frame label="wax" x="60" y="35" />
+
+    <animation label="glow" loop="true">
+      <cell label="wane" interval="100" />
+      <cell label="wax" interval="100" />
+    </animation>
   </sprite>
+
+  <sprite name="asteroid" width="35" height="35">
+    <grid x="0" y="0" columns="8" />
+
+    <keyframe label="start" indice="0" />
+    <keyframe label="end" indice="7" />
+
+    <animation label="tumble" loop="true">
+      <sequence start="start" end="end" interval="100" />
+    </animation>
+  </sprite>
+
 </spritesheet>

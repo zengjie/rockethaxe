@@ -36,6 +36,8 @@ import com.rocketshipgames.haxe.gfx.GameSpriteContainer;
 
 import com.rocketshipgames.haxe.physics.CollisionContainer;
 
+import com.rocketshipgames.haxe.ds.Deadpool;
+
 import com.rocketshipgames.haxe.ui.Keyboard;
 
 import com.rocketshipgames.haxe.util.TimeUtils;
@@ -45,9 +47,16 @@ class RocketHaxeBasicGame
   extends com.rocketshipgames.haxe.GameLoop
 {
 
+  public static inline var COLLIDES_PLAYER:Int = 1;
+  public static inline var COLLIDES_BULLET:Int = 2;
+  public static inline var COLLIDES_ASTEROID:Int = 4;
+
   //------------------------------------------------------------
   private var spriteContainer:GameSpriteContainer;
   private var collisionContainer:CollisionContainer;
+
+  private var bulletPool:Deadpool<Bullet>;
+  private var asteroidPool:Deadpool<Asteroid>;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -63,11 +72,34 @@ class RocketHaxeBasicGame
     collisionContainer =
       new com.rocketshipgames.haxe.physics.collisions.SweepScanCollisionContainer();
 
+    bulletPool = new Deadpool
+      (function(opts:Array<Dynamic>) {
+        return new Bullet(this, collisionContainer, spriteContainer, opts);
+      });
+
+    asteroidPool = new Deadpool
+      (function(opts:Array<Dynamic>) {
+        return new Asteroid(this, collisionContainer, spriteContainer, opts);
+      });
+
     new Player(this, collisionContainer, spriteContainer);
 
-    trace("Starting game...");
-
     // end new
+  }
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function newBullet(x:Float, y:Float, xvel:Float, yvel:Float):Void
+  {
+    bulletPool.newObject([x, y, xvel, yvel]);
+    // end newBullet
+  }
+
+  //------------------------------------------------------------
+  public function newAsteroid():Void
+  {
+    asteroidPool.newObject();
+    // end newAsteroid
   }
 
 
@@ -75,11 +107,18 @@ class RocketHaxeBasicGame
   //------------------------------------------------------------
   public override function update():Void
   {
-    if (Keyboard.isKeyPressed(Keyboard.F11)) {
+    if (Keyboard.isKeyPressed(Keyboard.T)) {
       trace("Time " + TimeUtils.getHumanTime(time) + " (" + time + "); " +
             entityCount + " entities; " +
             spriteContainer.instanceCount + " sprites");
     }
+
+    if (Keyboard.isKeyPressed(Keyboard.A)) {
+      newAsteroid();
+    }
+
+    collisionContainer.collide();
+
     // end update
   }
 
@@ -107,77 +146,4 @@ class RocketHaxeBasicGame
   }
 
   // end RocketHaxeBasicGame
-}
-
-//--------------------------------------------------------------------
-//------------------------------------------------------------
-import com.rocketshipgames.haxe.game.entities.BasicGameSpriteEntity;
-
-import com.rocketshipgames.haxe.physics.packages.ShooterPhysicsPackage;
-
-class Player
-  extends BasicGameSpriteEntity
-{
-
-  //------------------------------------------------------------
-  private static inline var ACCELERATION:Float = 2000;
-
-  private var enginesOnFrame:Int;
-  private var enginesOffFrame:Int;
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  public function new(world:World,
-                      collisionContainer:CollisionContainer,
-                      gfxContainer:GameSpriteContainer):Void
-  {
-
-    var physics:ShooterPhysicsPackage = new ShooterPhysicsPackage(this);
-    physics.xdrag = physics.ydrag = ACCELERATION/2;
-    physics.xvelMin = physics.yvelMin = 2;
-    physics.xvelMax = physics.yvelMax = 300;
-    physics.setBounds(BOUNDS_STOP, world);
-    this.physics = physics;
-
-    super(world, collisionContainer, gfxContainer, "player");
-
-    x = world.worldWidth/2;
-    y = 3*world.worldHeight/4;
-
-    enginesOnFrame = sprite.keyframe("engines");
-    enginesOffFrame = sprite.keyframe("idle");
-
-    // end new
-  }
-
-  //------------------------------------------------------------
-  public override function update(elapsed:Int):Void
-  {
-
-    physics.xacc = 0;
-    physics.yacc = 0;
-
-    if (Keyboard.isKeyDown(Keyboard.LEFT))
-      physics.xacc = -ACCELERATION;
-
-    if (Keyboard.isKeyDown(Keyboard.RIGHT))
-      physics.xacc = ACCELERATION;
-
-    if (Keyboard.isKeyDown(Keyboard.UP))
-      physics.yacc = -ACCELERATION;
-
-    if (Keyboard.isKeyDown(Keyboard.DOWN))
-      physics.yacc = ACCELERATION;
-
-    super.update(elapsed);
-
-    if (physics.yvel < -physics.yvelMin)
-      frame = enginesOnFrame;
-    else
-      frame = enginesOffFrame;
-
-    // end update
-  }
-
-  // end Player
 }

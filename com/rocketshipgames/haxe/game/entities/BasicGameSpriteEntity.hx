@@ -78,10 +78,12 @@ class BasicGameSpriteEntity
     this.world = world;
     this.collisionContainer = collisionContainer;
 
+    hitXBuffer = 0;
+    hitYBuffer = 0;
+
     if (physics == null)
       physics = new PhysicsPackage(this);
 
-    init(opts);
     // end new
   }
 
@@ -98,7 +100,7 @@ class BasicGameSpriteEntity
 
     //-- Restore basic live properties
     dead = false;
-    visible = true;
+    // visible = true;
 
     //-- Set up signals
     if (opts != null && (d = Reflect.field(opts, "killSignal")) != null) {
