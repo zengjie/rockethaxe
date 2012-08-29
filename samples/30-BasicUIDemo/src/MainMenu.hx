@@ -22,9 +22,16 @@
  * SOFTWARE.
  */
 
+import nme.Assets;
+
 import nme.events.KeyboardEvent;
 
 import nme.text.TextFormatAlign;
+
+import nme.display.DisplayObjectContainer;
+import nme.display.Sprite;
+
+import com.eclecticdesignstudio.motion.Actuate;
 
 import com.rocketshipgames.haxe.ui.ScreenManager;
 import com.rocketshipgames.haxe.ui.Panel;
@@ -39,7 +46,10 @@ import com.rocketshipgames.haxe.gfx.HorizontalAlignment;
 import com.rocketshipgames.haxe.gfx.VerticalAlignment;
 import com.rocketshipgames.haxe.gfx.GrowthDirection;
 
+import com.rocketshipgames.haxe.ui.Mouse;
+
 class MainMenu
+  extends Sprite,
   implements Panel
 {
 
@@ -47,8 +57,10 @@ class MainMenu
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new():Void
+  public function new(container:DisplayObjectContainer):Void
   {
+    super();
+
     uiList = new LinearUIWidgetList
       (320, 240,
        { orientation: VERTICAL,
@@ -57,14 +69,14 @@ class MainMenu
        });
 
     uiList.add(new TextBitmapButton
-               (nme.Lib.current.stage, gotoGame, "Play Game",
+               (this, gotoGame, "Play Game",
                 { borderWidth: 2, padding: 2, justification:TextFormatAlign.LEFT},
                 { bgcolor: 0xffffffff, color: 0xff000000 },
                 { bgcolor: 0xff000000, color: 0xffffffff },
                 { bgcolor: 0xff000000, color: 0xff333333 }
                 ));
     uiList.add(new TextBitmapButton
-               (nme.Lib.current.stage, doSettings, "Settings",
+               (this, doSettings, "Settings",
                 { borderWidth: 2, borderTopWidth: 0,
                     padding: 2, justification:TextFormatAlign.LEFT },
                 { bgcolor: 0xffffffff, color: 0xff000000 },
@@ -72,13 +84,16 @@ class MainMenu
                 { bgcolor: 0xff000000, color: 0xff333333 }
                 ));
     uiList.add(new TextBitmapButton
-               (nme.Lib.current.stage, doAbout, "About",
+               (this, doAbout, "About",
                 { borderWidth: 2, borderTopWidth: 0,
                     padding: 2, justification:TextFormatAlign.LEFT },
                 { bgcolor: 0xffffffff, color: 0xff000000 },
                 { bgcolor: 0xff000000, color: 0xffffffff },
                 { bgcolor: 0xff000000, color: 0xff333333 }
                 ));
+
+    container.addChild(this);
+
     // end new
   }
 
@@ -94,19 +109,27 @@ class MainMenu
 
     nme.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 
-    uiList.show();
+    Mouse.setCursor(Assets.getBitmapData("assets/cursor.png"), this);
+    Mouse.enableIdleHide();
     // end button
   }
 
   public function hide(onComplete:PanelNotifier, ?opts:Dynamic):Void
   {
     trace("Hiding main menu");
-
-    uiList.hide();
+    Mouse.disableIdleHide();
 
     nme.Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN,
                                               onKeyDown);
-    onComplete();
+
+    Actuate.tween(this, 1, {alpha: 0})
+      .onComplete(function() {
+          parent.removeChild(this);
+          Mouse.disableCursor();
+          onComplete();
+        });
+
+    // end hide
   }
 
 

@@ -80,6 +80,8 @@ class Button
     addEventListener(MouseEvent.ROLL_OVER, rollOver);
     addEventListener(MouseEvent.ROLL_OUT, rollOut);
 
+    show();
+
     // end new
   }
 
@@ -90,7 +92,6 @@ class Button
     upGraphic.visible = true;
     overGraphic.visible = false;
     downGraphic.visible = false;
-    down = false;
     container.addChild(this);
     // end show
   }
@@ -105,18 +106,15 @@ class Button
   //------------------------------------------------------------
   private function click(e:Event):Void
   {
-    trace("Click");
+    //trace("Click");
     if (action != null)
       action();
     // end click
   }
 
-  private var down:Bool;
-
   private function mouseDown(e:Event):Void
   {
-    trace("Down");
-    down = true;
+    //trace("Down");
     upGraphic.visible = false;
     overGraphic.visible = false;
     downGraphic.visible = true;
@@ -125,9 +123,7 @@ class Button
 
   private function mouseUp(e:Event):Void
   {
-    trace("Up");
-    down = false;
-
+    //trace("Up");
     upGraphic.visible = false;
     overGraphic.visible = true;
     downGraphic.visible = false;
@@ -136,16 +132,16 @@ class Button
 
   private function rollOver(e:Event):Void
   {
-    trace("Roll over");
+    //trace("Roll over");
     upGraphic.visible = false;
-    overGraphic.visible = !down;
-    downGraphic.visible = down;
+    overGraphic.visible = true;
+    downGraphic.visible = false;
     // end rollOver
   }
 
   private function rollOut(e:Event):Void
   {
-    trace("Roll out");
+    //trace("Roll out");
     upGraphic.visible = true;
     overGraphic.visible = false;
     downGraphic.visible = false;

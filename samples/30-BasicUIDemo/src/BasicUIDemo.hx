@@ -22,24 +22,34 @@
  * SOFTWARE.
  */
 
+import nme.Assets;
+
+import nme.display.Sprite;
+
+import com.eclecticdesignstudio.motion.Actuate;
+
 import com.rocketshipgames.haxe.ui.ScreenManager;
 import com.rocketshipgames.haxe.ui.Panel;
 import com.rocketshipgames.haxe.ui.widgets.MinimalPanel;
 import com.rocketshipgames.haxe.ui.PanelManager;
 
+import com.rocketshipgames.haxe.ui.Mouse;
+
 class BasicUIDemo
+  extends Sprite
 {
 
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  static public function main():Void
+  private function new():Void
   {
+    super();
     trace("Basic UI Demo");
 
     com.rocketshipgames.haxe.ui.StageUtils.setStandardConfiguration();
 
+    nme.Lib.current.stage.addChild(this);
+
     //-- Set up the screens
-    ScreenManager.add("main-menu", new MainMenu());
+    ScreenManager.add("main-menu", new MainMenu(this));
 
     ScreenManager.add
       ("shooter",
@@ -47,21 +57,30 @@ class BasicUIDemo
        (function(userData:Dynamic, ?opts:Dynamic):Void {
          trace("Showing shooter.");
          userData.game = new RocketHaxeBasicGame(640, 480);
-         nme.Lib.current.stage.addChild(userData.game);
+         userData.game.alpha = 0;
+         addChild(userData.game);
+         Actuate.tween(userData.game, 1, {alpha: 1});
        },
 
          function (onComplete:PanelNotifier,
                    userData:Dynamic, ?opts:Dynamic):Void {
          trace("Hiding shooter.");
          userData.game.stop();
-         nme.Lib.current.stage.removeChild(userData.game);
+         removeChild(userData.game);
          onComplete();
        }));
-
 
     //-- Show the main menu
     ScreenManager.show("main-menu");
 
+    // end new
+  }
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  static public function main():Void
+  {
+    new BasicUIDemo();
     // end main
   }
 

@@ -21,6 +21,7 @@
 
   <!-- Do not include trailing '/' in path! -->
   <assets path="../10-RocketHaxeBasicGame/assets" include="*" rename="assets"/>
+  <assets path="assets" include="*" />
 
   <haxelib name="rockethaxe" />
 </project>

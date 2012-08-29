@@ -68,6 +68,11 @@ class RocketHaxeBasicGame
   {
     super(width, height);
 
+    // Play a zero volume sound to get the sound system loaded.
+    new SoundEffect(Assets.getSound("assets/explosion.wav")).play(false, 0);
+
+    com.rocketshipgames.haxe.ui.Mouse.hide();
+
     addGraphicsContainer(spriteContainer =
                          new GameSpriteContainer
                          (Assets.getBitmapData("assets/sprites.png"),
@@ -175,11 +180,7 @@ class RocketHaxeBasicGame
   static public function main()
   {
 
-    // Play a zero volume sound to get the sound system loaded.
-    new SoundEffect(Assets.getSound("assets/explosion.wav")).play(false, 0);
-
     com.rocketshipgames.haxe.ui.StageUtils.setStandardConfiguration();
-    com.rocketshipgames.haxe.ui.Mouse.hide();
 
     var game:RocketHaxeBasicGame = new RocketHaxeBasicGame(640, 480);
     nme.Lib.current.stage.addChild(game);
