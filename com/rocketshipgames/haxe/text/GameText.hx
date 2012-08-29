@@ -56,9 +56,7 @@ class GameText {
 
   public var onComplete:Void->Void;
 
-  public function new(list:GameTextList, text:String, opts:Dynamic=null,
-                      predecorator:BitmapData->Void = null,
-                      postdecorator:BitmapData->Void = null):Void
+  public function new(list:GameTextList, text:String, opts:Dynamic=null):Void
   {
     this.text = text;
 
@@ -123,8 +121,7 @@ class GameText {
       // end was given opts
     }
 
-    bitmap = TextBitmap.makeBitmap(this.text, opts,
-                                   predecorator, postdecorator);
+    bitmap = TextBitmap.makeBitmap(this.text, opts);
     alpha = 0;
     bitmap.alpha = 0;
     timer = -wait;

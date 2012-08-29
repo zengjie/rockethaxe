@@ -62,10 +62,19 @@ class TextBitmap {
   private var width:Int;
   private var height:Int;
 
-  private var marginLeft:Int;
-  private var marginRight:Int;
-  private var marginTop:Int;
-  private var marginBottom:Int;
+  private var paddingLeft:Int;
+  private var paddingRight:Int;
+  private var paddingTop:Int;
+  private var paddingBottom:Int;
+
+  private var borderLeftWidth:Int;
+  private var borderLeftColor:Int;
+  private var borderRightWidth:Int;
+  private var borderRightColor:Int;
+  private var borderTopWidth:Int;
+  private var borderTopColor:Int;
+  private var borderBottomWidth:Int;
+  private var borderBottomColor:Int;
 
   private var predecorator:BitmapData->Void;
   private var postdecorator:BitmapData->Void;
@@ -73,9 +82,7 @@ class TextBitmap {
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(string:String,
-                      opts:Dynamic=null,
-                      predecorator:BitmapData->Void=null,
-                      postdecorator:BitmapData->Void=null):Void
+                      ?opts:Dynamic=null):Void
   {
     tf = new TextField();
 
@@ -83,13 +90,16 @@ class TextBitmap {
     color = defaultColor;
     bgcolor = defaultBackgroundColor;
 
-    marginLeft = 0;
-    marginRight = 0;
-    marginTop = 0;
-    marginBottom = 0;
-
     width = 0;
     height = 0;
+
+    paddingLeft = paddingRight = paddingTop = paddingBottom = 0;
+
+    borderLeftWidth = borderRightWidth = borderTopWidth = borderBottomWidth = 0;
+    borderLeftColor = borderRightColor = borderTopColor = borderBottomColor =
+      0xffffffff;
+
+    predecorator = postdecorator = null;
 
     // This is not packed into the following opts != null check so
     // that it can set a default if there are no opts.  It's not just
@@ -103,54 +113,112 @@ class TextBitmap {
     }
 
     if (opts != null) {
-      if (Reflect.hasField(opts, "size")) {
-        var d:Dynamic = Reflect.field(opts, "size");
+      var d:Dynamic;
+
+      if ((d = Reflect.field(opts, "size")) != null) {
         size = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
-      if (Reflect.hasField(opts, "color")) {
-        var d:Dynamic = Reflect.field(opts, "color");
+      if ((d = Reflect.field(opts, "color")) != null) {
         color = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
+      borderLeftColor = borderRightColor = borderTopColor = borderBottomColor =
+        color;
 
-      if (Reflect.hasField(opts, "bgcolor")) {
-        var d:Dynamic = Reflect.field(opts, "bgcolor");
+      /*
+       * Note that the background color is necessarily a 32 bit integer.
+       */
+      if ((d = Reflect.field(opts, "bgcolor")) != null) {
         bgcolor = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
-      if (Reflect.hasField(opts, "margin")) {
-        var d:Dynamic = Reflect.field(opts, "margin");
-        marginLeft = marginRight = marginTop = marginBottom =
+
+      if ((d = Reflect.field(opts, "padding")) != null) {
+        paddingLeft = paddingRight = paddingTop = paddingBottom =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
-      if (Reflect.hasField(opts, "marginLeft")) {
-        var d:Dynamic = Reflect.field(opts, "marginLeft");
-        marginLeft = (Std.is(d, String)) ? Std.parseInt(d) : d;
+      if ((d = Reflect.field(opts, "paddingLeft")) != null) {
+        paddingLeft = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
-      if (Reflect.hasField(opts, "marginRight")) {
-        var d:Dynamic = Reflect.field(opts, "marginRight");
-        marginRight = (Std.is(d, String)) ? Std.parseInt(d) : d;
+      if ((d = Reflect.field(opts, "paddingRight")) != null) {
+        paddingRight = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
-      if (Reflect.hasField(opts, "marginTop")) {
-        var d:Dynamic = Reflect.field(opts, "marginTop");
-        marginTop = (Std.is(d, String)) ? Std.parseInt(d) : d;
+      if ((d = Reflect.field(opts, "paddingTop")) != null) {
+        paddingTop = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
-      if (Reflect.hasField(opts, "marginBottom")) {
-        var d:Dynamic = Reflect.field(opts, "marginBottom");
-        marginBottom = (Std.is(d, String)) ? Std.parseInt(d) : d;
+      if ((d = Reflect.field(opts, "paddingBottom")) != null) {
+        paddingBottom = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
-      if (Reflect.hasField(opts, "width")) {
-        var d:Dynamic = Reflect.field(opts, "width");
+
+      if ((d = Reflect.field(opts, "width")) != null) {
         width = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
-      if (Reflect.hasField(opts, "height")) {
-        var d:Dynamic = Reflect.field(opts, "height");
+      if ((d = Reflect.field(opts, "height")) != null) {
         height = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
+
+
+      if ((d = Reflect.field(opts, "borderWidth")) != null) {
+        trace("Has a border.");
+        borderLeftWidth = borderRightWidth = borderTopWidth = borderBottomWidth =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+      if ((d = Reflect.field(opts, "borderColor")) != null) {
+        borderLeftColor = borderRightColor = borderTopColor = borderBottomColor =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+
+      if ((d = Reflect.field(opts, "borderLeftWidth")) != null) {
+        borderLeftWidth = borderRightWidth = borderTopWidth = borderBottomWidth =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+      if ((d = Reflect.field(opts, "borderLeftColor")) != null) {
+        borderLeftColor = borderRightColor = borderTopColor = borderBottomColor =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+
+      if ((d = Reflect.field(opts, "borderRightWidth")) != null) {
+        borderRightWidth =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+      if ((d = Reflect.field(opts, "borderRightColor")) != null) {
+        borderRightColor =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+
+      if ((d = Reflect.field(opts, "borderTopWidth")) != null) {
+        borderTopWidth =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+      if ((d = Reflect.field(opts, "borderTopColor")) != null) {
+        borderTopColor =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+
+      if ((d = Reflect.field(opts, "borderBottomWidth")) != null) {
+        borderBottomWidth =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+      if ((d = Reflect.field(opts, "borderBottomColor")) != null) {
+        borderBottomColor =
+          (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+
+
+      // Note that you can't just set these because you don't want to
+      // override a previous decorator if the new opts don't have one.
+      if ((d = Reflect.field(opts, "predecorator")) != null) {
+        predecorator = d;
+      }
+      if ((d = Reflect.field(opts, "postdecorator")) != null) {
+        postdecorator = d;
+      }
+
       // end has opts
     }
+
 
     /*
     // This does not compile because of some problems in the
@@ -187,9 +255,6 @@ class TextBitmap {
     tf.defaultTextFormat = format;
     tf.autoSize = LEFT;
 
-    this.predecorator = predecorator;
-    this.postdecorator = postdecorator;
-
     draw(string);
 
     // end new
@@ -204,13 +269,13 @@ class TextBitmap {
 
     var w:Int;
     if (width == 0)
-      w = Std.int(tf.width) + marginLeft + marginRight;
+      w = Std.int(tf.width) + paddingLeft + paddingRight;
     else
       w = width;
 
     var h:Int;
     if (height == 0)
-      h = Std.int(tf.height) + marginTop + marginBottom;
+      h = Std.int(tf.height) + paddingTop + paddingBottom;
     else
       h = height;
 
@@ -219,11 +284,39 @@ class TextBitmap {
     } else
       bitmap.fillRect(new Rectangle(0, 0, bitmap.width, bitmap.height), bgcolor);
 
+
+    //-- Predecorate---fill in any background, etc
     if (predecorator != null)
       predecorator(bitmap);
 
+    //-- Draw any defined borders
+    if (borderLeftWidth != 0) {
+      bitmap.fillRect(new Rectangle(0, 0,
+                                    borderLeftWidth, bitmap.height),
+                                    borderLeftColor);
+    }
+
+    if (borderRightWidth != 0) {
+      bitmap.fillRect(new Rectangle(bitmap.width-borderRightWidth, 0,
+                                    borderRightWidth, bitmap.height),
+                                    borderRightColor);
+    }
+
+    if (borderTopWidth != 0) {
+      bitmap.fillRect(new Rectangle(0, 0,
+                                    bitmap.width, borderTopWidth),
+                                    borderTopColor);
+    }
+
+    if (borderBottomWidth != 0) {
+      bitmap.fillRect(new Rectangle(0, bitmap.height-borderBottomWidth,
+                                    bitmap.width, borderBottomWidth),
+                                    borderBottomColor);
+    }
+
+    //-- Actually draw the text
     var matrix:Matrix = new Matrix();
-    matrix.translate(marginLeft, marginTop);
+    matrix.translate(paddingLeft, paddingTop);
     if (format.align == TextFormatAlign.CENTER) {
       matrix.translate((w-tf.width)/2, 0);
     } else if (format.align == TextFormatAlign.RIGHT) {
@@ -231,6 +324,7 @@ class TextBitmap {
     }
     bitmap.draw(tf, matrix);
 
+    //-- Postdecorator---apply filters, etc
     if (postdecorator != null)
       postdecorator(bitmap);
 
@@ -239,17 +333,10 @@ class TextBitmap {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  /*
-   * Note that the background color is necessarily a 32 bit integer.
-   */
-
   public static function makeBitmap(string:String,
-                                    opts:Dynamic=null,
-                                    predecorator:BitmapData->Void=null,
-                                    postdecorator:BitmapData->Void=null):Bitmap
+                                    ?opts:Dynamic):Bitmap
   {
-    var b:Bitmap = new Bitmap(makeBitmapData
-                              (string, opts, predecorator, postdecorator));
+    var b:Bitmap = new Bitmap(makeBitmapData(string, opts));
 
     if (opts != null && Reflect.hasField(opts, "alpha")) {
       var d:Dynamic = Reflect.field(opts, "alpha");
@@ -260,13 +347,10 @@ class TextBitmap {
     // end bitmapData
   }
 
-  public static function makeBitmapData
-    (string:String,
-     opts:Dynamic=null,
-     predecorator:BitmapData->Void=null,
-     postdecorator:BitmapData->Void=null):BitmapData
+  public static function makeBitmapData(string:String,
+                                        ?opts:Dynamic):BitmapData
   {
-    return new TextBitmap(string, opts, predecorator, postdecorator).bitmap;
+    return new TextBitmap(string, opts).bitmap;
     // end bitmapData
   }
 

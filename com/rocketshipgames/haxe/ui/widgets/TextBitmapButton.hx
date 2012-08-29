@@ -28,43 +28,58 @@ import nme.events.Event;
 import nme.events.MouseEvent;
 
 import nme.display.DisplayObjectContainer;
-import nme.display.Sprite;
+import nme.display.SimpleButton;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 
 import com.rocketshipgames.haxe.text.TextBitmap;
 
-class TextButton
-  extends Sprite
+class TextBitmapButton
+  extends SimpleButton
 {
   private var container:DisplayObjectContainer;
   private var action:Void->Void;
-
-  private var bitmap:Bitmap;
-
-  private var onGraphic:BitmapData;
-  private var overGraphic:BitmapData;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(container:DisplayObjectContainer,
                       action:Void->Void,
-                      text:String):Void
+                      text:String,
+                      ?defaultStyle:Dynamic,
+                      ?upStyle:Dynamic,
+                      ?overStyle:Dynamic,
+                      ?downStyle:Dynamic):Void
   {
-    super();
+
+    var _up = Reflect.copy(defaultStyle);
+    for (f in Reflect.fields(upStyle))
+      Reflect.setField(_up, f, Reflect.field(upStyle, f));
+
+    var _over = Reflect.copy(defaultStyle);
+    for (f in Reflect.fields(overStyle))
+      Reflect.setField(_over, f, Reflect.field(overStyle, f));
+
+    var _down = Reflect.copy(defaultStyle);
+    for (f in Reflect.fields(downStyle))
+      Reflect.setField(_down, f, Reflect.field(downStyle, f));
+
+    var over:Bitmap;
+    super(TextBitmap.makeBitmap(text, _up),
+          (over = TextBitmap.makeBitmap(text, _over)),
+          TextBitmap.makeBitmap(text, _down),
+          over);
+
     this.container = container;
     this.action = action;
 
-    bitmap = new Bitmap();
-    addChild(bitmap);
-
-    onGraphic = TextBitmap.makeBitmapData(text);
-    overGraphic = TextBitmap.makeBitmapData(text, { bgcolor: 0xffffffff,
-                                                    color: 0x000000 });
-
     addEventListener(MouseEvent.CLICK, click);
+
+    /*
+    addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+    addEventListener(MouseEvent.MOUSE_UP, mouseUp);
     addEventListener(MouseEvent.ROLL_OVER, rollOver);
     addEventListener(MouseEvent.ROLL_OUT, rollOut);
+    */
 
     // end new
   }
@@ -74,8 +89,6 @@ class TextButton
   public function show():Void
   {
     trace("Showing button");
-    bitmap.bitmapData = onGraphic;
-    visible = true;
     container.addChild(this);
     // end show
   }
@@ -83,7 +96,6 @@ class TextButton
   public function hide():Void
   {
     trace("Hiding button");
-    visible = false;
     container.removeChild(this);
     // end hide
   }
@@ -98,19 +110,31 @@ class TextButton
     // end click
   }
 
+  /*
+  private function mouseDown(e:Event):Void
+  {
+    trace("Mouse down");
+    // end mouseUp
+  }
+
+  private function mouseUp(e:Event):Void
+  {
+    trace("Mouse up");
+    // end mouseUp
+  }
+
   private function rollOver(e:Event):Void
   {
     trace("Roll over");
-    bitmap.bitmapData = overGraphic;
     // end rollOver
   }
 
   private function rollOut(e:Event):Void
   {
     trace("Roll out");
-    bitmap.bitmapData = onGraphic;
     // end rollOut
   }
+  */
 
   // end TextButton
 }

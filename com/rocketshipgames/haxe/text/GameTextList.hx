@@ -63,9 +63,6 @@ class GameTextList
   public var defaultFadeIn:Int;
   public var defaultFadeOut:Int;
 
-  public var predecorator:BitmapData->Void = null;
-  public var postdecorator:BitmapData->Void = null;
-
   public var defaultOpts:Dynamic = null;
 
   public var verticalJustification:VerticalJustification;
@@ -127,7 +124,7 @@ class GameTextList
       opts = Reflect.copy(defaultOpts);
     }
 
-    last = newGameText(this, text, opts, predecorator, postdecorator);
+    last = newGameText(this, text, opts);
 
     if (growthDirection == FORWARD)
       texts.add(last);
@@ -151,11 +148,9 @@ class GameTextList
    * This is here to override to use an extended GameText class.
    */
   private function newGameText(list:GameTextList,
-                               text:String, opts:Dynamic=null,
-                               predecorator:BitmapData->Void = null,
-                               postdecorator:BitmapData->Void = null):GameText
+                               text:String, opts:Dynamic=null):GameText
   {
-    return new GameText(list, text, opts, predecorator, postdecorator);
+    return new GameText(list, text, opts);
     // end newGameText
   }
 

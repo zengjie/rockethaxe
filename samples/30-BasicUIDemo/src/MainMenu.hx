@@ -29,24 +29,37 @@ import com.rocketshipgames.haxe.ui.Panel;
 import com.rocketshipgames.haxe.ui.widgets.MinimalPanel;
 import com.rocketshipgames.haxe.ui.PanelManager;
 
-import com.rocketshipgames.haxe.ui.widgets.TextButton;
+import com.rocketshipgames.haxe.ui.widgets.TextBitmapButton;
 
 class MainMenu
   implements Panel
 {
 
-  var button:TextButton;
-  var button2:TextButton;
+  var button:TextBitmapButton;
+  var button2:TextBitmapButton;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new():Void
   {
-    button = new TextButton(nme.Lib.current.stage, gotoGame, "Play Game");
+    button = new TextBitmapButton
+      (nme.Lib.current.stage, gotoGame, "Play Game",
+       { borderWidth: 2, padding: 4 },
+       { bgcolor: 0xffffffff, color: 0xff000000 },
+       { bgcolor: 0xff000000, color: 0xffffffff },
+       { bgcolor: 0xff000000, color: 0xff333333 }
+       );
+
     button.x = nme.Lib.current.stage.stageWidth/2;
     button.y = nme.Lib.current.stage.stageHeight/2;
 
-    button2 = new TextButton(nme.Lib.current.stage, null, "Goto Sub-Menu");
+    button2 = new TextBitmapButton
+      (nme.Lib.current.stage, null, "Goto Sub-Menu",
+       { borderWidth: 2, borderTopWidth: 0, padding: 4 },
+       { bgcolor: 0xffffffff, color: 0xff000000 },
+       { bgcolor: 0xff000000, color: 0xffffffff },
+       { bgcolor: 0xff000000, color: 0xff333333 }
+       );
     button2.x = nme.Lib.current.stage.stageWidth/2;
     button2.y = nme.Lib.current.stage.stageHeight/2 + 24;
     // end new
