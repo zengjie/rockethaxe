@@ -29,33 +29,69 @@ import com.rocketshipgames.haxe.ui.Panel;
 import com.rocketshipgames.haxe.ui.widgets.MinimalPanel;
 import com.rocketshipgames.haxe.ui.PanelManager;
 
+import com.rocketshipgames.haxe.ui.widgets.TextButton;
+
 class MainMenu
   implements Panel
 {
-  public function new():Void {}
+
+  var button:TextButton;
+  var button2:TextButton;
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function new():Void
+  {
+    button = new TextButton(nme.Lib.current.stage, gotoGame, "Play Game");
+    button.x = nme.Lib.current.stage.stageWidth/2;
+    button.y = nme.Lib.current.stage.stageHeight/2;
+
+    button2 = new TextButton(nme.Lib.current.stage, null, "Goto Sub-Menu");
+    button2.x = nme.Lib.current.stage.stageWidth/2;
+    button2.y = nme.Lib.current.stage.stageHeight/2 + 24;
+    // end new
+  }
 
   public function added(manager:PanelManager, id:String):Void {}
   public function removed():Void {}
 
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
   public function show(?opts:Dynamic):Void
   {
     trace("Showing main menu.");
 
     nme.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+
+    button.show();
+    button2.show();
+    // end button
   }
 
   public function hide(onComplete:PanelNotifier, ?opts:Dynamic):Void
   {
     trace("Hiding main menu");
+    button.hide();
+    button2.hide();
 
     nme.Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN,
                                               onKeyDown);
     onComplete();
   }
 
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
   private function onKeyDown(e:KeyboardEvent):Void
   {
+    gotoGame();
+  }
+
+  private function gotoGame():Void
+  {
     ScreenManager.show("shooter");
+    // end gotoGame
   }
 
   // end MainMenu
