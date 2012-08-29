@@ -22,48 +22,41 @@
  * SOFTWARE.
  */
 
+import nme.events.KeyboardEvent;
+
 import com.rocketshipgames.haxe.ui.ScreenManager;
 import com.rocketshipgames.haxe.ui.Panel;
 import com.rocketshipgames.haxe.ui.widgets.MinimalPanel;
 import com.rocketshipgames.haxe.ui.PanelManager;
 
-class BasicUIDemo
+class MainMenu
+  implements Panel
 {
+  public function new():Void {}
 
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  static public function main():Void
+  public function added(manager:PanelManager, id:String):Void {}
+  public function removed():Void {}
+
+  public function show(?opts:Dynamic):Void
   {
-    trace("Basic UI Demo");
+    trace("Showing main menu.");
 
-    com.rocketshipgames.haxe.ui.StageUtils.setStandardConfiguration();
-
-    //-- Set up the screens
-    ScreenManager.add("main-menu", new MainMenu());
-
-    ScreenManager.add
-      ("shooter",
-       new MinimalPanel
-       (function(userData:Dynamic, ?opts:Dynamic):Void {
-         trace("Showing shooter.");
-         userData.game = new RocketHaxeBasicGame(640, 480);
-         nme.Lib.current.stage.addChild(userData.game);
-       },
-
-         function (onComplete:PanelNotifier,
-                   userData:Dynamic, ?opts:Dynamic):Void {
-         trace("Hiding shooter.");
-         userData.game.stop();
-         nme.Lib.current.stage.removeChild(userData.game);
-         onComplete();
-       }));
-
-
-    //-- Show the main menu
-    ScreenManager.show("main-menu");
-
-    // end main
+    nme.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
   }
 
-  // end BasicUIDemo
+  public function hide(onComplete:PanelNotifier, ?opts:Dynamic):Void
+  {
+    trace("Hiding main menu");
+
+    nme.Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN,
+                                              onKeyDown);
+    onComplete();
+  }
+
+  private function onKeyDown(e:KeyboardEvent):Void
+  {
+    ScreenManager.show("shooter");
+  }
+
+  // end MainMenu
 }

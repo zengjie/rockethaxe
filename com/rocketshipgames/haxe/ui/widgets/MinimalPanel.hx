@@ -24,21 +24,26 @@
 
 package com.rocketshipgames.haxe.ui.widgets;
 
+import com.rocketshipgames.haxe.ui.Panel;
+
 class MinimalPanel
   implements Panel
 {
 
   //------------------------------------------------------------
-  private var onShow:?Dynamic->Void;
-  private var onHide:PanelManager->?Dynamic->Bool;
+  private var onShow:Dynamic->?Dynamic->Void;
+  private var onHide:PanelNotifier->Dynamic->?Dynamic->Void;
+
+  private var userData:Dynamic;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new(onShow:?Dynamic->Void,
-                      onHide:PanelManager->?Dynamic->Bool):Void
+  public function new(onShow:Dynamic->?Dynamic->Void,
+                      onHide:PanelNotifier->Dynamic->?Dynamic->Void):Void
   {
     this.onShow = onShow;
     this.onHide = onHide;
+    userData = {};
     // end new
   }
 
@@ -50,16 +55,14 @@ class MinimalPanel
   public function show(?opts:Dynamic):Void
   {
     if (onShow != null)
-      onShow(opts);
+      onShow(userData, opts);
     // end show
   }
 
-  public function hide(manager:PanelManager, ?opts:Dynamic):Bool
+  public function hide(onComplete:PanelNotifier, ?opts:Dynamic):Void
   {
     if (onHide != null)
-      return onHide(manager, opts);
-
-    return true;
+      onHide(onComplete, userData, opts);
     // end hide
   }
 

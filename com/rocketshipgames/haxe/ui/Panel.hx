@@ -24,14 +24,16 @@
 
 package com.rocketshipgames.haxe.ui;
 
-interface Panel {
 
+typedef PanelNotifier = Void->Void;
+
+
+interface Panel {
   function added(manager:PanelManager, id:String):Void;
   function removed():Void;
 
   function show(?opts:Dynamic):Void;
 
-  function hide(manager:PanelManager, ?opts:Dynamic):Bool;
-
+  function hide(onComplete:PanelNotifier, ?opts:Dynamic):Void;
   // end Panel
 }

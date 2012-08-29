@@ -29,9 +29,11 @@ import com.rocketshipgames.haxe.debug.Debug;
 class PanelManager {
 
   //------------------------------------------------------------
-  private var panels:Hash<Panel>;
-  private var current:Panel;
-  private var next:Panel;
+  private var panels:Hash<PanelHandle>;
+
+  private var current:PanelHandle;
+
+  private var next:PanelHandle;
   private var nextOpts:Dynamic;
 
   //--------------------------------------------------------------------
@@ -39,7 +41,9 @@ class PanelManager {
   public function new():Void
   {
     panels = new Hash();
+
     current = null;
+
     next = null;
     nextOpts = null;
     // end new
@@ -54,7 +58,7 @@ class PanelManager {
       return null;
     }
 
-    panels.set(id, panel);
+    panels.set(id, new PanelHandle(this, id, panel));
     panel.added(this, id);
     return panel;
     // end register
@@ -62,14 +66,14 @@ class PanelManager {
 
   public function remove(id:String):Void
   {
-    var panel:Panel;
+    var panel:PanelHandle;
     if ((panel = panels.get(id)) == null) {
       Debug.error("Unknown panel " + id);
       return;
     }
 
     panels.remove(id);
-    panel.removed();
+    panel.removed(this);
     // end remove
   }
 
@@ -77,103 +81,128 @@ class PanelManager {
   //------------------------------------------------------------
   public function show(id:String, ?opts:Dynamic):Void
   {
-    var panel:Panel;
+    var panel:PanelHandle;
     if ((panel = panels.get(id)) == null) {
       Debug.error("Unknown panel " + id);
       return;
     }
 
-    if (current == null) {
-      current = panel;
-      panel.show(opts);
-      return;
-    }
-
-    if (panel == current) {
-      Debug.error("Panel " + id + " is already showing.");
-      return;
-    }
-
-    if (current.hide(this, opts)) {
-      current = panel;
-      panel.show(opts);
-    } else {
+    if (current == null)
+      showComplete(panel, opts);
+    else {
       next = panel;
       nextOpts = opts;
+      current.hide(opts);
     }
-
     // end show
   }
+
+  private function showComplete(panel:PanelHandle, ?opts:Dynamic):Void
+  {
+    current = panel;
+    panel.show(opts);
+    // end show
+  }
+
 
   //------------------------------------------------------------
   public function hide(id:String, ?opts:Dynamic):Void
   {
-    var panel:Panel;
+    var panel:PanelHandle;
     if ((panel = panels.get(id)) == null) {
       Debug.error("Unknown panel " + id);
       return;
     }
 
-    if (panel != current) {
-      Debug.error("Panel " + id + "is not currently showing.");
-      return;
-    }
-
-    if (panel.hide(this, opts))
-      current = null;
+    panel.hide(opts);
     // end hide
   }
 
-  public function hideComplete(panel:Panel):Void
+  public function hideComplete(panel:PanelHandle):Void
   {
-    if (current == null) {
-      Debug.error("No panel is currently showing.");
-    }
-
+    // If the client calls onComplete twice, bail
     if (panel != current) {
-      Debug.error("Panel reporting hide complete is not currently showing.");
+      Debug.error("Panel " + panel.getID() + "notified hide complete " +
+                  "while not current.");
+      return;
     }
 
+    current = null;
     if (next != null) {
-      current = next;
-      next.show(nextOpts);
-    } else
-      current = null;
-
+      showComplete(next, nextOpts);
+    }
     // end hideComplete
   }
-
-  /*
-   * Does it need a switch()?
-   * - Is it necessary for panels to completely transition out before
-   *   transitioning in a newone ?
-   */
 
   // end PanelManager
 }
 
 
-/*
+private enum PanelStatus {
+  SHOWING;
+  HIDING;
+  HIDDEN;
+}
+
 private class PanelHandle
 {
-  public id:String;
-  public panel:Panel;
-  public visible:Bool;
 
-  public function new(id:String, panel:Panel):Void
+  private var manager:PanelManager;
+  private var id:String;
+  private var panel:Panel;
+  private var status:PanelStatus;
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function new(manager:PanelManager, id:String, panel:Panel):Void
   {
+    this.manager = manager;
     this.id = id;
     this.panel = panel;
-    visible = false;
+    status = HIDDEN;
     // end new
   }
 
+  public function removed(manager:PanelManager):Void
+  {
+    if (status == SHOWING)
+      panel.hide(hideComplete);
+    // end removed
+  }
+
+  public function getID():String { return id; }
+  public function getPanel():Panel { return panel; }
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
   public function show(?opts:Dynamic):Void
   {
-    panel.show(opts);
+    if (status != SHOWING) {
+      status = SHOWING;
+      panel.show(opts);
+    } else {
+      Debug.error("Panel " + id + " is already showing.");
+    }
     // end show
+  }
+
+  //------------------------------------------------------------
+  public function hide(?opts:Dynamic):Void
+  {
+    if (status == SHOWING) {
+      status = HIDING;
+      panel.hide(hideComplete, opts);
+    } else {
+      Debug.error("Panel " + id + " is not showing.");
+    }
+    // end hide
+  }
+
+  private function hideComplete():Void
+  {
+    status = HIDDEN;
+    manager.hideComplete(this);
   }
 
   // end PanelHandle
 }
-*/

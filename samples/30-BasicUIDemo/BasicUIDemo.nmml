@@ -12,6 +12,7 @@
   
   <set name="BUILD_DIR" value="bin" />
   <source name="src/" />
+  <source name="../10-RocketHaxeBasicGame/src/" />
 
   <window background="#336699" />
 
@@ -19,7 +20,7 @@
   <window width="640" height="480" orientation="*" resizable="false" />
 
   <!-- Do not include trailing '/' in path! -->
-  <!-- <assets path="assets" include="*" /> -->
+  <assets path="../10-RocketHaxeBasicGame/assets" include="*" rename="assets"/>
 
   <haxelib name="rockethaxe" />
 </project>
