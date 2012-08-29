@@ -24,24 +24,13 @@
 
 package com.rocketshipgames.haxe.ui.widgets;
 
-import nme.events.Event;
-import nme.events.MouseEvent;
-
 import nme.display.DisplayObjectContainer;
-import nme.display.SimpleButton;
-import nme.display.Bitmap;
-import nme.display.BitmapData;
 
 import com.rocketshipgames.haxe.text.TextBitmap;
 
-import com.rocketshipgames.haxe.ui.UIWidget;
-
 class TextBitmapButton
-  extends SimpleButton,
-  implements UIWidget
+  extends Button
 {
-  private var container:DisplayObjectContainer;
-  private var action:Void->Void;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -53,7 +42,6 @@ class TextBitmapButton
                       ?overStyle:Dynamic,
                       ?downStyle:Dynamic):Void
   {
-
     var _up = Reflect.copy(defaultStyle);
     for (f in Reflect.fields(upStyle))
       Reflect.setField(_up, f, Reflect.field(upStyle, f));
@@ -66,72 +54,12 @@ class TextBitmapButton
     for (f in Reflect.fields(downStyle))
       Reflect.setField(_down, f, Reflect.field(downStyle, f));
 
-    var over:Bitmap;
-    super(TextBitmap.makeBitmap(text, _up),
-          (over = TextBitmap.makeBitmap(text, _over)),
-          TextBitmap.makeBitmap(text, _down),
-          over);
-
-    this.container = container;
-    this.action = action;
-
-    addEventListener(MouseEvent.CLICK, click);
-
-    /*
-    addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
-    addEventListener(MouseEvent.MOUSE_UP, mouseUp);
-    addEventListener(MouseEvent.ROLL_OVER, rollOver);
-    addEventListener(MouseEvent.ROLL_OUT, rollOut);
-    */
-
+    super(container, action,
+          TextBitmap.makeBitmap(text, _up),
+          TextBitmap.makeBitmap(text, _over),
+          TextBitmap.makeBitmap(text, _down));
     // end new
   }
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  public function show(?opts:Dynamic):Void
-  {
-    container.addChild(this);
-    // end show
-  }
-
-  public function hide(?opts:Dynamic):Void
-  {
-    container.removeChild(this);
-    nme.Lib.current.stage.focus = nme.Lib.current.stage;
-    // end hide
-  }
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  private function click(e:Event):Void
-  {
-    if (action != null)
-      action();
-    // end click
-  }
-
-  /*
-  private function mouseDown(e:Event):Void
-  {
-    // end mouseUp
-  }
-
-  private function mouseUp(e:Event):Void
-  {
-    // end mouseUp
-  }
-
-  private function rollOver(e:Event):Void
-  {
-    // end rollOver
-  }
-
-  private function rollOut(e:Event):Void
-  {
-    // end rollOut
-  }
-  */
 
   // end TextButton
 }
