@@ -97,6 +97,7 @@ class SoundEffect
     // end setAll
   }
 
+
   //----------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(sound:Sound, replay:Replay = null):Void

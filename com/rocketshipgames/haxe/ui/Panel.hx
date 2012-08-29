@@ -22,10 +22,16 @@
  * SOFTWARE.
  */
 
-package com.rocketshipgames.haxe.game;
+package com.rocketshipgames.haxe.ui;
 
-class GameTimerList
-{
+interface Panel {
 
-  // end GameTimerList
+  function added(manager:PanelManager, id:String):Void;
+  function removed():Void;
+
+  function show(?opts:Dynamic):Void;
+
+  function hide(manager:PanelManager, ?opts:Dynamic):Bool;
+
+  // end Panel
 }
