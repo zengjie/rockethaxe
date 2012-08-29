@@ -41,6 +41,7 @@ class BasicUIDemo
     com.rocketshipgames.haxe.ui.StageUtils.setStandardConfiguration();
 
     ScreenManager.add("main-menu", new MainMenu());
+    ScreenManager.add("main-menu", new MainMenu());
 
     ScreenManager.add
       ("shooter",

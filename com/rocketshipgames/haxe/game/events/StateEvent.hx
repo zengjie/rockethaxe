@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe.game.events;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 import com.rocketshipgames.haxe.World;
 
 import com.rocketshipgames.haxe.game.GameEvent;
@@ -59,7 +61,7 @@ class StateEvent
 
     var a:String = params.get("action");
     if (a == null) {
-      trace("No action in state event.");
+      Debug.error("No action in state event.");
       return;
     }
 

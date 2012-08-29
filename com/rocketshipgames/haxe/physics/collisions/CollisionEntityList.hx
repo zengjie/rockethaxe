@@ -31,6 +31,7 @@
 
 package com.rocketshipgames.haxe.physics.collisions;
 
+import com.rocketshipgames.haxe.debug.Debug;
 
 class CollisionEntityList
 {
@@ -47,7 +48,7 @@ class CollisionEntityList
   public function add(i:CollisionEntity):Void
   {
     if (i.prevCollisionEntity != null || i.nextCollisionEntity != null) {
-      trace("CollisionEntity already in group.");
+      Debug.error("CollisionEntity already in group.");
       return;
     }
 
@@ -67,7 +68,7 @@ class CollisionEntityList
   {
     if ((i.prevCollisionEntity == null && head != i) ||
         (i.nextCollisionEntity == null && tail != i)) {
-      trace("CollisionEntity not in group.");
+      Debug.error("CollisionEntity not in group.");
       return;
     }
 

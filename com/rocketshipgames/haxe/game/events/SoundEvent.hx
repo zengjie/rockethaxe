@@ -26,6 +26,8 @@ package com.rocketshipgames.haxe.game.events;
 
 import nme.Assets;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 import com.rocketshipgames.haxe.sfx.SoundEffect;
 
 import com.rocketshipgames.haxe.game.GameEvent;
@@ -43,7 +45,7 @@ class SoundEvent
                       path:String, params:Hash<String>):Void
   {
     if ((sound = new SoundEffect(Assets.getSound(path))) == null)
-      trace("Could not load sound " + path);
+      Debug.error("Could not load sound " + path);
 
     var d:String;
     if ((d = params.get("loop")) != null && d == "true")

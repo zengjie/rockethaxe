@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 import nme.Lib;
 
 import nme.display.Sprite;
@@ -133,7 +135,7 @@ class GameLoop
   public function addEntity(e:Entity):Entity
   {
     if (e.prevEntity != null || e.nextEntity != null || entitiesHead == e) {
-      trace("Entity already in world.");
+      Debug.error("Entity already in world.");
       return e;
     }
 
@@ -157,7 +159,7 @@ class GameLoop
 
     if ((e.prevEntity == null && entitiesHead != e) ||
         (e.nextEntity == null && entitiesTail != e)) {
-      trace("Entity not in world.");
+      Debug.error("Entity not in world.");
       return;
     }
 

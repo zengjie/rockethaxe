@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe.physics.collisions;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 import com.rocketshipgames.haxe.physics.CollisionEntity;
 
 import com.rocketshipgames.haxe.ds.Heap;
@@ -113,8 +115,6 @@ class SweepScanCollisionContainer
 
     var e:CollisionEntity = group.head;
     while (e != null) {
-      //trace("Heap " + Type.getClassName(Type.getClass(e)) +
-      //      " top " + e.top() + " bottom " + e.bottom());
       heap.add(event = newSweepEvent(TOP, e.top(), e, null, null));
       heap.add(newSweepEvent(BOTTOM, e.bottom(), e, event, null));
 
@@ -133,7 +133,6 @@ class SweepScanCollisionContainer
     var outerAs:Int;
 
     while ((event = heap.pop()) != null) {
-      //trace("Pop " + event.type + " " + event.y + " " + event.entity);
 
       outer = event.entity;
 
@@ -143,8 +142,6 @@ class SweepScanCollisionContainer
         while (scanEvent != null) {
           inner = scanEvent.entity;
 
-          //trace("Scan " + Type.getClassName(Type.getClass(inner)));
-
           innerHit = (((outerAs=outer.collidesAs) & inner.collidesWith) != 0);
           outerHit = (((innerAs=inner.collidesAs) & outer.collidesWith) != 0);
 
@@ -153,9 +150,6 @@ class SweepScanCollisionContainer
                 outer.right() < inner.left() ||
                 outer.top() > inner.bottom() ||
                 outer.bottom() < inner.top())) {
-
-            //trace("Collide " + Type.getClassName(Type.getClass(outer)) + "  " +
-            //      Type.getClassName(Type.getClass(inner)));
 
             if (innerHit)
               inner.collide(outerAs, outer);
@@ -207,25 +201,17 @@ class SweepScanCollisionContainer
     }
 
     if (scanHead != null) {
-      trace("SCAN LIST IS CORRUPTED");
+      Debug.error("SCAN LIST IS CORRUPTED.");
       #if cpp
         Sys.exit(-1);
       #end
     }
     if (heap.hasElements()) {
-      trace("HEAP IS CORRUPTED");
+      Debug.error("HEAP IS CORRUPTED.");
       #if cpp
         Sys.exit(-1);
       #end
     }
-
-    /*
-    if (heap.hasElements() || scan.length > 0) {
-      trace("Heap " + ((heap.hasElements())?"populated":"empty") +
-            "; scan " + ((scan.length > 0)?"populated":"empty"));
-      //Sys.exit(-1);
-    }
-    */
 
     // end collide
   }

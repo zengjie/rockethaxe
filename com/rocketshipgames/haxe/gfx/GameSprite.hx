@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe.gfx;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 class GameSpriteAnimationFrame {
   public var frame:Int;
   public var interval:Int;
@@ -95,11 +97,6 @@ class GameSprite {
   //------------------------------------------------------------
   public function new(name:String, baseIndex:Int, width:Int, height:Int):Void
   {
-    /*
-    trace("New sprite " + name + "[" + baseIndex + "]  " +
-          width + "x" + height);
-    */
-
     this.name = name;
     this.baseIndex = baseIndex;
     this.width = width;
@@ -127,7 +124,7 @@ class GameSprite {
   public function keyframe(label:String):Int
   {
     if (!keyframes.exists(label)) {
-      trace("Unknown keyframe " + label + " in " + name);
+      Debug.error("Unknown keyframe " + label + " in " + name);
       return baseIndex;
     }
     return keyframes.get(label);
@@ -146,7 +143,7 @@ class GameSprite {
   public function animation(label:String):GameSpriteAnimation
   {
     if (!animations.exists(label)) {
-      trace("Unknown animation " + label + " in " + name);
+      Debug.error("Unknown animation " + label + " in " + name);
       return null;
     }
     return animations.get(label);

@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe.game.scenarios;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 import com.rocketshipgames.haxe.text.TextReceiver;
 
 import com.rocketshipgames.haxe.game.GameEvent;
@@ -124,7 +126,7 @@ class TimeOrderedEventScript
       //------------------------------------------------
 
       if (event == null) {
-        trace("Unknown event " + cmd + " or other error parsing.");
+        Debug.error("Unknown event " + cmd + " or other error parsing.");
         continue;
       }
 

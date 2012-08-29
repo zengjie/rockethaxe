@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe.gfx;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 class GameSpriteInstanceList
 {
   public var head:GameSpriteInstance;
@@ -41,7 +43,7 @@ class GameSpriteInstanceList
     if (i.prevGameSpriteInstance != null ||
         i.nextGameSpriteInstance != null ||
         head == i) {
-      trace("GameSpriteInstance already in container.");
+      Debug.error("GameSpriteInstance already in container.");
       return;
     }
 
@@ -62,7 +64,7 @@ class GameSpriteInstanceList
 
     if ((i.prevGameSpriteInstance == null && head != i) ||
         (i.nextGameSpriteInstance == null && tail != i)) {
-      trace("GamespriteInstance not in container.");
+      Debug.error("GamespriteInstance not in container.");
       return;
     }
 

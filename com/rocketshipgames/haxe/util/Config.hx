@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe.util;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 //----------------------------------------------------------------------
 //----------------------------------------------------------------------
 class Section
@@ -109,7 +111,7 @@ class Config
   public function new(xml:String):Void
   {
     if (xml == null) {
-      trace("No XML.");
+      Debug.error("No XML passed to Config.");
       return;
     }
 
@@ -119,7 +121,7 @@ class Config
     var root = Xml.parse(xml).firstElement();
 
     if (root == null) {
-      trace("No XML data.");
+      Debug.error("No XML data parsed from:\n" + xml);
       return;
     }
 

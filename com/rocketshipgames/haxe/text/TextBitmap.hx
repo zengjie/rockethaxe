@@ -170,11 +170,10 @@ class TextBitmap {
       else if (d == "justify")
         justification = TextFormatAlign.JUSTIFY;
       else
-        trace("Unknown justification " + d);
+        Debug.error("Unknown justification " + d);
       // end justification opt
     }
     */
-    //trace("Creating format");
 
     format = new TextFormat(fontName, size, color);
 

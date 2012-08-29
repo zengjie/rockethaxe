@@ -30,6 +30,8 @@ import nme.geom.Point;
 import nme.display.BitmapData;
 import nme.display.Tilesheet;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 import GameSprite.GameSpriteAnimation;
 
 class GameSpriteContainer
@@ -51,12 +53,12 @@ class GameSpriteContainer
   public function new(spritesheet:BitmapData, descriptor:String):Void
   {
     if (spritesheet == null) {
-      trace("GameSpriteContainer must be given spritesheet BitmapData.");
+      Debug.error("GameSpriteContainer must be given spritesheet BitmapData.");
       return;
     }
 
     if (descriptor == null) {
-      trace("GameSpriteContainer must be given spritesheet XML description.");
+      Debug.error("GameSpriteContainer must be given spritesheet XML description.");
       return;
     }
 
@@ -99,11 +101,6 @@ class GameSpriteContainer
           if (cmd.has.framewidth) width = Std.parseInt(cmd.att.framewidth);
           if (cmd.has.frameheight) height = Std.parseInt(cmd.att.frameheight);
 
-          /*
-          trace("  Found " + rows + "x" + columns + " grid at " +
-                basex + "," + basey + " -- " + width + "," + height);
-          */
-
           var cx:Float = width/2;
           var cy:Float = height/2;
           var x:Int;
@@ -114,11 +111,6 @@ class GameSpriteContainer
             for (c in 0...columns) {
               addTileRect(new Rectangle(x, y, width, height),
                           new Point(cx, cy));
-              /*
-              trace("    Added " + index + "  " + x + "," + y + " -- " +
-                    width + "," + height +
-                    " [" + cx + "," + cy + "]");
-              */
 
               index++;
               x += width;
@@ -146,11 +138,6 @@ class GameSpriteContainer
           var cy:Float = height/2;
           addTileRect(new Rectangle(x, y, width, height),
                       new Point(cx, cy));
-          /*
-          trace("    Added " + index + "[" + label +"]  " + x + "," + y +
-                " -- " + width + "," + height +
-                " [" + cx + "," + cy + "]");
-          */
 
           if (label != null)
             data.setKeyframe(label, index);
@@ -165,10 +152,6 @@ class GameSpriteContainer
 
           data.setKeyframe(label, baseIndex+indice);
 
-          /*
-          trace("  Keyframe " + label + " -> " + indice +
-                " ("+ (baseIndex+indice) +")");
-          */
 
           // end keyframe command
         } else if (cmd.name == 'animation') {
@@ -215,11 +198,6 @@ class GameSpriteContainer
             // end looping animation commands
           }
 
-          /*
-          trace("    Animation " + anim.name + " " +
-                anim.numFrames() + " frames");
-          */
-
           // end animation command
         }
 
@@ -227,7 +205,6 @@ class GameSpriteContainer
       }
 
       data.numFrames = index - baseIndex;
-      // trace("  Total " + data.numFrames + " frames");
 
       baseIndex = index;
       // end looping sprite declarations

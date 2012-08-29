@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe.ui;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 class PanelManager {
 
   //------------------------------------------------------------
@@ -48,7 +50,7 @@ class PanelManager {
   public function add(id:String, panel:Panel):Panel
   {
     if (panels.get(id) != null) {
-      trace("Panel " + id + " already exists!");
+      Debug.error("Panel " + id + " already exists!");
       return null;
     }
 
@@ -62,7 +64,7 @@ class PanelManager {
   {
     var panel:Panel;
     if ((panel = panels.get(id)) == null) {
-      trace("Unknown panel " + id);
+      Debug.error("Unknown panel " + id);
       return;
     }
 
@@ -77,7 +79,7 @@ class PanelManager {
   {
     var panel:Panel;
     if ((panel = panels.get(id)) == null) {
-      trace("Unknown panel " + id);
+      Debug.error("Unknown panel " + id);
       return;
     }
 
@@ -88,7 +90,7 @@ class PanelManager {
     }
 
     if (panel == current) {
-      trace("Panel " + id + " is already showing.");
+      Debug.error("Panel " + id + " is already showing.");
       return;
     }
 
@@ -108,12 +110,12 @@ class PanelManager {
   {
     var panel:Panel;
     if ((panel = panels.get(id)) == null) {
-      trace("Unknown panel " + id);
+      Debug.error("Unknown panel " + id);
       return;
     }
 
     if (panel != current) {
-      trace("Panel " + id + "is not currently showing.");
+      Debug.error("Panel " + id + "is not currently showing.");
       return;
     }
 
@@ -125,11 +127,11 @@ class PanelManager {
   public function hideComplete(panel:Panel):Void
   {
     if (current == null) {
-      trace("No panel is currently showing.");
+      Debug.error("No panel is currently showing.");
     }
 
     if (panel != current) {
-      trace("Panel reporting hide complete is not currently showing.");
+      Debug.error("Panel reporting hide complete is not currently showing.");
     }
 
     if (next != null) {

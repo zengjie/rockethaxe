@@ -24,6 +24,8 @@
 
 package com.rocketshipgames.haxe.util;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 import nme.display.DisplayObject;
 
 #if flash
@@ -46,7 +48,7 @@ class Analytics
       tracker = new GATracker(gameRoot, gameID, "AS3", false);
       event("load");
     } catch (e:Dynamic) {
-      trace("Could not connect to analytics: " + e);
+      Debug.error("Could not connect to analytics: " + e);
     }
     // end connect
   }
@@ -67,7 +69,7 @@ class Analytics
     try {
       tracker.trackEvent(game, eventID, str);
     } catch (e:Dynamic) {
-      trace("Could not post to analytics: " + e);
+      Debug.error("Could not post to analytics: " + e);
     }
 
     // end event
@@ -91,7 +93,7 @@ class Analytics
     try {
       tracker.trackPageview(str);
     } catch (e:Dynamic) {
-      trace("Could not post to analytics: " + e);
+      Debug.error("Could not post to analytics: " + e);
     }
 
     // end pageView
