@@ -34,8 +34,11 @@ import nme.display.BitmapData;
 
 import com.rocketshipgames.haxe.text.TextBitmap;
 
+import com.rocketshipgames.haxe.ui.UIWidget;
+
 class TextBitmapButton
-  extends SimpleButton
+  extends SimpleButton,
+  implements UIWidget
 {
   private var container:DisplayObjectContainer;
   private var action:Void->Void;
@@ -73,6 +76,8 @@ class TextBitmapButton
     this.action = action;
 
     addEventListener(MouseEvent.CLICK, click);
+
+    trace("Width is " + width);
 
     /*
     addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);

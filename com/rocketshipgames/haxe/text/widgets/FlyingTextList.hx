@@ -77,9 +77,6 @@ class FlyingTextList
 
   public var verticalJustification:FlyingTextVerticalDirection;
 
-  public var predecorator:BitmapData->Void = null;
-  public var postdecorator:BitmapData->Void = null;
-
   //------------------------------------------------------------
   private var texts:List<FlyingText> = null;
   private var cursor:Iterator<FlyingText>;
@@ -161,7 +158,7 @@ class FlyingTextList
   //------------------------------------------------------------
   public function receiveText(text:String, opts:Dynamic=null)
   {
-    texts.add(new FlyingText(text, opts, predecorator, postdecorator));
+    texts.add(new FlyingText(text, opts));
     // end receiveText
   }
 
@@ -332,9 +329,7 @@ private class FlyingText {
 
   public var bitmap:Bitmap = null;
 
-  public function new(text:String, opts:Dynamic=null,
-                      predecorator:BitmapData->Void = null,
-                      postdecorator:BitmapData->Void = null):Void
+  public function new(text:String, opts:Dynamic=null):Void
   {
     this.text = text;
     flyinDirection = FLY_DEFAULT;
@@ -394,8 +389,7 @@ private class FlyingText {
     }
 
 
-    bitmap = TextBitmap.makeBitmap(this.text, opts,
-                                   predecorator, postdecorator);
+    bitmap = TextBitmap.makeBitmap(this.text, opts);
     // end new
   }
 
