@@ -161,7 +161,6 @@ class TextBitmap {
 
 
       if ((d = Reflect.field(opts, "borderWidth")) != null) {
-        trace("Has a border.");
         borderLeftWidth = borderRightWidth = borderTopWidth = borderBottomWidth =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
@@ -269,13 +268,17 @@ class TextBitmap {
 
     var w:Int;
     if (width == 0)
-      w = Std.int(tf.width) + paddingLeft + paddingRight;
+      w = Std.int(tf.width) +
+        paddingLeft + paddingRight +
+        borderLeftWidth + borderRightWidth;
     else
       w = width;
 
     var h:Int;
     if (height == 0)
-      h = Std.int(tf.height) + paddingTop + paddingBottom;
+      h = Std.int(tf.height) +
+        paddingTop + paddingBottom +
+        borderTopWidth + borderBottomWidth;
     else
       h = height;
 
@@ -316,11 +319,14 @@ class TextBitmap {
 
     //-- Actually draw the text
     var matrix:Matrix = new Matrix();
-    matrix.translate(paddingLeft, paddingTop);
     if (format.align == TextFormatAlign.CENTER) {
-      matrix.translate((w-tf.width)/2, 0);
+      matrix.translate((w-tf.width)/2, paddingTop+borderTopWidth);
     } else if (format.align == TextFormatAlign.RIGHT) {
-      matrix.translate(w-tf.width, 0);
+      matrix.translate(w-(tf.width+paddingRight+borderRightWidth),
+                       paddingTop+borderTopWidth);
+    } else {
+      matrix.translate(paddingLeft+borderLeftWidth,
+                       paddingTop+borderTopWidth);
     }
     bitmap.draw(tf, matrix);
 

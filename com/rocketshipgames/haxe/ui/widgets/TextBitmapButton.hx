@@ -77,8 +77,6 @@ class TextBitmapButton
 
     addEventListener(MouseEvent.CLICK, click);
 
-    trace("Width is " + width);
-
     /*
     addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
     addEventListener(MouseEvent.MOUSE_UP, mouseUp);
@@ -91,17 +89,16 @@ class TextBitmapButton
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function show():Void
+  public function show(?opts:Dynamic):Void
   {
-    trace("Showing button");
     container.addChild(this);
     // end show
   }
 
-  public function hide():Void
+  public function hide(?opts:Dynamic):Void
   {
-    trace("Hiding button");
     container.removeChild(this);
+    nme.Lib.current.stage.focus = nme.Lib.current.stage;
     // end hide
   }
 
@@ -109,7 +106,6 @@ class TextBitmapButton
   //------------------------------------------------------------
   private function click(e:Event):Void
   {
-    trace("Click");
     if (action != null)
       action();
     // end click
@@ -118,25 +114,21 @@ class TextBitmapButton
   /*
   private function mouseDown(e:Event):Void
   {
-    trace("Mouse down");
     // end mouseUp
   }
 
   private function mouseUp(e:Event):Void
   {
-    trace("Mouse up");
     // end mouseUp
   }
 
   private function rollOver(e:Event):Void
   {
-    trace("Roll over");
     // end rollOver
   }
 
   private function rollOut(e:Event):Void
   {
-    trace("Roll out");
     // end rollOut
   }
   */

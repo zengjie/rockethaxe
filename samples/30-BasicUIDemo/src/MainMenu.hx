@@ -24,44 +24,61 @@
 
 import nme.events.KeyboardEvent;
 
+import nme.text.TextFormatAlign;
+
 import com.rocketshipgames.haxe.ui.ScreenManager;
 import com.rocketshipgames.haxe.ui.Panel;
 import com.rocketshipgames.haxe.ui.widgets.MinimalPanel;
 import com.rocketshipgames.haxe.ui.PanelManager;
 
 import com.rocketshipgames.haxe.ui.widgets.TextBitmapButton;
+import com.rocketshipgames.haxe.ui.widgets.LinearUIWidgetList;
+
+import com.rocketshipgames.haxe.gfx.Orientation;
+import com.rocketshipgames.haxe.gfx.HorizontalAlignment;
+import com.rocketshipgames.haxe.gfx.VerticalAlignment;
+import com.rocketshipgames.haxe.gfx.GrowthDirection;
 
 class MainMenu
   implements Panel
 {
 
-  var button:TextBitmapButton;
-  var button2:TextBitmapButton;
+  var uiList:LinearUIWidgetList;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new():Void
   {
-    button = new TextBitmapButton
-      (nme.Lib.current.stage, gotoGame, "Play Game",
-       { borderWidth: 2, padding: 4 },
-       { bgcolor: 0xffffffff, color: 0xff000000 },
-       { bgcolor: 0xff000000, color: 0xffffffff },
-       { bgcolor: 0xff000000, color: 0xff333333 }
-       );
+    uiList = new LinearUIWidgetList
+      (320, 240,
+       { orientation: VERTICAL,
+         horizontalAlignment: HorizontalAlignment.CENTER,
+         verticalAlignment: VerticalAlignment.MIDDLE,
+       });
 
-    button.x = nme.Lib.current.stage.stageWidth/2;
-    button.y = nme.Lib.current.stage.stageHeight/2;
-
-    button2 = new TextBitmapButton
-      (nme.Lib.current.stage, null, "Goto Sub-Menu",
-       { borderWidth: 2, borderTopWidth: 0, padding: 4 },
-       { bgcolor: 0xffffffff, color: 0xff000000 },
-       { bgcolor: 0xff000000, color: 0xffffffff },
-       { bgcolor: 0xff000000, color: 0xff333333 }
-       );
-    button2.x = nme.Lib.current.stage.stageWidth/2;
-    button2.y = nme.Lib.current.stage.stageHeight/2 + 24;
+    uiList.add(new TextBitmapButton
+               (nme.Lib.current.stage, gotoGame, "Play Game",
+                { borderWidth: 2, padding: 2, justification:TextFormatAlign.LEFT},
+                { bgcolor: 0xffffffff, color: 0xff000000 },
+                { bgcolor: 0xff000000, color: 0xffffffff },
+                { bgcolor: 0xff000000, color: 0xff333333 }
+                ));
+    uiList.add(new TextBitmapButton
+               (nme.Lib.current.stage, doSettings, "Settings",
+                { borderWidth: 2, borderTopWidth: 0,
+                    padding: 2, justification:TextFormatAlign.LEFT },
+                { bgcolor: 0xffffffff, color: 0xff000000 },
+                { bgcolor: 0xff000000, color: 0xffffffff },
+                { bgcolor: 0xff000000, color: 0xff333333 }
+                ));
+    uiList.add(new TextBitmapButton
+               (nme.Lib.current.stage, doAbout, "About",
+                { borderWidth: 2, borderTopWidth: 0,
+                    padding: 2, justification:TextFormatAlign.LEFT },
+                { bgcolor: 0xffffffff, color: 0xff000000 },
+                { bgcolor: 0xff000000, color: 0xffffffff },
+                { bgcolor: 0xff000000, color: 0xff333333 }
+                ));
     // end new
   }
 
@@ -77,16 +94,15 @@ class MainMenu
 
     nme.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 
-    button.show();
-    button2.show();
+    uiList.show();
     // end button
   }
 
   public function hide(onComplete:PanelNotifier, ?opts:Dynamic):Void
   {
     trace("Hiding main menu");
-    button.hide();
-    button2.hide();
+
+    uiList.hide();
 
     nme.Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN,
                                               onKeyDown);
@@ -105,6 +121,18 @@ class MainMenu
   {
     ScreenManager.show("shooter");
     // end gotoGame
+  }
+
+  private function doSettings():Void
+  {
+    trace("SETTINGS!");
+    // end doSettings
+  }
+
+  private function doAbout():Void
+  {
+    trace("ABOUT!");
+    // end doAbout
   }
 
   // end MainMenu
