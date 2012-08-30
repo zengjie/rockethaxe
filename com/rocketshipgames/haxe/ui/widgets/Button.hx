@@ -112,7 +112,7 @@ class Button
   //------------------------------------------------------------
   private function click(e:Event):Void
   {
-    trace("Click");
+    //trace("Click");
     if (action != null)
       action();
     // end click
@@ -120,7 +120,7 @@ class Button
 
   private function mouseDown(e:Event):Void
   {
-    trace("Down");
+    //trace("Down");
     if (state != DOWN) {
       state = DOWN;
       updateGraphicState();
@@ -130,7 +130,7 @@ class Button
 
   private function mouseUp(e:Event):Void
   {
-    trace("Up");
+    //trace("Up");
     if (state != OVER) {
       state = OVER;
       updateGraphicState();
@@ -140,7 +140,7 @@ class Button
 
   private function rollOver(e:Event):Void
   {
-    trace("Roll over");
+    //trace("Roll over");
     if (state != OVER) {
       state = OVER;
       updateGraphicState();
@@ -150,7 +150,7 @@ class Button
 
   private function rollOut(e:Event):Void
   {
-    trace("Roll out");
+    //trace("Roll out");
     if (state != UP) {
       state = UP;
       updateGraphicState();
