@@ -60,7 +60,7 @@ class Mouse {
   private static var prevIdleTimestamp:Int;
   private static var idled:Bool = false;
 
-  private static var container:DisplayObjectContainer = nme.Lib.current.stage;
+  private static var container:DisplayObjectContainer;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -78,16 +78,17 @@ class Mouse {
     if (installed)
       return;
 
-    var stage = nme.Lib.current.stage;
-    stage.addEventListener(MouseEvent.MOUSE_MOVE, update);
-    stage.addEventListener(MouseEvent.ROLL_OVER, show);
-    stage.addEventListener(MouseEvent.ROLL_OUT, hide);
-
-    cursor.x = stage.mouseX;
-    cursor.y = stage.mouseY;
+    nme.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE, update);
+    nme.Lib.current.stage.addEventListener(MouseEvent.ROLL_OVER, show);
+    nme.Lib.current.stage.addEventListener(Event.MOUSE_LEAVE, hide);
 
     if (c != null)
       container = c;
+    else
+      container = nme.Lib.current.stage;
+
+    cursor.x = container.mouseX;
+    cursor.y = container.mouseY;
 
     container.addChild(cursor);
     installed = true;
@@ -102,10 +103,8 @@ class Mouse {
       return;
 
     nme.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, update);
-    /*
-    stage.removeEventListener(MouseEvent.ROLL_OVER, show);
-    stage.removeEventListener(Event.MOUSE_LEAVE, hide);
-    */
+    nme.Lib.current.stage.removeEventListener(MouseEvent.ROLL_OVER, show);
+    nme.Lib.current.stage.removeEventListener(Event.MOUSE_LEAVE, hide);
 
     container.removeChild(cursor);
     installed = false;
