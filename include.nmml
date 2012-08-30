@@ -2,7 +2,7 @@
 
 <project>
   <!-- Do not include trailing '/' in path! -->
-  <assets path="assets/fonts" rename="assets/fonts" include="*" />
+  <assets path="assets" rename="assets" include="*" />
 
   <section if="flash">
     <source name="lib/google/analytics_flash/hxclasses/" />

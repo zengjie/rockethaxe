@@ -53,13 +53,21 @@ class MainMenu
   implements Panel
 {
 
-  var uiList:LinearUIWidgetList;
-
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(container:DisplayObjectContainer):Void
   {
     super();
+
+    var uiList:LinearUIWidgetList;
+
+    var style:Dynamic =
+      { borderWidth: 2, borderBottomWidth: 0, padding: 2,
+        justification:TextFormatAlign.LEFT,
+      };
+    var upColors:Dynamic = { bgcolor: 0xffffffff, color: 0xff000000 };
+    var overColors:Dynamic = { bgcolor: 0xff000000, color: 0xffffffff };
+    var downColors:Dynamic = { bgcolor: 0xff000000, color: 0xff333333 };
 
     uiList = new LinearUIWidgetList
       (320, 240,
@@ -70,27 +78,41 @@ class MainMenu
 
     uiList.add(new TextBitmapButton
                (this, gotoGame, "Play Game",
-                { borderWidth: 2, padding: 2, justification:TextFormatAlign.LEFT},
-                { bgcolor: 0xffffffff, color: 0xff000000 },
-                { bgcolor: 0xff000000, color: 0xffffffff },
-                { bgcolor: 0xff000000, color: 0xff333333 }
-                ));
+                style, upColors, overColors, downColors));
     uiList.add(new TextBitmapButton
                (this, doSettings, "Settings",
-                { borderWidth: 2, borderTopWidth: 0,
-                    padding: 2, justification:TextFormatAlign.LEFT },
-                { bgcolor: 0xffffffff, color: 0xff000000 },
-                { bgcolor: 0xff000000, color: 0xffffffff },
-                { bgcolor: 0xff000000, color: 0xff333333 }
-                ));
+                style, upColors, overColors, downColors));
     uiList.add(new TextBitmapButton
                (this, doAbout, "About",
-                { borderWidth: 2, borderTopWidth: 0,
-                    padding: 2, justification:TextFormatAlign.LEFT },
-                { bgcolor: 0xffffffff, color: 0xff000000 },
-                { bgcolor: 0xff000000, color: 0xffffffff },
-                { bgcolor: 0xff000000, color: 0xff333333 }
-                ));
+                style, upColors, overColors, downColors));
+    uiList.add(new TextBitmapButton
+               (this, doHelp, "Help!",
+                style, upColors, overColors, downColors));
+
+    var uiList2:LinearUIWidgetList;
+    uiList2 = new LinearUIWidgetList
+      (0, 0,
+       { orientation: HORIZONTAL,
+         horizontalAlignment: HorizontalAlignment.LEFT,
+         verticalAlignment: VerticalAlignment.TOP,
+       });
+
+    Reflect.deleteField(style, "borderBottomWidth");
+    uiList2.add(new TextBitmapButton
+               (this, null, "Sponsor",
+                style, upColors, overColors, downColors));
+    uiList2.add(new TextBitmapButton
+               (this,
+                function() {
+                 nme.Lib.getURL
+                   (new nme.net.URLRequest("http://rocketshipgames.com"));
+                },
+                "rocketshipgames.com",
+                style, upColors, overColors, downColors));
+    uiList2.add(new TextBitmapButton
+               (this, null, "Sponsor",
+                style, upColors, overColors, downColors));
+    uiList.add(uiList2);
 
     container.addChild(this);
 
@@ -109,15 +131,16 @@ class MainMenu
 
     nme.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 
-    Mouse.setCursor(Assets.getBitmapData("assets/cursor.png"), this);
-    Mouse.enableIdleHide();
+    Mouse.i().enable();
+
     // end button
   }
 
   public function hide(onComplete:PanelNotifier, ?opts:Dynamic):Void
   {
     trace("Hiding main menu");
-    Mouse.disableIdleHide();
+
+    Mouse.i().disable();
 
     nme.Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN,
                                               onKeyDown);
@@ -125,7 +148,6 @@ class MainMenu
     Actuate.tween(this, 1, {alpha: 0})
       .onComplete(function() {
           parent.removeChild(this);
-          Mouse.disableCursor();
           onComplete();
         });
 
@@ -149,12 +171,21 @@ class MainMenu
   private function doSettings():Void
   {
     trace("SETTINGS!");
+    Mouse.i().setCursorHand();
     // end doSettings
   }
 
   private function doAbout():Void
   {
     trace("ABOUT!");
+    Mouse.i().setCursorMiniPointer();
+    // end doAbout
+  }
+
+  private function doHelp():Void
+  {
+    trace("HELP!");
+    Mouse.i().setCursor();
     // end doAbout
   }
 

@@ -29,13 +29,11 @@ import com.rocketshipgames.haxe.gfx.HorizontalAlignment;
 import com.rocketshipgames.haxe.gfx.VerticalAlignment;
 import com.rocketshipgames.haxe.gfx.GrowthDirection;
 
-class LinearUIWidgetList {
+import com.rocketshipgames.haxe.ui.UIWidget;
 
-  public var x:Float;
-  public var y:Float;
-
-  public var width:Float;
-  public var height:Float;
+class LinearUIWidgetList
+  implements UIWidget
+{
 
   //------------------------------------------------------------
   private var orientation:Orientation;
@@ -47,6 +45,12 @@ class LinearUIWidgetList {
   private var margin:Float;
 
   private var widgets:List<UIWidget>;
+
+  private var x:Float;
+  private var y:Float;
+
+  private var width:Float;
+  private var height:Float;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -115,9 +119,35 @@ class LinearUIWidgetList {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
+  //------------------------------------------------------------
+  public function getX():Float { return x; }
+  public function getY():Float { return y; }
+
+  public function setX(x:Float):Float
+  {
+    for (w in widgets)
+      w.setX(w.getX() + (x-this.x));
+    this.x = x;
+    return x;
+    // end setX
+  }
+
+  public function setY(y:Float):Float
+  {
+    for (w in widgets)
+      w.setY(w.getY() + (y-this.y));
+    this.y = y;
+    return y;
+    // end setY
+  }
+
+  public function getWidth():Float { return width; }
+  public function getHeight():Float { return height; }
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
   public function add(widget:UIWidget):Void
   {
-    var prev:UIWidget = widgets.last();
 
     switch (growth) {
     case FORWARD:
@@ -133,18 +163,18 @@ class LinearUIWidgetList {
 
       width = -margin;
       for (w in widgets)
-        width += w.width + margin;
-      height = Math.max(widget.height, height);
+        width += w.getWidth() + margin;
+      height = Math.max(widget.getHeight(), height);
 
       switch (verticalAlignment) {
       case TOP:
-        widget.y = y;
+        widget.setY(y);
 
       case MIDDLE:
-        widget.y = y - widget.height /2;
+        widget.setY(y - widget.getHeight()/2);
 
       case BOTTOM:
-        widget.y = y - widget.height;
+        widget.setY(y - widget.getHeight());
         // end vertical alignment
       }
 
@@ -152,21 +182,21 @@ class LinearUIWidgetList {
       case LEFT:
         var tx:Float = x;
         for (w in widgets) {
-          w.x = tx;
-          tx += w.width + margin;
+          w.setX(tx);
+          tx += w.getWidth() + margin;
         }
 
       case CENTER:
         var tx:Float = x-width/2;
         for (w in widgets) {
-          w.x = tx;
-          tx += w.width + margin;
+          w.setX(tx);
+          tx += w.getWidth() + margin;
         }
 
       case RIGHT:
         var tx:Float = x;
         for (w in widgets) {
-          w.x = tx -= w.width;
+          w.setX(tx -= w.getWidth());
           tx -= margin;
         }
 
@@ -176,41 +206,41 @@ class LinearUIWidgetList {
 
     case VERTICAL:
 
-      width = Math.max(widget.width, width);
+      width = Math.max(widget.getWidth(), width);
       height = -margin;
       for (w in widgets)
-        height += w.height + margin;
+        height += w.getHeight() + margin;
 
       switch (horizontalAlignment) {
       case LEFT:
-        widget.x = x;
+        widget.setX(x);
 
       case CENTER:
-        widget.x = x - widget.width / 2;
+        widget.setX(x - widget.getWidth()/2);
 
       case RIGHT:
-        widget.x = x - widget.width;
+        widget.setX(x - widget.getWidth());
       }
 
       switch (verticalAlignment) {
       case TOP:
         var ty:Float = y;
         for (w in widgets) {
-          w.y = ty;
-          ty += w.height + margin;
+          w.setY(ty);
+          ty += w.getHeight() + margin;
         }
 
       case MIDDLE:
         var ty:Float = y-height/2;
         for (w in widgets) {
-          w.y = ty;
-          ty += w.height + margin;
+          w.setY(ty);
+          ty += w.getHeight() + margin;
         }
 
       case BOTTOM:
         var ty:Float = y;
         for (w in widgets) {
-          w.y = ty -= w.height;
+          w.setY(ty -= w.getHeight());
           ty -= margin;
         }
 

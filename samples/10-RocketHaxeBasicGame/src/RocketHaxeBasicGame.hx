@@ -71,7 +71,7 @@ class RocketHaxeBasicGame
     // Play a zero volume sound to get the sound system loaded.
     new SoundEffect(Assets.getSound("assets/explosion.wav")).play(false, 0);
 
-    com.rocketshipgames.haxe.ui.Mouse.hide();
+    com.rocketshipgames.haxe.ui.Mouse.i().disable();
 
     addGraphicsContainer(spriteContainer =
                          new GameSpriteContainer

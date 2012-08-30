@@ -27,11 +27,14 @@ package com.rocketshipgames.haxe.ui;
 
 interface UIWidget {
 
-  var x:Float;
-  var y:Float;
+  function getX():Float;
+  function setX(x:Float):Float;
 
-  var width:Float;
-  var height:Float;
+  function getY():Float;
+  function setY(y:Float):Float;
+
+  function getWidth():Float;
+  function getHeight():Float;
 
   function show(?opts:Dynamic):Void;
   function hide(?opts:Dynamic):Void;
