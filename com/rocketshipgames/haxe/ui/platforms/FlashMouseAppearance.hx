@@ -60,6 +60,7 @@ class FlashMouseAppearance
   public function disable():Void
   {
     nme.ui.Mouse.cursor = MouseCursor.AUTO;
+    nme.ui.Mouse.hide();
     // end disable
   }
 

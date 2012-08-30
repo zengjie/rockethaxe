@@ -105,8 +105,12 @@ class Mouse {
   {
     nme.ui.Mouse.hide();
 
-    if (installed)
+    if (installed) {
+      if (cursor != null)
+        appearance.setCursor(cursor, hotspotX, hotspotY);
+      show();
       return;
+    }
 
     var stage = nme.Lib.current.stage;
     stage.addEventListener(Event.ENTER_FRAME,           onEnterFrame);
@@ -136,8 +140,10 @@ class Mouse {
   //------------------------------------------------------------
   public function disable():Void
   {
-    if (!installed)
+    if (!installed) {
+      nme.ui.Mouse.hide();
       return;
+    }
 
     appearance.disable();
 
