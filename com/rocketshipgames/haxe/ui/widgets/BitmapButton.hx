@@ -26,40 +26,57 @@ package com.rocketshipgames.haxe.ui.widgets;
 
 import nme.display.DisplayObjectContainer;
 
-import com.rocketshipgames.haxe.text.TextBitmap;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
 
-class TextBitmapButton
-  extends BitmapButton
+import com.rocketshipgames.haxe.ui.widgets.Button;
+
+
+class BitmapButton
+  extends Button
 {
+
+  private var bitmap:Bitmap;
+
+  private var upBitmap:BitmapData;
+  private var overBitmap:BitmapData;
+  private var downBitmap:BitmapData;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(container:DisplayObjectContainer,
                       action:Void->Void,
-                      text:String,
-                      ?defaultStyle:Dynamic,
-                      ?upStyle:Dynamic,
-                      ?overStyle:Dynamic,
-                      ?downStyle:Dynamic):Void
+                      upBitmap:BitmapData,
+                      overBitmap:BitmapData = null,
+                      downBitmap:BitmapData = null):Void
   {
-    var _up = Reflect.copy(defaultStyle);
-    for (f in Reflect.fields(upStyle))
-      Reflect.setField(_up, f, Reflect.field(upStyle, f));
+    super(container, action);
 
-    var _over = Reflect.copy(defaultStyle);
-    for (f in Reflect.fields(overStyle))
-      Reflect.setField(_over, f, Reflect.field(overStyle, f));
+    this.upBitmap = upBitmap;
+    this.overBitmap = (overBitmap != null) ? overBitmap : upBitmap;
+    this.downBitmap = (downBitmap != null) ? downBitmap : upBitmap;
 
-    var _down = Reflect.copy(defaultStyle);
-    for (f in Reflect.fields(downStyle))
-      Reflect.setField(_down, f, Reflect.field(downStyle, f));
-
-    super(container, action,
-          TextBitmap.makeBitmapData(text, _up),
-          TextBitmap.makeBitmapData(text, _over),
-          TextBitmap.makeBitmapData(text, _down));
+    addChild(bitmap = new Bitmap(upBitmap));
     // end new
   }
 
-  // end TextButton
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  private override function updateGraphicState():Void
+  {
+    switch (state) {
+    case UP:
+      bitmap.bitmapData = upBitmap;
+
+    case OVER:
+      bitmap.bitmapData = overBitmap;
+
+    case DOWN:
+      bitmap.bitmapData = downBitmap;
+    }
+    // end updateGraphicState
+  }
+
+  // end BitmapButton
 }

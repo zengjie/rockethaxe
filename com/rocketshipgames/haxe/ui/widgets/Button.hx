@@ -35,11 +35,16 @@ package com.rocketshipgames.haxe.ui.widgets;
 import nme.events.Event;
 import nme.events.MouseEvent;
 
-import nme.display.DisplayObject;
 import nme.display.DisplayObjectContainer;
 import nme.display.Sprite;
 
 import com.rocketshipgames.haxe.ui.UIWidget;
+
+enum ButtonState {
+  UP;
+  OVER;
+  DOWN;
+}
 
 class Button
   extends Sprite,
@@ -48,30 +53,19 @@ class Button
   private var container:DisplayObjectContainer;
   private var action:Void->Void;
 
-  private var upGraphic:DisplayObject;
-  private var overGraphic:DisplayObject;
-  private var downGraphic:DisplayObject;
+  private var state:ButtonState;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(container:DisplayObjectContainer,
-                      action:Void->Void,
-                      upGraphic:DisplayObject,
-                      overGraphic:DisplayObject,
-                      downGraphic:DisplayObject):Void
+                      action:Void->Void):Void
   {
     super();
 
-    this.upGraphic = upGraphic;
-    this.overGraphic = overGraphic;
-    this.downGraphic = downGraphic;
-
-    addChild(upGraphic);
-    addChild(overGraphic);
-    addChild(downGraphic);
-
     this.container = container;
     this.action = action;
+
+    state = UP;
 
     addEventListener(MouseEvent.CLICK, click);
 
@@ -80,8 +74,7 @@ class Button
     addEventListener(MouseEvent.ROLL_OVER, rollOver);
     addEventListener(MouseEvent.ROLL_OUT, rollOut);
 
-    show();
-
+    container.addChild(this);
     // end new
   }
 
@@ -95,13 +88,16 @@ class Button
   public function getWidth():Float { return width; }
   public function getHeight():Float { return height; }
 
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  private function updateGraphicState():Void {}
+
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function show(?opts:Dynamic):Void
   {
-    upGraphic.visible = true;
-    overGraphic.visible = false;
-    downGraphic.visible = false;
     container.addChild(this);
     // end show
   }
@@ -116,7 +112,7 @@ class Button
   //------------------------------------------------------------
   private function click(e:Event):Void
   {
-    //trace("Click");
+    trace("Click");
     if (action != null)
       action();
     // end click
@@ -124,37 +120,41 @@ class Button
 
   private function mouseDown(e:Event):Void
   {
-    //trace("Down");
-    upGraphic.visible = false;
-    overGraphic.visible = false;
-    downGraphic.visible = true;
+    trace("Down");
+    if (state != DOWN) {
+      state = DOWN;
+      updateGraphicState();
+    }
     // end mouseUp
   }
 
   private function mouseUp(e:Event):Void
   {
-    //trace("Up");
-    upGraphic.visible = false;
-    overGraphic.visible = true;
-    downGraphic.visible = false;
+    trace("Up");
+    if (state != OVER) {
+      state = OVER;
+      updateGraphicState();
+    }
     // end mouseUp
   }
 
   private function rollOver(e:Event):Void
   {
-    //trace("Roll over");
-    upGraphic.visible = false;
-    overGraphic.visible = true;
-    downGraphic.visible = false;
+    trace("Roll over");
+    if (state != OVER) {
+      state = OVER;
+      updateGraphicState();
+    }
     // end rollOver
   }
 
   private function rollOut(e:Event):Void
   {
-    //trace("Roll out");
-    upGraphic.visible = true;
-    overGraphic.visible = false;
-    downGraphic.visible = false;
+    trace("Roll out");
+    if (state != UP) {
+      state = UP;
+      updateGraphicState();
+    }
     // end rollOut
   }
 
