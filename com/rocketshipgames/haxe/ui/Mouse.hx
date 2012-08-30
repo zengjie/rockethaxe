@@ -24,31 +24,36 @@
 
 package com.rocketshipgames.haxe.ui;
 
-import nme.Assets;
-
 import nme.events.Event;
 import nme.events.MouseEvent;
 
-import nme.display.Bitmap;
-import nme.display.BitmapData;
 
-import com.eclecticdesignstudio.motion.Actuate;
+interface MouseAppearanceWrapper {
+
+  public function enable(?cursor:String, ?hotspotX:Float, ?hotspotY:Float):Void;
+  public function disable():Void;
+
+  public function updateVisibility(visibility:Bool):Void;
+  public function updatePosition(x:Float, y:Float):Void;
+  public function idleOut():Void;
+
+  function setCursor(?asset:String, ?hotspotX:Float, ?hotspotY:Float):Void;
+
+  // end MouseAppearanceWrapper
+}
 
 
 class Mouse {
 
-  public static var CURSOR_POINTER:BitmapData;
-
-  public static var CURSOR_MINIPOINTER:BitmapData;
-
-  public static var CURSOR_HAND:BitmapData;
-  public static inline var CURSOR_HAND_X:Float = -6;
+  public static var CURSOR_POINTER:String = "assets/ui/cursor-pointer.png";
+  public static var CURSOR_MINIPOINTER:String =
+    "assets/ui/cursor-minipointer.png";
+  public static var CURSOR_HAND:String = "assets/ui/cursor-hand.png";
+  public static inline var CURSOR_HAND_X:Float = 6;
   public static inline var CURSOR_HAND_Y:Float = 0;
-
 
   public static inline var DEFAULT_IDLE_TIMEOUT:Int = 5000;
 
-  public var cursor(default, null):Bitmap;
 
   //------------------------------------------------------------
   private static var instance:Mouse = new Mouse();
@@ -59,40 +64,34 @@ class Mouse {
 
   private var installed:Bool;
 
-  private var offX:Float;
-  private var offY:Float;
-
   private var idleEnabled:Bool;
   private var idleTimeout:Int;
   private var idleClock:Int;
   private var idleTimestamp:Int;
 
-  private var fading:Bool;
+  private var appearance:MouseAppearanceWrapper;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   private function new():Void
   {
-
-    CURSOR_POINTER = CURSOR_MINIPOINTER = CURSOR_HAND = null;
+    installed = false;
 
     offscreen = true;
     idle = true;
     visibleRequested = false;
 
-    cursor = new Bitmap();
-    cursor.visible = false;
-
-    offX = 0;
-    offY = 0;
-
     idleEnabled = true;
     idleTimeout = DEFAULT_IDLE_TIMEOUT;
     idleClock = idleTimeout;
 
-    fading = false;
-
-    installed = false;
+    #if flash
+      appearance =
+        new com.rocketshipgames.haxe.ui.platforms.FlashMouseAppearance();
+    #else
+      appearance =
+        new com.rocketshipgames.haxe.ui.platforms.DefaultMouseAppearance();
+    #end
 
     // end new
   }
@@ -102,38 +101,32 @@ class Mouse {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function enable(?cursor:BitmapData,
-                         ?offX:Float, ?offY:Float):Void
+  public function enable(?cursor:String, ?hotspotX:Float, ?hotspotY:Float):Void
   {
     nme.ui.Mouse.hide();
-
-    CURSOR_POINTER = Assets.getBitmapData("assets/ui/cursor-pointer.png");
-    CURSOR_MINIPOINTER=Assets.getBitmapData("assets/ui/cursor-minipointer.png");
-    CURSOR_HAND = Assets.getBitmapData("assets/ui/cursor-hand.png");
 
     if (installed)
       return;
 
-    nme.Lib.current.stage.addEventListener(Event.ENTER_FRAME,
-                                           onEnterFrame);
-    nme.Lib.current.stage.addEventListener(Event.MOUSE_LEAVE,
-                                           mouseLeave);
-    nme.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE,
-                                           mouseMove);
+    var stage = nme.Lib.current.stage;
+    stage.addEventListener(Event.ENTER_FRAME,           onEnterFrame);
 
-    nme.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN,
-                                           notIdle);
-    nme.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP,
-                                           notIdle);
-    nme.Lib.current.stage.addEventListener(MouseEvent.ROLL_OVER,
-                                           notIdle);
+    stage.addEventListener(Event.MOUSE_LEAVE,           mouseLeave);
 
-    setCursor(cursor, offX, offY);
+    // Thought this might be sent in cpp target to capture leaving the
+    // stage, but it does not seem to
+    //stage.addEventListener(MouseEvent.ROLL_OUT,         mouseLeave);
 
-    idleTimestamp = nme.Lib.getTimer();
+    stage.addEventListener(MouseEvent.MOUSE_MOVE,       mouseMove);
 
-    nme.Lib.current.stage.addChild(this.cursor);
+    stage.addEventListener(MouseEvent.MOUSE_DOWN,       notIdle);
+    stage.addEventListener(MouseEvent.MOUSE_UP,         notIdle);
+    stage.addEventListener(MouseEvent.ROLL_OVER,        notIdle);
+
+    appearance.enable(cursor, hotspotX, hotspotY);
+
     installed = true;
+    idleTimestamp = nme.Lib.getTimer();
 
     show();
 
@@ -146,61 +139,49 @@ class Mouse {
     if (!installed)
       return;
 
-    nme.Lib.current.stage.removeEventListener(Event.ENTER_FRAME,
-                                              onEnterFrame);
-    nme.Lib.current.stage.removeEventListener(Event.MOUSE_LEAVE,
-                                              mouseLeave);
-    nme.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE,
-                                              mouseMove);
+    appearance.disable();
 
-    nme.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_DOWN,
-                                              notIdle);
-    nme.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP,
-                                              notIdle);
-    nme.Lib.current.stage.removeEventListener(MouseEvent.ROLL_OVER,
-                                              notIdle);
+    var stage = nme.Lib.current.stage;
+    stage.removeEventListener(Event.ENTER_FRAME,        onEnterFrame);
 
-    nme.Lib.current.stage.removeChild(cursor);
+    stage.removeEventListener(Event.MOUSE_LEAVE,        mouseLeave);
+
+    // Thought this might be sent in cpp target to capture leaving the
+    // stage, but it does not seem to
+    //stage.removeEventListener(MouseEvent.ROLL_OUT,    mouseLeave);
+
+    stage.removeEventListener(MouseEvent.MOUSE_MOVE,    mouseMove);
+
+    stage.removeEventListener(MouseEvent.MOUSE_DOWN,    notIdle);
+    stage.removeEventListener(MouseEvent.MOUSE_UP,      notIdle);
+    stage.removeEventListener(MouseEvent.ROLL_OVER,     notIdle);
+
     installed = false;
     // end enable
   }
 
   //------------------------------------------------------------
-  public function setCursor(cursor:BitmapData = null,
-                            offX:Float = 0, offY:Float=0):Void
+  public function setCursor(?asset:String, ?hotspotX:Float, ?hotspotY:Float):Void
   {
-    if (cursor == null)
-      this.cursor.bitmapData = CURSOR_POINTER;
-    else
-      this.cursor.bitmapData = cursor;
-
-    this.cursor.x -= this.offX;
-    this.cursor.y -= this.offY;
-
-    this.offX = offX;
-    this.offY = offY;
-
-    this.cursor.x += this.offX;
-    this.cursor.y += this.offY;
-
+    appearance.setCursor(asset, hotspotX, hotspotY);
     // end setCursor
   }
 
   public function setCursorHand():Void
   {
-    setCursor(CURSOR_HAND, CURSOR_HAND_X, CURSOR_HAND_Y);
+    appearance.setCursor(CURSOR_HAND, CURSOR_HAND_X, CURSOR_HAND_Y);
     // end setCursorHand
   }
 
   public function setCursorPointer():Void
   {
-    setCursor(CURSOR_POINTER, 0, 0);
+    appearance.setCursor(CURSOR_POINTER, 0, 0);
     // end setCursorDefault
   }
 
   public function setCursorMiniPointer():Void
   {
-    setCursor(CURSOR_MINIPOINTER, 0, 0);
+    appearance.setCursor(CURSOR_MINIPOINTER, 0, 0);
     // end setCursorDefault
   }
 
@@ -238,7 +219,6 @@ class Mouse {
 
   public function hide(e:Event = null):Void
   {
-    nme.Lib.current.stage.removeChild(cursor);
     visibleRequested = false;
     updateVisibility();
     // end show
@@ -247,16 +227,9 @@ class Mouse {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  private inline function updateVisibility():Void
+  public inline function updateVisibility():Void
   {
-    cursor.visible = visibleRequested && !(offscreen || idle);
-    if (cursor.visible) {
-      if (fading) {
-        Actuate.stop(cursor, {alpha: null}, false, false);
-        fading = false;
-      }
-      cursor.alpha = 1;
-    }
+    appearance.updateVisibility(visibleRequested && !(offscreen || idle));
     // end updateVisibility
   }
 
@@ -277,8 +250,7 @@ class Mouse {
 
     if (!idle && idleClock <= 0) {
       idle = true;
-      fading = true;
-      Actuate.tween(cursor, 4, {alpha: 0});
+      appearance.idleOut();
     }
     // end onEnterFrameIdle
   }
@@ -286,9 +258,10 @@ class Mouse {
   //------------------------------------------------------------
   private function mouseLeave(e:Event):Void
   {
-    offscreen = true;
-    updateVisibility();
-
+    if (!offscreen) {
+      offscreen = true;
+      updateVisibility();
+    }
     // e.updateAfterEvent();
     // end mouseLeave
   }
@@ -296,8 +269,7 @@ class Mouse {
   //------------------------------------------------------------
   private function mouseMove(e:MouseEvent):Void
   {
-    cursor.x = e.stageX + offX;
-    cursor.y = e.stageY + offY;
+    appearance.updatePosition(e.stageX, e.stageY);
 
     offscreen = false;
     resetIdle();
