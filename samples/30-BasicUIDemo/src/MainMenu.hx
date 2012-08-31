@@ -48,16 +48,21 @@ import com.rocketshipgames.haxe.gfx.GrowthDirection;
 
 import com.rocketshipgames.haxe.ui.Mouse;
 
+
 class MainMenu
   extends Sprite,
   implements Panel
 {
+
+  //------------------------------------------------------------
+  private var container:DisplayObjectContainer;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(container:DisplayObjectContainer):Void
   {
     super();
+    this.container = container;
 
     var uiList:LinearUIWidgetList;
 
@@ -114,7 +119,7 @@ class MainMenu
                 style, upColors, overColors, downColors));
     uiList.add(uiList2);
 
-    container.addChild(this);
+    uiList.show();
 
     // end new
   }
@@ -129,9 +134,11 @@ class MainMenu
   {
     trace("Showing main menu.");
 
+    container.addChild(this);
+
     nme.Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 
-    Mouse.i().enable();
+    Mouse.enable();
 
     // end button
   }
@@ -140,7 +147,7 @@ class MainMenu
   {
     trace("Hiding main menu");
 
-    Mouse.i().disable();
+    Mouse.disable();
 
     nme.Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN,
                                               onKeyDown);
@@ -171,21 +178,21 @@ class MainMenu
   private function doSettings():Void
   {
     trace("SETTINGS!");
-    Mouse.i().setCursorHand();
+    Mouse.setCursorHand();
     // end doSettings
   }
 
   private function doAbout():Void
   {
     trace("ABOUT!");
-    Mouse.i().setCursorMiniPointer();
+    Mouse.setCursorMiniPointer();
     // end doAbout
   }
 
   private function doHelp():Void
   {
     trace("HELP!");
-    Mouse.i().setCursor();
+    Mouse.setCursor();
     // end doAbout
   }
 

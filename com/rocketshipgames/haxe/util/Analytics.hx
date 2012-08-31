@@ -115,12 +115,12 @@ class Analytics
     // end connect
   }
 
-  public static function event(eventID:String):Void
+  public static function event(eventID:String, vars:Dynamic=null):Void
   {
     // end event
   }
 
-  public static function pageView(eventID:String):Void
+  public static function pageView(eventID:String, vars:Dynamic=null):Void
   {
     // end page
   }

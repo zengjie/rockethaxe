@@ -74,7 +74,6 @@ class Button
     addEventListener(MouseEvent.ROLL_OVER, rollOver);
     addEventListener(MouseEvent.ROLL_OUT, rollOut);
 
-    container.addChild(this);
     // end new
   }
 

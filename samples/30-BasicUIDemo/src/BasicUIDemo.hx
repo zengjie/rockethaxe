@@ -44,10 +44,6 @@ class BasicUIDemo
     super();
     trace("Basic UI Demo");
 
-    com.rocketshipgames.haxe.ui.StageUtils.setStandardConfiguration();
-
-    nme.Lib.current.stage.addChild(this);
-
     //-- Set up the screens
     ScreenManager.add("main-menu", new MainMenu(this));
 
@@ -73,6 +69,7 @@ class BasicUIDemo
     //-- Show the main menu
     ScreenManager.show("main-menu");
 
+    nme.Lib.current.stage.addChild(this);
     // end new
   }
 
@@ -80,6 +77,8 @@ class BasicUIDemo
   //------------------------------------------------------------
   static public function main():Void
   {
+    com.rocketshipgames.haxe.gfx.Screen.configureStandard();
+
     new BasicUIDemo();
     // end main
   }

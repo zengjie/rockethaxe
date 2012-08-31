@@ -24,8 +24,14 @@
 
 import nme.Assets;
 
+// Provides a helper to configure the screen coordinate system, as
+// well as the screen dimensions prescribed by the build.
+import com.rocketshipgames.haxe.gfx.Screen;
+
+
 import com.rocketshipgames.haxe.World;
 import com.rocketshipgames.haxe.Timer;
+
 
 import com.rocketshipgames.haxe.gfx.GameSpriteContainer;
 
@@ -41,6 +47,7 @@ import com.rocketshipgames.haxe.debug.DebugConsole;
 import com.rocketshipgames.haxe.debug.FPSDisplay;
 
 import com.rocketshipgames.haxe.sfx.SoundEffect;
+
 
 class RocketHaxeBasicGame
   extends com.rocketshipgames.haxe.GameLoop
@@ -64,14 +71,9 @@ class RocketHaxeBasicGame
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new(width:Float, height:Float):Void
+  public function new(?width:Float, ?height:Float):Void
   {
     super(width, height);
-
-    // Play a zero volume sound to get the sound system loaded.
-    new SoundEffect(Assets.getSound("assets/explosion.wav")).play(false, 0);
-
-    com.rocketshipgames.haxe.ui.Mouse.i().disable();
 
     addGraphicsContainer(spriteContainer =
                          new GameSpriteContainer
@@ -168,7 +170,7 @@ class RocketHaxeBasicGame
       SoundEffect.setAll(mute);
     }
 
-
+    // Check for collisions and apply responses
     collisionContainer.collide();
 
     // end update
@@ -180,22 +182,41 @@ class RocketHaxeBasicGame
   static public function main()
   {
 
-    com.rocketshipgames.haxe.ui.StageUtils.setStandardConfiguration();
+    //-- Do some basic setup and initialization
 
-    var game:RocketHaxeBasicGame = new RocketHaxeBasicGame(640, 480);
+    // Configure the stage to use standard game conventions.
+    Screen.configureStandard();
+
+    // Play a zero volume sound to get the sound system going.
+    new SoundEffect(Assets.getSound("assets/explosion.wav")).play(false, 0);
+
+    // Turn off the mouse.
+    com.rocketshipgames.haxe.ui.Mouse.disable();
+
+
+    //-- Create the game and put it on stage!
+    var game:RocketHaxeBasicGame = new RocketHaxeBasicGame();
     nme.Lib.current.stage.addChild(game);
 
-    #if flash
-      new DebugConsole();
-    #end
 
-    nme.Lib.current.stage.addChild
-      (new com.rocketshipgames.haxe.debug.FPSDisplay(0xffffff, 540));
+    //-- Setup some debugging stuff
 
+    // Change the display of trace() so that messages timeout
+    new com.rocketshipgames.haxe.debug.DebugConsole();
+
+    // Add FPS display
+    new com.rocketshipgames.haxe.debug.FPSDisplay
+      (0xffffff,
+       Screen.width,
+       com.rocketshipgames.haxe.gfx.HorizontalAlignment.RIGHT);
+
+
+    //-- Explain how to play
     trace("Arrows move, space shoots");
     trace("Press T for entity count");
     trace("Press +/- to launch asteroids");
-    trace("Press M to toggle sound; default is "+((game.mute)?"":"un")+"muted");
+    trace("Press M to toggle sound; default is " +
+          ((game.mute)?"":"un") + "muted");
 
     // end main
   }

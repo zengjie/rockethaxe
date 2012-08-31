@@ -34,10 +34,17 @@ import nme.events.Event;
 
 import nme.text.TextField;
 import nme.text.TextFormat;
+import nme.text.TextFormatAlign;
 import nme.text.TextFieldAutoSize;
 
-class EventRateDisplay extends TextField {
+import com.rocketshipgames.haxe.gfx.HorizontalAlignment;
 
+
+class EventRateDisplay
+  extends TextField
+{
+
+  //------------------------------------------------------------
   private var events:Int;
   private var prevEvents:Int;
 
@@ -45,46 +52,87 @@ class EventRateDisplay extends TextField {
 
   private var label:String;
 
-  private static var stack:Float = 0.0;
+  private static var stack:Float = 0;
 
-  private var fontName:String = null;
+  private var align:HorizontalAlignment;
 
-  public function new(labelText:String,
+  private var baseX:Float;
+  private var baseY:Float;
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function new(label:String,
                       color:Int=0xffffff,
-                      posx:Float=0, posy:Float=-1):Void
+                      x:Float=0, y:Float=-1,
+                      align:HorizontalAlignment=null):Void
   {
     super();
+    this.label = label;
 
-    if (fontName == null) {
-      var font = Assets.getFont("assets/fonts/nokiafc22.ttf");
-      if (font != null)
-        fontName = font.fontName;
-      else
-        fontName = "sans";
-    }
+    if (x < 0)
+      x += com.rocketshipgames.haxe.gfx.Screen.width;
+    baseX = x;
 
-    label = labelText;
-
-    x = posx;
-
-    if (posy < 0) {
+    if (y < 0)
       y = stack;
-    } else {
-      y = posy;
-    }
+    baseY = y;
 
+    if (align == null)
+      align = LEFT;
+    this.align = align;
+
+
+    /*
+    private var fontName:String = "sans";
+    var font = Assets.getFont("assets/fonts/nokiafc22.ttf");
+    if (font != null)
+      fontName = font.fontName;
+    else
+      fontName = "sans";
+    */
+
+    //-- Create the actual textfield and put into display
     autoSize = LEFT;
-    defaultTextFormat = new TextFormat(fontName, 8, color, true);
-    htmlText = label + ": 0";
+    defaultTextFormat = new TextFormat("sans", 8, color, true);
+    text = label + ": 0";
     multiline = false;
     selectable = false;
-    stack += textHeight;
 
+    adjustPosition();
+
+    nme.Lib.current.stage.addChild(this);
+
+
+    //-- Prepared to track events
     eventTimes = [];
     events = prevEvents = 0;
+
+
+    //-- Setup for the next display
+    stack += textHeight;
+
     // end new
   }
 
+  //------------------------------------------------------------
+  private function adjustPosition():Void
+  {
+    switch (align) {
+    case LEFT:
+      x = baseX;
+
+    case CENTER:
+      x = baseX - textWidth/2;
+
+    case RIGHT:
+      x = baseX - (textWidth+4);
+    }
+    // end adjustPosition
+  }
+
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
   public function event():Void
   {
     var t = nme.Lib.getTimer() / 1000.0;
@@ -96,7 +144,8 @@ class EventRateDisplay extends TextField {
 
     if (visible && (prevEvents != events)) {
       prevEvents = events;
-      htmlText = label + ": " + events;
+      text = label + ": " + events;
+      adjustPosition();
     }
     // end onEnterFrame
   }

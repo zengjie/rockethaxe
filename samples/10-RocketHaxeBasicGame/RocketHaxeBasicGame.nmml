@@ -13,10 +13,11 @@
   <set name="BUILD_DIR" value="bin" />
   <source name="src/" />
 
-  <window background="#000000" />
 
-  <window fps="60" />
-  <window width="640" height="480" orientation="*" resizable="false" />
+  <window background="#336699" if="debug" />
+  <window background="#000000" unless="debug" />
+
+  <window width="640" height="480" fps="60" orientation="*" resizable="false" />
 
   <!-- Do not include trailing '/' in path! -->
   <assets path="assets" include="*" />

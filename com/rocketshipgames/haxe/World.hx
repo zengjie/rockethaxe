@@ -28,14 +28,15 @@ interface World
   implements TimerContainer
 {
 
-  var worldWidth:Float;
-  var worldHeight:Float;
+  var worldWidth(default,null):Float;
+  var worldHeight(default,null):Float;
 
-  var screenWidth:Int;
-  var screenHeight:Int;
+  var displayWidth(default,null):Int;
+  var displayHeight(default,null):Int;
 
-  var time:Int;
-  var elapsed:Int;
+  var time(default,null):Int;
+  var elapsed(default,null):Int;
+
 
   public function addEntity(e:Entity):Entity;
   public function removeEntity(e:Entity):Void;

@@ -69,7 +69,8 @@ class DefaultMouseAppearance
 
   public function disable():Void
   {
-    nme.Lib.current.stage.removeChild(cursor);
+    if (nme.Lib.current.stage.contains(cursor))
+      nme.Lib.current.stage.removeChild(cursor);
     // end disable
   }
 

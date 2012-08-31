@@ -24,9 +24,11 @@
 
 package com.rocketshipgames.haxe;
 
-import com.rocketshipgames.haxe.debug.Debug;
-
 import nme.Lib;
+
+import com.rocketshipgames.haxe.gfx.Screen;
+
+import com.rocketshipgames.haxe.debug.Debug;
 
 import nme.display.Sprite;
 import nme.events.Event;
@@ -45,20 +47,21 @@ class GameLoop
 {
 
   //------------------------------------------------------------
-  public var worldWidth:Float = 0;
-  public var worldHeight:Float = 0;
+  public var worldWidth(default,null):Float;
+  public var worldHeight(default,null):Float;
 
-  public var screenWidth:Int = 0;
-  public var screenHeight:Int = 0;
+  public var displayWidth(default,null):Int;
+  public var displayHeight(default,null):Int;
 
-  public var time:Int = 0;
-  public var elapsed:Int = 0;
+  public var time(default,null):Int;
+  public var elapsed(default,null):Int;
 
-  public var entityCount:Int;
+  public var entityCount(default,null):Int;
+
+  public var pauseOnUnfocus:Bool;
+
 
   //------------------------------------------------------------
-  private var prevFrameTimestamp:Int;
-
   private var graphicsContainers:List<GraphicsContainer>;
 
   private var entitiesTail:Entity;
@@ -70,21 +73,40 @@ class GameLoop
 
   private var paused:Bool;
 
+  private var prevFrameTimestamp:Int;
+
   //------------------------------------------------------------
-  public function new(width:Float = 0, height:Float = 0):Void
+  public function new(worldWidth:Float=0, worldHeight:Float=0,
+                      displayWidth:Int=0, displayHeight:Int=0):Void
   {
     super();
 
-    if (width == 0)
-      screenWidth = Std.int(worldWidth = Lib.current.stage.stageWidth);
+    //-- Setup the world dimensions
+    if (worldWidth == 0)
+      this.worldWidth = Screen.width;
     else
-      screenWidth = Std.int(worldWidth = width);
+      this.worldWidth = worldWidth;
 
-    if (height == 0)
-      screenHeight = Std.int(worldHeight = Lib.current.stage.stageHeight);
+    if (worldHeight == 0)
+      this.worldHeight = Screen.height;
     else
-      screenHeight = Std.int(worldHeight = height);
+      this.worldHeight = worldHeight;
 
+
+    //-- Setup the display dimensions; note this isn't necessarily the
+    //   same as the screen dimensions, hence the option.
+    if (displayWidth == 0)
+      this.displayWidth = Std.int(this.worldWidth);
+    else
+      this.displayWidth = displayWidth;
+
+    if (displayHeight == 0)
+      this.displayHeight = Std.int(this.worldHeight);
+    else
+      this.displayHeight = displayHeight;
+
+
+    //-- Setup the basic game containers
     graphicsContainers = new List();
 
     entitiesHead = entitiesTail = null;
@@ -94,6 +116,16 @@ class GameLoop
     states = new Hash();
     timers = new List();
 
+
+    //-- Setup the game clocks and initial state
+    time = 0;
+    elapsed = 0;
+
+    pauseOnUnfocus = true;
+    paused = true;
+
+
+    //-- Setup the events that make everything happen
     var stage = Lib.current.stage;
     stage.addEventListener(Event.ADDED, onAdded);
     stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -101,8 +133,6 @@ class GameLoop
     stage.addEventListener(KeyboardEvent.KEY_UP, Keyboard.onKeyUp);
     stage.addEventListener(Event.ACTIVATE, onActivate);
     stage.addEventListener(Event.DEACTIVATE, onDeactivate);
-
-    paused = true;
 
     // end new
   }
@@ -297,8 +327,11 @@ class GameLoop
   public function setPaused(paused:Bool = true)
   {
     if (!paused && this.paused) {
+      // If we're starting back up, we need to adjust the clock so
+      // that the game doesn't warp speed ahead the paused interval.
       prevFrameTimestamp = Lib.getTimer();
     }
+
     this.paused = paused;
     // end pause
   }

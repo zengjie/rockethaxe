@@ -22,20 +22,37 @@
  * SOFTWARE.
  */
 
-package com.rocketshipgames.haxe.ui;
+package com.rocketshipgames.haxe.gfx;
 
 import nme.display.StageAlign;
 import nme.display.StageScaleMode;
 
-class StageUtils
+
+class Screen
 {
 
-  public static function setStandardConfiguration():Void
+  public static var width(default,null):Float;
+  public static var height(default,null):Float;
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public static function configure(align:StageAlign, scale:StageScaleMode):Void
   {
-    nme.Lib.current.stage.align = StageAlign.TOP_LEFT;
-    nme.Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-    // end setStandardConfiguration
+    width = nme.Lib.current.stage.stageWidth;
+    height = nme.Lib.current.stage.stageHeight;
+
+    nme.Lib.current.stage.align = align;
+    nme.Lib.current.stage.scaleMode = scale;
+    // end configure
   }
 
-  // end StageUtils
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public static function configureStandard():Void
+  {
+    configure(StageAlign.TOP_LEFT, StageScaleMode.NO_SCALE);
+    // end StandardConfiguration
+  }
+
+  // end Screen
 }

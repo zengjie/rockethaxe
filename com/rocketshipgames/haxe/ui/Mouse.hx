@@ -56,52 +56,30 @@ class Mouse {
 
 
   //------------------------------------------------------------
-  private static var instance:Mouse = new Mouse();
+  private static var offscreen:Bool = true;
+  private static var idle:Bool = true;
+  private static var visibleRequested:Bool = false;
 
-  private var offscreen:Bool;
-  private var idle:Bool;
-  private var visibleRequested:Bool;
+  private static var installed:Bool = false;
 
-  private var installed:Bool;
+  private static var idleEnabled:Bool = true;
+  private static var idleTimeout:Int = DEFAULT_IDLE_TIMEOUT;
+  private static var idleClock:Int = DEFAULT_IDLE_TIMEOUT;
+  private static var idleTimestamp:Int;
 
-  private var idleEnabled:Bool;
-  private var idleTimeout:Int;
-  private var idleClock:Int;
-  private var idleTimestamp:Int;
-
-  private var appearance:MouseAppearanceWrapper;
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  private function new():Void
-  {
-    installed = false;
-
-    offscreen = true;
-    idle = true;
-    visibleRequested = false;
-
-    idleEnabled = true;
-    idleTimeout = DEFAULT_IDLE_TIMEOUT;
-    idleClock = idleTimeout;
-
-    #if flash
-      appearance =
-        new com.rocketshipgames.haxe.ui.platforms.FlashMouseAppearance();
-    #else
-      appearance =
-        new com.rocketshipgames.haxe.ui.platforms.DefaultMouseAppearance();
-    #end
-
-    // end new
-  }
-
-  public static function i():Mouse { return instance; }
+  #if flash
+    private static var appearance:MouseAppearanceWrapper =
+      new com.rocketshipgames.haxe.ui.platforms.FlashMouseAppearance();
+  #else
+    private static var appearance:MouseAppearanceWrapper =
+      new com.rocketshipgames.haxe.ui.platforms.DefaultMouseAppearance();
+  #end
 
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function enable(?cursor:String, ?hotspotX:Float, ?hotspotY:Float):Void
+  public static function enable(?cursor:String,
+                                ?hotspotX:Float, ?hotspotY:Float):Void
   {
     nme.ui.Mouse.hide();
 
@@ -138,14 +116,13 @@ class Mouse {
   }
 
   //------------------------------------------------------------
-  public function disable():Void
+  public static function disable():Void
   {
+    appearance.disable();
+
     if (!installed) {
-      nme.ui.Mouse.hide();
       return;
     }
-
-    appearance.disable();
 
     var stage = nme.Lib.current.stage;
     stage.removeEventListener(Event.ENTER_FRAME,        onEnterFrame);
@@ -166,34 +143,38 @@ class Mouse {
     // end enable
   }
 
+
+  //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function setCursor(?asset:String, ?hotspotX:Float, ?hotspotY:Float):Void
+  public static function setCursor(?asset:String,
+                                   ?hotspotX:Float, ?hotspotY:Float):Void
   {
     appearance.setCursor(asset, hotspotX, hotspotY);
     // end setCursor
   }
 
-  public function setCursorHand():Void
+  public static function setCursorHand():Void
   {
     appearance.setCursor(CURSOR_HAND, CURSOR_HAND_X, CURSOR_HAND_Y);
     // end setCursorHand
   }
 
-  public function setCursorPointer():Void
+  public static function setCursorPointer():Void
   {
     appearance.setCursor(CURSOR_POINTER, 0, 0);
     // end setCursorDefault
   }
 
-  public function setCursorMiniPointer():Void
+  public static function setCursorMiniPointer():Void
   {
     appearance.setCursor(CURSOR_MINIPOINTER, 0, 0);
     // end setCursorDefault
   }
 
 
+  //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function setIdleTimeout(timeout:Int = 0):Void {
+  public static function setIdleTimeout(timeout:Int = 0):Void {
     idleEnabled = true;
 
     if (timeout == 0)
@@ -207,7 +188,7 @@ class Mouse {
     // end enableIdle
   }
 
-  public function disableIdle():Void
+  public static function disableIdle():Void
   {
     idleEnabled = false;
     // end disableIdle
@@ -216,14 +197,14 @@ class Mouse {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function show(e:Event = null):Void
+  public static function show(e:Event = null):Void
   {
     visibleRequested = true;
     updateVisibility();
     // end show
   }
 
-  public function hide(e:Event = null):Void
+  public static function hide(e:Event = null):Void
   {
     visibleRequested = false;
     updateVisibility();
@@ -233,22 +214,23 @@ class Mouse {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public inline function updateVisibility():Void
+  public static inline function updateVisibility():Void
   {
     appearance.updateVisibility(visibleRequested && !(offscreen || idle));
     // end updateVisibility
   }
 
-  private function resetIdle():Void
+  private static function resetIdle():Void
   {
     idleClock = idleTimeout;
     idle = false;
     // end resetIdle
   }
 
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  private function onEnterFrame(e:Event=null):Void
+  private static function onEnterFrame(e:Event=null):Void
   {
     var currTime:Int = nme.Lib.getTimer();
     idleClock -= currTime - idleTimestamp;
@@ -262,7 +244,7 @@ class Mouse {
   }
 
   //------------------------------------------------------------
-  private function mouseLeave(e:Event):Void
+  private static function mouseLeave(e:Event):Void
   {
     if (!offscreen) {
       offscreen = true;
@@ -273,7 +255,7 @@ class Mouse {
   }
 
   //------------------------------------------------------------
-  private function mouseMove(e:MouseEvent):Void
+  private static function mouseMove(e:MouseEvent):Void
   {
     appearance.updatePosition(e.stageX, e.stageY);
 
@@ -286,7 +268,7 @@ class Mouse {
   }
 
   //------------------------------------------------------------
-  private function notIdle(e:MouseEvent):Void
+  private static function notIdle(e:MouseEvent):Void
   {
     offscreen = false;
     resetIdle();

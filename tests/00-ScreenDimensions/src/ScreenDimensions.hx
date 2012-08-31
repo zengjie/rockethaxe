@@ -22,35 +22,45 @@
  * SOFTWARE.
  */
 
-/*
- * Originally derived from utility in NME-RunnerMark by Philippe Elsass.
- */
+// import nme.display.Shape;
 
-package com.rocketshipgames.haxe.debug;
+import nme.display.StageAlign;
+import nme.display.StageScaleMode;
 
-import nme.Lib;
+class ScreenDimensions
+{
 
-import nme.text.TextField;
-import nme.text.TextFormat;
-import nme.events.Event;
-
-import com.rocketshipgames.haxe.gfx.HorizontalAlignment;
-
-
-class FPSDisplay extends EventRateDisplay {
-
-  public function new(?color:Int,
-                      ?x:Float, ?y:Float,
-                      ?align:HorizontalAlignment):Void
+  public static function main():Void
   {
-    super("FPS", color, x, y, align);
-    addEventListener(Event.ENTER_FRAME, onEnterFrame);
-    // end new
+    //trace("Stage w,h is " + nme.Lib.current.stage.stageWidth + "x" +
+    //      nme.Lib.current.stage.stageHeight);
+    trace("Stage w,h is " + nme.Lib.current.stage.stageWidth + "x" +
+          nme.Lib.current.stage.stageHeight);
+
+    nme.Lib.current.stage.align = StageAlign.TOP_LEFT;
+    nme.Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+
+    trace("Stage w,h is " + nme.Lib.current.stage.stageWidth + "x" +
+          nme.Lib.current.stage.stageHeight);
+
+
+    /*
+    var circle:Shape = new Shape();
+    circle.graphics.beginFill(0xFFFF0000);
+    circle.graphics.drawCircle(0, 0, 10);
+    circle.graphics.endFill();
+    nme.Lib.current.stage.addChild(circle);
+
+    circle = new Shape();
+    circle.graphics.beginFill(0xFFFF0000);
+    circle.graphics.drawCircle
+      (nme.Lib.current.stage.stageWidth, nme.Lib.current.stage.stageHeight, 10);
+    circle.graphics.endFill();
+    nme.Lib.current.stage.addChild(circle);
+    */
+
+    // end main
   }
 
-  private function onEnterFrame(_):Void {
-    event();
-  }
-
-  // end FPSDisplay
+  // end ScreenDimensions
 }
