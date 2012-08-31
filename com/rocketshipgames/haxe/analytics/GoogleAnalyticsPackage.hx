@@ -22,38 +22,46 @@
  * SOFTWARE.
  */
 
-package com.rocketshipgames.haxe.util;
+package com.rocketshipgames.haxe.analytics;
 
 import com.rocketshipgames.haxe.debug.Debug;
 
 import nme.display.DisplayObject;
 
-#if flash
 import com.google.analytics.AnalyticsTracker; 
 import com.google.analytics.GATracker;
 
-class Analytics
+
+class GoogleAnalyticsPackage
+  implements AnalyticsPackage
 {
 
-  private static var tracker:AnalyticsTracker = null;
-  private static var game:String;
-  private static var error:Dynamic;
+  private var tracker:AnalyticsTracker;
+  private var category:String;
 
-  public static function connect(gameRoot:DisplayObject,
-                          gameID:String,
-                          gameLabel:String):Void
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function new(container:DisplayObject,
+                      propertyID:String,
+                      category:String):Void
   {
-    game = gameLabel;
+    this.category = category;
+
     try {
-      tracker = new GATracker(gameRoot, gameID, "AS3", false);
-      event("load");
+      tracker = new GATracker(container, propertyID, "AS3", false);
     } catch (e:Dynamic) {
-      Debug.error("Could not connect to analytics: " + e);
+      Debug.error("Could not connect to Google Analytics: " + e);
     }
-    // end connect
+
+    // end new
   }
 
-  public static function event(eventID:String, vars:Dynamic=null):Void
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function event(eventID:String,
+                        vars:Dynamic=null,
+                        ?value:Float=null):Void
   {
     if (tracker == null || !tracker.isReady())
       return;
@@ -67,20 +75,27 @@ class Analytics
     }
 
     try {
-      tracker.trackEvent(game, eventID, str);
+      tracker.trackEvent(category, eventID, str, value);
+      #if debug
+        trace("Event " + category + ":" + eventID + " -> " +
+              str + ((value != null) ? (" " + value) : ""));
+      #end
     } catch (e:Dynamic) {
-      Debug.error("Could not post to analytics: " + e);
+      Debug.error("Could not post to Google Analytics: " + e);
     }
 
     // end event
   }
 
-  public static function pageView(eventID:String, vars:Dynamic=null):Void
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function pageView(eventID:String, vars:Dynamic=null):Void
   {
     if (tracker == null || !tracker.isReady())
       return;
 
-    var str:String = "/"+game+"/"+eventID;
+    var str:String = "/"+category+"/"+eventID;
     if (vars != null) {
       str += "?";
 
@@ -92,41 +107,15 @@ class Analytics
 
     try {
       tracker.trackPageview(str);
+      #if debug
+        trace("Pageview " + str);
+      #end
     } catch (e:Dynamic) {
-      Debug.error("Could not post to analytics: " + e);
+      Debug.error("Could not post to Google Analytics: " + e);
     }
 
     // end pageView
   }
 
-  // end Analytics
+  // end GoogleAnalyticsPackage
 }
-
-// end flash
-#else
-
-class Analytics
-{
-
-  public static function connect(root:DisplayObject,
-                          gameID:String,
-                          gameLabel:String):Void
-  {
-    // end connect
-  }
-
-  public static function event(eventID:String, vars:Dynamic=null):Void
-  {
-    // end event
-  }
-
-  public static function pageView(eventID:String, vars:Dynamic=null):Void
-  {
-    // end page
-  }
-
-  // end Analytics
-}
-
-#end
-
