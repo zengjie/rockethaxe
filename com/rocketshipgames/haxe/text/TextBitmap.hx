@@ -59,6 +59,8 @@ class TextBitmap {
   private var color:Int;
   private var bgcolor:Int;
 
+  private var underline:Bool;
+
   private var width:Int;
   private var height:Int;
 
@@ -89,6 +91,8 @@ class TextBitmap {
     size = defaultSize;
     color = defaultColor;
     bgcolor = defaultBackgroundColor;
+
+    underline = false;
 
     width = 0;
     height = 0;
@@ -130,6 +134,10 @@ class TextBitmap {
        */
       if ((d = Reflect.field(opts, "bgcolor")) != null) {
         bgcolor = (Std.is(d, String)) ? Std.parseInt(d) : d;
+      }
+
+      if ((d = Reflect.field(opts, "underline")) != null) {
+        underline = (Std.is(d, String)) ? (d=="true") : d;
       }
 
 
@@ -249,6 +257,8 @@ class TextBitmap {
     if (opts != null && Reflect.hasField(opts, "justification")) {
       format.align = Reflect.field(opts, "justification");
     }
+
+    format.underline = underline;
 
     tf.embedFonts = true;
     tf.defaultTextFormat = format;
