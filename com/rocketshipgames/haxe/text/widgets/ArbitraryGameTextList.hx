@@ -67,8 +67,8 @@ class ArbitraryGameTextList
     this.parent = parent;
     margin = 0;
     defaultChain = null;
-    defaultX = world.screenWidth/2;
-    defaultY = world.screenHeight/2;
+    defaultX = world.displayWidth/2;
+    defaultY = world.displayHeight/2;
     // end new
   }
 
@@ -187,7 +187,7 @@ class ArbitraryGameTextList
         var d:Dynamic = Reflect.field(opts, "sx");
         x =  (Std.is(d, String)) ? Std.parseFloat(d): d;
         if (x < 0)
-          x += world.screenWidth;
+          x += world.displayWidth;
 
         switch (last.horizontalAlignment) {
         case LEFT:
@@ -206,7 +206,7 @@ class ArbitraryGameTextList
         var d:Dynamic = Reflect.field(opts, "sy");
         y =  (Std.is(d, String)) ? Std.parseFloat(d): d;
         if (y < 0)
-          y += world.screenHeight;
+          y += world.displayHeight;
 
         switch (last.verticalAlignment) {
         case TOP:

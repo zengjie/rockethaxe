@@ -26,37 +26,45 @@ package com.rocketshipgames.haxe.ui.widgets;
 
 import nme.display.DisplayObjectContainer;
 
-import nme.display.Bitmap;
-import nme.display.BitmapData;
+import nme.display.DisplayObject;
 
 import com.rocketshipgames.haxe.ui.widgets.Button;
 
 
-class BitmapButton
+class DisplayObjectButton
   extends Button
 {
 
-  private var bitmap:Bitmap;
-
-  private var upBitmap:BitmapData;
-  private var overBitmap:BitmapData;
-  private var downBitmap:BitmapData;
+  private var upDisplayObject:DisplayObject;
+  private var overDisplayObject:DisplayObject;
+  private var downDisplayObject:DisplayObject;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(action:Void->Void,
-                      upBitmap:BitmapData,
-                      overBitmap:BitmapData = null,
-                      downBitmap:BitmapData = null,
-                      ?container:DisplayObjectContainer):Void
+                      upDisplayObject:DisplayObject,
+                      overDisplayObject:DisplayObject = null,
+                      downDisplayObject:DisplayObject = null,
+                      container:DisplayObjectContainer):Void
   {
     super(action, container);
 
-    this.upBitmap = upBitmap;
-    this.overBitmap = (overBitmap != null) ? overBitmap : upBitmap;
-    this.downBitmap = (downBitmap != null) ? downBitmap : upBitmap;
+    this.upDisplayObject = upDisplayObject;
+    this.overDisplayObject = overDisplayObject;
+    this.downDisplayObject = downDisplayObject;
 
-    addChild(bitmap = new Bitmap(upBitmap));
+    if (downDisplayObject != null) {
+      downDisplayObject.visible = false;
+      addChild(downDisplayObject);
+    }
+
+    if (overDisplayObject != null) {
+      overDisplayObject.visible = false;
+      addChild(overDisplayObject);
+    }
+
+    addChild(upDisplayObject);
+
     // end new
   }
 
@@ -65,18 +73,43 @@ class BitmapButton
   //------------------------------------------------------------
   private override function updateGraphicState():Void
   {
+
     switch (state) {
+
     case UP:
-      bitmap.bitmapData = upBitmap;
+      upDisplayObject.visible = true;
+      if (overDisplayObject != null)
+        overDisplayObject.visible = false;
+      if (downDisplayObject != null)
+        downDisplayObject.visible = false;
+
 
     case OVER:
-      bitmap.bitmapData = overBitmap;
+      if (overDisplayObject != null) {
+        upDisplayObject.visible = false;
+        overDisplayObject.visible = true;
+      } else
+        upDisplayObject.visible = true;
+
+      if (downDisplayObject != null)
+        downDisplayObject.visible = false;
+
 
     case DOWN:
-      bitmap.bitmapData = downBitmap;
+      if (overDisplayObject != null)
+        overDisplayObject.visible = false;
+
+      if (downDisplayObject != null) {
+        downDisplayObject.visible = true;
+        upDisplayObject.visible = false;
+      } else {
+        upDisplayObject.visible = true;
+      }
+
     }
+
     // end updateGraphicState
   }
 
-  // end BitmapButton
+  // end DisplayObjectButton
 }

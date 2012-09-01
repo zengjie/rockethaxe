@@ -24,17 +24,18 @@
 
 package com.rocketshipgames.haxe.ui;
 
+import nme.display.DisplayObjectContainer;
 
 interface UIWidget {
 
-  function getX():Float;
-  function setX(x:Float):Float;
+  function setContainer(container:DisplayObjectContainer):Void;
+  function remove():Void;
 
-  function getY():Float;
-  function setY(y:Float):Float;
+  var x:Float;
+  var y:Float;
 
-  function getWidth():Float;
-  function getHeight():Float;
+  var width:Float;
+  var height:Float;
 
   function show(?opts:Dynamic):Void;
   function hide(?opts:Dynamic):Void;

@@ -97,7 +97,7 @@ class GameEventUtils
     var val:String = params.get(field);
     var i:Int;
     if ((i=val.indexOf("/")) != -1) {
-      x = world.screenWidth * Std.parseFloat(val.substr(0,i)) /
+      x = world.displayWidth * Std.parseFloat(val.substr(0,i)) /
         Std.parseFloat(val.substr(i+1));
     } else {
       x = Std.parseFloat(val);
@@ -124,7 +124,7 @@ class GameEventUtils
     var val:String = params.get(field);
     var i:Int;
     if ((i=val.indexOf("/")) != -1) {
-      y = world.screenHeight * Std.parseFloat(val.substr(0,i)) /
+      y = world.displayHeight * Std.parseFloat(val.substr(0,i)) /
         Std.parseFloat(val.substr(i+1));
     } else {
       y = Std.parseFloat(val);

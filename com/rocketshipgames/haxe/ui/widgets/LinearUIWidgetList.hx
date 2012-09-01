@@ -24,15 +24,18 @@
 
 package com.rocketshipgames.haxe.ui.widgets;
 
+import nme.display.DisplayObjectContainer;
+
 import com.rocketshipgames.haxe.gfx.Orientation;
 import com.rocketshipgames.haxe.gfx.HorizontalAlignment;
 import com.rocketshipgames.haxe.gfx.VerticalAlignment;
-import com.rocketshipgames.haxe.gfx.GrowthDirection;
 
 import com.rocketshipgames.haxe.ui.UIWidget;
+import com.rocketshipgames.haxe.ui.UIWidgetList;
+
 
 class LinearUIWidgetList
-  implements UIWidget
+  extends UIWidgetList
 {
 
   //------------------------------------------------------------
@@ -40,33 +43,20 @@ class LinearUIWidgetList
   private var horizontalAlignment:HorizontalAlignment;
   private var verticalAlignment:VerticalAlignment;
 
-  private var growth:GrowthDirection;
-
   private var margin:Float;
 
-  private var widgets:List<UIWidget>;
-
-  private var x:Float;
-  private var y:Float;
-
-  private var width:Float;
-  private var height:Float;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(x:Float, y:Float,
+                      ?container:DisplayObjectContainer,
                       ?opts:Dynamic):Void
   {
-    this.x = x;
-    this.y = y;
-
-    width = 0;
-    height = 0;
+    super(x, y, container, opts);
 
     orientation = HORIZONTAL;
     horizontalAlignment = LEFT;
     verticalAlignment = TOP;
-    growth = FORWARD;
 
     margin = 0;
 
@@ -94,13 +84,6 @@ class LinearUIWidgetList
           verticalAlignment = Type.createEnum(VerticalAlignment, d);
       }
 
-      if ((d = Reflect.field(opts, "direction")) != null) {
-        if (Std.is(d, GrowthDirection))
-          growth = d;
-        else
-          growth = Type.createEnum(GrowthDirection, d);
-      }
-
       if ((d = Reflect.field(opts, "margin")) != null) {
         if (Std.is(d, Float))
           margin = d;
@@ -111,23 +94,21 @@ class LinearUIWidgetList
       // opts is not null
     }
 
-
-    widgets = new List();
-
     // end new
   }
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   //------------------------------------------------------------
+  /*
   public function getX():Float { return x; }
   public function getY():Float { return y; }
 
   public function setX(x:Float):Float
   {
     for (w in widgets)
-      w.setX(w.getX() + (x-this.x));
-    this.x = x;
+      w.setX(w.getX() + (x-listx));
+    listx = x;
     return x;
     // end setX
   }
@@ -135,68 +116,65 @@ class LinearUIWidgetList
   public function setY(y:Float):Float
   {
     for (w in widgets)
-      w.setY(w.getY() + (y-this.y));
-    this.y = y;
+      w.setY(w.getY() + (y-listy));
+    listy = y;
     return y;
     // end setY
   }
+  */
 
-  public function getWidth():Float { return width; }
-  public function getHeight():Float { return height; }
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function add(widget:UIWidget):Void
+  public override function add(widget:UIWidget):Void
   {
+    super.add(widget);
 
-    switch (growth) {
-    case FORWARD:
-      widgets.add(widget);
-
-    case REVERSE:
-      widgets.push(widget);
-    }
-
+    var subWidth:Float;
+    var subHeight:Float;
 
     switch (orientation) {
     case HORIZONTAL:
 
-      width = -margin;
-      for (w in widgets)
-        width += w.getWidth() + margin;
-      height = Math.max(widget.getHeight(), height);
+      subWidth = -margin;
+      subHeight = 0;
+      for (w in widgets) {
+        subWidth += w.width + margin;
+        subHeight = Math.max(widget.height, subHeight);
+      }
 
       switch (verticalAlignment) {
       case TOP:
-        widget.setY(y);
+        widget.y = 0;
 
       case MIDDLE:
-        widget.setY(y - widget.getHeight()/2);
+        widget.y = -widget.height/2;
 
       case BOTTOM:
-        widget.setY(y - widget.getHeight());
+        widget.y = -widget.height;
+
         // end vertical alignment
       }
 
       switch (horizontalAlignment) {
       case LEFT:
-        var tx:Float = x;
+        var tx:Float = 0;
         for (w in widgets) {
-          w.setX(tx);
-          tx += w.getWidth() + margin;
+          w.x = tx;
+          tx += w.width + margin;
         }
 
       case CENTER:
-        var tx:Float = x-width/2;
+        var tx:Float = -subWidth/2;
         for (w in widgets) {
-          w.setX(tx);
-          tx += w.getWidth() + margin;
+          w.x = tx;
+          tx += w.width + margin;
         }
 
       case RIGHT:
-        var tx:Float = x;
+        var tx:Float = 0;
         for (w in widgets) {
-          w.setX(tx -= w.getWidth());
+          w.x = tx -= w.width;
           tx -= margin;
         }
 
@@ -206,41 +184,43 @@ class LinearUIWidgetList
 
     case VERTICAL:
 
-      width = Math.max(widget.getWidth(), width);
-      height = -margin;
-      for (w in widgets)
-        height += w.getHeight() + margin;
+      subWidth = 0;
+      subHeight = -margin;
+      for (w in widgets) {
+        subWidth = Math.max(widget.width, subWidth);
+        subHeight += w.height + margin;
+      }
 
       switch (horizontalAlignment) {
       case LEFT:
-        widget.setX(x);
+        widget.x = 0;
 
       case CENTER:
-        widget.setX(x - widget.getWidth()/2);
+        widget.x = -widget.width/2;
 
       case RIGHT:
-        widget.setX(x - widget.getWidth());
+        widget.x = -widget.width;
       }
 
       switch (verticalAlignment) {
       case TOP:
-        var ty:Float = y;
+        var ty:Float = 0;
         for (w in widgets) {
-          w.setY(ty);
-          ty += w.getHeight() + margin;
+          w.y = ty;
+          ty += w.height + margin;
         }
 
       case MIDDLE:
-        var ty:Float = y-height/2;
+        var ty:Float = -subHeight/2;
         for (w in widgets) {
-          w.setY(ty);
-          ty += w.getHeight() + margin;
+          w.y = ty;
+          ty += w.height + margin;
         }
 
       case BOTTOM:
-        var ty:Float = y;
+        var ty:Float = 0;
         for (w in widgets) {
-          w.setY(ty -= w.getHeight());
+          w.y = ty -= w.height;
           ty -= margin;
         }
 
@@ -250,22 +230,6 @@ class LinearUIWidgetList
     }
 
     // end widget
-  }
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  public function show(?opts:Dynamic):Void
-  {
-    for (w in widgets)
-      w.show(opts);
-    // end show
-  }
-
-  public function hide(?opts:Dynamic):Void
-  {
-    for (w in widgets)
-      w.hide(opts);
-    // end hide
   }
 
   // end LinearUIWidgetList

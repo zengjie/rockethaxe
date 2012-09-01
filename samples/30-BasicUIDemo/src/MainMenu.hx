@@ -67,7 +67,7 @@ class MainMenu
     var uiList:LinearUIWidgetList;
 
     var style:Dynamic =
-      { borderWidth: 2, borderBottomWidth: 0, padding: 2,
+      { borderWidth: 2, padding: 2,
         justification:TextFormatAlign.LEFT,
       };
     var upColors:Dynamic = { bgcolor: 0xffffffff, color: 0xff000000 };
@@ -75,47 +75,42 @@ class MainMenu
     var downColors:Dynamic = { bgcolor: 0xff000000, color: 0xff333333 };
 
     uiList = new LinearUIWidgetList
-      (320, 240,
+      (320, 240, this,
        { orientation: VERTICAL,
          horizontalAlignment: HorizontalAlignment.CENTER,
-         verticalAlignment: VerticalAlignment.MIDDLE,
-       });
+         verticalAlignment: VerticalAlignment.MIDDLE, });
 
-    uiList.add(new TextBitmapButton
-               (this, gotoGame, "Play Game",
-                style, upColors, overColors, downColors));
-    uiList.add(new TextBitmapButton
-               (this, doSettings, "Settings",
-                style, upColors, overColors, downColors));
-    uiList.add(new TextBitmapButton
-               (this, doAbout, "About",
-                style, upColors, overColors, downColors));
-    uiList.add(new TextBitmapButton
-               (this, doHelp, "Help!",
-                style, upColors, overColors, downColors));
+    //-- Place a bunch of buttons into the list
+    TextBitmapButton.makeList
+      (uiList,
+       [ {action: gotoGame, text: "Play Game"},
+         {action: doSettings, text: "Settings"},
+         {action: doAbout, text: "About"},
+         {action: doHelp, text: "Help!"} ],
+       style, upColors, overColors, downColors);
 
+
+    //-- Manually construct another list and place at bottom of list
     var uiList2:LinearUIWidgetList;
     uiList2 = new LinearUIWidgetList
       (0, 0,
        { orientation: HORIZONTAL,
          horizontalAlignment: HorizontalAlignment.LEFT,
-         verticalAlignment: VerticalAlignment.TOP,
-       });
+         verticalAlignment: VerticalAlignment.TOP});
 
     Reflect.deleteField(style, "borderBottomWidth");
     uiList2.add(new TextBitmapButton
-               (this, null, "Sponsor",
+               (null, "Sponsor",
                 style, upColors, overColors, downColors));
     uiList2.add(new TextBitmapButton
-               (this,
-                function() {
+               (function() {
                  nme.Lib.getURL
                    (new nme.net.URLRequest("http://rocketshipgames.com"));
                 },
                 "rocketshipgames.com",
                 style, upColors, overColors, downColors));
     uiList2.add(new TextBitmapButton
-               (this, null, "Sponsor",
+               (null, "Sponsor",
                 style, upColors, overColors, downColors));
     uiList.add(uiList2);
 
@@ -149,8 +144,8 @@ class MainMenu
 
     Mouse.disable();
 
-    nme.Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN,
-                                              onKeyDown);
+    nme.Lib.current.stage.removeEventListener
+      (KeyboardEvent.KEY_DOWN, onKeyDown);
 
     Actuate.tween(this, 1, {alpha: 0})
       .onComplete(function() {

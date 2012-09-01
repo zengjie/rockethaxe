@@ -34,31 +34,78 @@ class TextBitmapButton
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new(container:DisplayObjectContainer,
-                      action:Void->Void,
+  public function new(action:Void->Void,
                       text:String,
                       ?defaultStyle:Dynamic,
                       ?upStyle:Dynamic,
                       ?overStyle:Dynamic,
-                      ?downStyle:Dynamic):Void
+                      ?downStyle:Dynamic,
+                      ?container:DisplayObjectContainer):Void
   {
     var _up = Reflect.copy(defaultStyle);
-    for (f in Reflect.fields(upStyle))
-      Reflect.setField(_up, f, Reflect.field(upStyle, f));
+    if (upStyle != null) {
+      for (f in Reflect.fields(upStyle))
+        Reflect.setField(_up, f, Reflect.field(upStyle, f));
+    }
 
     var _over = Reflect.copy(defaultStyle);
-    for (f in Reflect.fields(overStyle))
-      Reflect.setField(_over, f, Reflect.field(overStyle, f));
+    if (overStyle != null) {
+      for (f in Reflect.fields(overStyle))
+        Reflect.setField(_over, f, Reflect.field(overStyle, f));
+    }
 
     var _down = Reflect.copy(defaultStyle);
-    for (f in Reflect.fields(downStyle))
-      Reflect.setField(_down, f, Reflect.field(downStyle, f));
+    if (downStyle != null) {
+      for (f in Reflect.fields(downStyle))
+        Reflect.setField(_down, f, Reflect.field(downStyle, f));
+    }
 
-    super(container, action,
+    super(action,
           TextBitmap.makeBitmapData(text, _up),
           TextBitmap.makeBitmapData(text, _over),
-          TextBitmap.makeBitmapData(text, _down));
+          TextBitmap.makeBitmapData(text, _down),
+          container);
     // end new
+  }
+
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public static function makeList(widgetList:UIWidgetList,
+                                  buttons:Array<Dynamic>,
+                                  ?defaultStyle:Dynamic,
+                                  ?upStyle:Dynamic,
+                                  ?overStyle:Dynamic,
+                                  ?downStyle:Dynamic,
+                                  ?opts:Dynamic):Void
+  {
+    var dropTopBorder:Bool = true;
+
+    if (opts != null) {
+      var d:Dynamic;
+      if ((d = Reflect.field(opts, "dropTopBorder")) != null)
+        dropTopBorder = d;
+    }
+
+    var entry:Dynamic;
+    entry = buttons.shift();
+    if (entry != null) {
+      widgetList.add(new TextBitmapButton
+                     (entry.action, entry.text,
+                      defaultStyle, upStyle, overStyle, downStyle));
+    }
+
+    if (dropTopBorder) {
+      Reflect.setField(defaultStyle, "borderTopWidth", 0);
+    }
+
+    for (entry in buttons) {
+      widgetList.add(new TextBitmapButton
+                     (entry.action, entry.text,
+                      defaultStyle, upStyle, overStyle, downStyle));
+    }
+
+    // end makeList
   }
 
   // end TextButton

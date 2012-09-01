@@ -22,63 +22,52 @@
  * SOFTWARE.
  */
 
-/*
- * This class exists, rather than using SimpleButton, for two reasons:
- *   - So I can add hotkeys.
- *   - A bug in SimpleButton such that it clobbers the focus when it
- *     is removed from the stage, and you have to have a hack to put
- *     the focus back somewhere reasonable.
- */
-
-package com.rocketshipgames.haxe.ui.widgets;
-
-import nme.events.Event;
-import nme.events.MouseEvent;
+package com.rocketshipgames.haxe.ui;
 
 import nme.display.DisplayObjectContainer;
 import nme.display.Sprite;
 
+import com.rocketshipgames.haxe.gfx.GrowthDirection;
+
 import com.rocketshipgames.haxe.ui.UIWidget;
 
-enum ButtonState {
-  UP;
-  OVER;
-  DOWN;
-}
 
-class Button
+class UIWidgetList
   extends Sprite,
   implements UIWidget
 {
 
   //------------------------------------------------------------
-  public var onMouseOver:Void->Void;
-  public var onMouseOut:Void->Void;
+  private var widgets:List<UIWidget>;
 
-  //------------------------------------------------------------
-  private var action:Void->Void;
-
-  private var state:ButtonState;
+  private var growth:GrowthDirection;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new(action:Void->Void,
-                      ?container:DisplayObjectContainer):Void
+  public function new(x:Float, y:Float,
+                      ?container:DisplayObjectContainer,
+                      ?opts:Dynamic):Void
   {
     super();
 
-    this.action = action;
+    this.x = x;
+    this.y = y;
 
-    state = UP;
+    growth = FORWARD;
 
-    addEventListener(MouseEvent.CLICK, click);
+    widgets = new List();
 
-    addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
-    addEventListener(MouseEvent.MOUSE_UP, mouseUp);
-    addEventListener(MouseEvent.ROLL_OVER, rollOver);
-    addEventListener(MouseEvent.ROLL_OUT, rollOut);
+    if (opts != null) {
+      var d:Dynamic;
 
-    onMouseOver = onMouseOut = null;
+      if ((d = Reflect.field(opts, "direction")) != null) {
+        if (Std.is(d, GrowthDirection))
+          growth = d;
+        else
+          growth = Type.createEnum(GrowthDirection, d);
+      }
+
+    }
 
     visible = false;
     if (container != null)
@@ -102,22 +91,34 @@ class Button
     // end remove
   }
 
-
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
   //------------------------------------------------------------
   /*
   public function getX():Float { return x; }
   public function getY():Float { return y; }
 
-  public function setX(x:Float):Float { return this.x = x;}
-  public function setY(y:Float):Float { return this.y = y;}
+  public function setX(x:Float):Float
+  {
+    for (w in widgets)
+      w.setX(w.getX() + (x-this.x));
+    this.x = x;
+    return x;
+    // end setX
+  }
 
-  public function getWidth():Float { return width; }
-  public function getHeight():Float { return height; }
+  public function setY(y:Float):Float
+  {
+    for (w in widgets)
+      w.setY(w.getY() + (y-this.y));
+    this.y = y;
+    return y;
+    // end setY
+  }
+
+  public function getWidth():Float { return subWidth; }
+  public function getHeight():Float { return subHeight; }
   */
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  private function updateGraphicState():Void {}
 
 
   //--------------------------------------------------------------------
@@ -134,59 +135,26 @@ class Button
     // end hide
   }
 
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  private function click(e:Event):Void
+  public function add(widget:UIWidget):Void
   {
-    //trace("Click");
-    if (action != null)
-      action();
-    // end click
-  }
 
-  private function mouseDown(e:Event):Void
-  {
-    //trace("Down");
-    if (state != DOWN) {
-      state = DOWN;
-      updateGraphicState();
+    switch (growth) {
+    case FORWARD:
+      widgets.add(widget);
+
+    case REVERSE:
+      widgets.push(widget);
     }
-    // end mouseUp
+
+    widget.setContainer(this);
+
+    widget.show();
+
+    // end add
   }
 
-  private function mouseUp(e:Event):Void
-  {
-    //trace("Up");
-    if (state != OVER) {
-      state = OVER;
-      updateGraphicState();
-    }
-    // end mouseUp
-  }
-
-  private function rollOver(e:Event):Void
-  {
-    //trace("Roll over");
-    if (state != OVER) {
-      state = OVER;
-      updateGraphicState();
-      if (onMouseOver != null)
-        onMouseOver();
-    }
-    // end rollOver
-  }
-
-  private function rollOut(e:Event):Void
-  {
-    //trace("Roll out");
-    if (state != UP) {
-      state = UP;
-      updateGraphicState();
-      if (onMouseOut != null)
-        onMouseOut();
-    }
-    // end rollOut
-  }
-
-  // end Button
+  // end LinearUIWidgetList
 }
