@@ -52,12 +52,12 @@ class Button
 {
 
   //------------------------------------------------------------
+  public var action:Void->Void;
+
   public var onMouseOver:Void->Void;
   public var onMouseOut:Void->Void;
 
   //------------------------------------------------------------
-  private var action:Void->Void;
-
   private var state:ButtonState;
 
   //--------------------------------------------------------------------

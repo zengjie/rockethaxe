@@ -36,11 +36,13 @@ class BitmapButton
   extends Button
 {
 
+  //------------------------------------------------------------
   private var bitmap:Bitmap;
 
   private var upBitmap:BitmapData;
   private var overBitmap:BitmapData;
   private var downBitmap:BitmapData;
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -60,6 +62,33 @@ class BitmapButton
     // end new
   }
 
+  public function setBitmap(bmp:BitmapData):Void
+  {
+    upBitmap = overBitmap = downBitmap = bmp;
+    updateGraphicState();
+    // end setBitmap
+  }
+
+  public function setUpBitmap(bmp:BitmapData):Void
+  {
+    upBitmap = bmp;
+    updateGraphicState();
+    // end setUpBitmap
+  }
+
+  public function setOverBitmap(bmp:BitmapData):Void
+  {
+    overBitmap = bmp;
+    updateGraphicState();
+    // end setOverBitmap
+  }
+
+  public function setDownBitmap(bmp:BitmapData):Void
+  {
+    downBitmap = bmp;
+    updateGraphicState();
+    // end setDownBitmap
+  }
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
