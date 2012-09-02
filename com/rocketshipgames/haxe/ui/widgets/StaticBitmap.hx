@@ -24,49 +24,63 @@
 
 package com.rocketshipgames.haxe.ui.widgets;
 
-import com.rocketshipgames.haxe.ui.Panel;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.DisplayObjectContainer;
 
-class MinimalPanel
-  implements Panel
+import com.rocketshipgames.haxe.ui.UIWidget;
+
+class StaticBitmap
+  extends Bitmap,
+  implements UIWidget
 {
 
-  //------------------------------------------------------------
-  private var onShow:Dynamic->?Dynamic->Void;
-  private var onHide:PanelNotifier->Dynamic->?Dynamic->Void;
-
-  private var userData:Dynamic;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new(onShow:Dynamic->?Dynamic->Void,
-                      onHide:PanelNotifier->Dynamic->?Dynamic->Void):Void
+  public function new(bitmap:BitmapData,
+                      ?container:DisplayObjectContainer,
+                      ?opts:Dynamic):Void
   {
-    this.onShow = onShow;
-    this.onHide = onHide;
-    userData = {};
-    // end new
+    super(bitmap);
+
+    visible = false;
+    if (container != null)
+      container.addChild(this);
+
+    // end opts
   }
 
-  public function added(manager:PanelManager, id:String):Void {}
-  public function removed():Void {}
+  public function setContainer(container:DisplayObjectContainer):Void
+  {
+    if (parent != null)
+      parent.removeChild(this);
+    container.addChild(this);
+    // end setContainer
+  }
+
+  public function remove():Void
+  {
+    if (parent != null)
+      parent.removeChild(this);
+    // end remove
+  }
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function show(?opts:Dynamic):Void
   {
-    if (onShow != null)
-      onShow(userData, opts);
+    visible = true;
     // end show
   }
 
-  public function hide(onComplete:PanelNotifier, ?opts:Dynamic):Void
+  public function hide(?opts:Dynamic):Void
   {
-    if (onHide != null)
-      onHide(onComplete, userData, opts);
-    else
-      onComplete();
+    visible = false;
     // end hide
   }
 
-  // end MinimalPanel
+
+  // end StaticBitmap
 }

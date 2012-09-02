@@ -32,6 +32,10 @@ class TextBitmapButton
   extends BitmapButton
 {
 
+  var upText:TextBitmap;
+  var overText:TextBitmap;
+  var downText:TextBitmap;
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(action:Void->Void,
@@ -60,17 +64,31 @@ class TextBitmapButton
         Reflect.setField(_down, f, Reflect.field(downStyle, f));
     }
 
-    super(action,
-          TextBitmap.makeBitmapData(text, _up),
-          TextBitmap.makeBitmapData(text, _over),
-          TextBitmap.makeBitmapData(text, _down),
-          container);
+    upText = new TextBitmap(text, _up);
+    overText = new TextBitmap(text, _over);
+    downText = new TextBitmap(text, _down);
+
+    super(action, upText.bitmap, overText.bitmap, downText.bitmap, container);
+
     // end new
   }
 
+  //--------------------------------------------------------------------
+  public function setText(string:String):Void
+  {
+    upText.draw(string);
+    overText.draw(string);
+    downText.draw(string);
+
+    upBitmap = upText.bitmap;
+    overBitmap = overText.bitmap;
+    downBitmap = downText.bitmap;
+    updateGraphicState();
+    // end setText
+  }
 
   //--------------------------------------------------------------------
-  //------------------------------------------------------------
+  //--------------------------------------------------------------------
   public static function makeList(widgetList:UIWidgetList,
                                   buttons:Array<Dynamic>,
                                   ?defaultStyle:Dynamic,
