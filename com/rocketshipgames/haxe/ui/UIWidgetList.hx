@@ -42,6 +42,9 @@ class UIWidgetList
 
   private var growth:GrowthDirection;
 
+  private var baseX:Float;
+  private var baseY:Float;
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(x:Float, y:Float,
@@ -50,8 +53,8 @@ class UIWidgetList
   {
     super();
 
-    this.x = x;
-    this.y = y;
+    this.x = baseX = x;
+    this.y = baseY = y;
 
     growth = FORWARD;
 
@@ -66,7 +69,6 @@ class UIWidgetList
         else
           growth = Type.createEnum(GrowthDirection, d);
       }
-
     }
 
     visible = false;
