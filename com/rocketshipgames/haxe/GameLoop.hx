@@ -122,12 +122,13 @@ class GameLoop
     elapsed = 0;
 
     pauseOnUnfocus = true;
-    paused = true;
+    paused = false;
 
+    prevFrameTimestamp = Lib.getTimer();
 
     //-- Setup the events that make everything happen
     var stage = Lib.current.stage;
-    stage.addEventListener(Event.ADDED, onAdded);
+    // stage.addEventListener(Event.ADDED_TO_STAGE, onAdded);
     stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
     stage.addEventListener(KeyboardEvent.KEY_DOWN, Keyboard.onKeyDown);
     stage.addEventListener(KeyboardEvent.KEY_UP, Keyboard.onKeyUp);
@@ -141,7 +142,7 @@ class GameLoop
   public function stop():Void
   {
     var stage = Lib.current.stage;
-    stage.removeEventListener(Event.ADDED, onAdded);
+    // stage.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
     stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
     stage.removeEventListener(KeyboardEvent.KEY_DOWN, Keyboard.onKeyDown);
     stage.removeEventListener(KeyboardEvent.KEY_UP, Keyboard.onKeyUp);
@@ -299,12 +300,14 @@ class GameLoop
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
+  /*
   private function onAdded(e:Event=null):Void
   {
     paused = false;
     prevFrameTimestamp = Lib.getTimer();
     // end function onStage
   }
+  */
 
   private function onActivate(e:Event=null):Void
   {

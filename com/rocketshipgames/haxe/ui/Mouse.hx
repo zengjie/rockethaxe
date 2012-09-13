@@ -200,6 +200,7 @@ class Mouse {
   public static function show(e:Event = null):Void
   {
     visibleRequested = true;
+    resetIdle();
     updateVisibility();
     // end show
   }
@@ -227,6 +228,11 @@ class Mouse {
     // end resetIdle
   }
 
+  public static function goIdle():Void
+  {
+    idle = true;
+    appearance.idleOut();
+  }
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -237,8 +243,7 @@ class Mouse {
     idleTimestamp = currTime;
 
     if (!idle && idleClock <= 0) {
-      idle = true;
-      appearance.idleOut();
+      goIdle();
     }
     // end onEnterFrameIdle
   }

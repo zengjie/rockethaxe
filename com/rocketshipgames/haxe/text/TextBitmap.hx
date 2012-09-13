@@ -263,6 +263,7 @@ class TextBitmap {
     tf.embedFonts = true;
     tf.defaultTextFormat = format;
     tf.autoSize = LEFT;
+    tf.multiline = true;
 
     draw(string);
 
@@ -274,7 +275,7 @@ class TextBitmap {
   public function draw(string:String):Void
   {
 
-    tf.text = string;
+    tf.htmlText = string;
 
     var w:Int;
     if (width == 0)

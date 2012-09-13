@@ -39,8 +39,8 @@ class StaticBitmap
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function new(bitmap:BitmapData,
-                      ?container:DisplayObjectContainer,
-                      ?opts:Dynamic):Void
+                      ?opts:Dynamic,
+                      ?container:DisplayObjectContainer):Void
   {
     super(bitmap);
 
@@ -66,6 +66,12 @@ class StaticBitmap
     // end remove
   }
 
+  //------------------------------------------------------------
+  public function setBitmapData(bmp:BitmapData):Void
+  {
+    bitmapData = bmp;
+    // end setBitmapData
+  }
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------

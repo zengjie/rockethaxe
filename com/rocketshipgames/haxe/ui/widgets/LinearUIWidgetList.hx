@@ -118,38 +118,19 @@ class LinearUIWidgetList
     // end new
   }
 
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  /*
-    public function getX():Float { return x; }
-    public function getY():Float { return y; }
-
-    public function setX(x:Float):Float
-    {
-    for (w in widgets)
-    w.setX(w.getX() + (x-listx));
-    listx = x;
-    return x;
-    // end setX
-    }
-
-    public function setY(y:Float):Float
-    {
-    for (w in widgets)
-    w.setY(w.getY() + (y-listy));
-    listy = y;
-    return y;
-    // end setY
-    }
-  */
-
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public override function add(widget:UIWidget):Void
   {
     super.add(widget);
+    pack();
+    // end add
+  }
 
+  //------------------------------------------------------------
+  public function pack():Void
+  {
     var subWidth:Float;
     var subHeight:Float;
 
@@ -183,33 +164,6 @@ class LinearUIWidgetList
 
       }
 
-      /*
-        switch (horizontalAlignment) {
-        case LEFT:
-        var tx:Float = 0;
-        for (w in widgets) {
-        w.x = tx;
-        tx += w.width + margin;
-        }
-
-        case CENTER:
-        var tx:Float = -subWidth/2;
-        for (w in widgets) {
-        w.x = tx;
-        tx += w.width + margin;
-        }
-
-        case RIGHT:
-        var tx:Float = 0;
-        for (w in widgets) {
-        w.x = tx -= w.width;
-        tx -= margin;
-        }
-
-        // end horizontal alignment
-        }
-      */
-
 
     case VERTICAL:
 
@@ -237,32 +191,6 @@ class LinearUIWidgetList
         w.y = ty;
         ty += w.height + margin;
       }
-
-      /*
-        switch (verticalAlignment) {
-        case TOP:
-        var ty:Float = 0;
-        for (w in widgets) {
-        w.y = ty;
-        ty += w.height + margin;
-        }
-
-        case MIDDLE:
-        var ty:Float = -subHeight/2;
-        for (w in widgets) {
-        w.y = ty;
-        ty += w.height + margin;
-        }
-
-        case BOTTOM:
-        var ty:Float = 0;
-        for (w in widgets) {
-        w.y = ty -= w.height;
-        ty -= margin;
-        }
-
-        }
-      */
 
       // end switch orientation
     }
@@ -293,7 +221,7 @@ class LinearUIWidgetList
       // end vertical alignment
     }
 
-    // end widget
+    // end pack
   }
 
   // end LinearUIWidgetList
