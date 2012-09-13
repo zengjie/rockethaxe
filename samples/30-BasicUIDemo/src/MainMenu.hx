@@ -78,7 +78,9 @@ class MainMenu
       (320, 240, this,
        { orientation: VERTICAL,
          horizontalAlignment: HorizontalAlignment.CENTER,
-         verticalAlignment: VerticalAlignment.MIDDLE, });
+         verticalAlignment: VerticalAlignment.MIDDLE,
+         horizontalJustification: HorizontalAlignment.CENTER,
+       });
 
     //-- Place a bunch of buttons into the list
     TextBitmapButton.makeList

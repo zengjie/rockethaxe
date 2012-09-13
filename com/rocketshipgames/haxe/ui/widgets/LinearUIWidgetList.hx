@@ -99,7 +99,6 @@ class LinearUIWidgetList
       }
 
       if ((d = Reflect.field(opts, "verticalJustification")) != null) {
-        trace("vert");
         if (Std.is(d, VerticalAlignment))
           verticalJustification = d;
         else
@@ -172,7 +171,6 @@ class LinearUIWidgetList
 
         case MIDDLE:
           w.y = (subHeight-w.height)/2;
-          //trace("middle " + w.y + "  " + subHeight + "  " + w.height);
 
         case BOTTOM:
           w.y = subHeight-w.height;
