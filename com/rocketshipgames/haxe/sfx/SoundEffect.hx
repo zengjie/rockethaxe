@@ -34,102 +34,51 @@ class SoundEffect
   extends AudioClip {
 
   //------------------------------------------------------------
-  private static var mute:Bool = false;
-  private static var effects:List<SoundEffect> = new List();
-  private static var fading:Bool = false;
-  private static var volumeControl:Dynamic;
+  private var group:SoundEffectGroup;
+
+  private var setVolume:Float;
 
   //----------------------------------------------------------------------
   //------------------------------------------------------------
-  public static function stopAll():Void
+  public function new(sound:Sound, ?opts:Dynamic):Void
   {
-    for (s in effects)
-      s.stop();
-    // end muteAll
-  }
+    super(sound, opts);
+    setVolume = volume;
 
-  public static function muteAll():Void
-  {
-    mute = true;
-    stopAll();
-    // end muteAll
-  }
-
-  public static function unmuteAll():Void
-  {
-    mute = false;
-    // end muteAll
-  }
-
-  public static function toggleAll():Void
-  {
-    if (mute)
-      unmuteAll();
-    else
-      muteAll();
-    // end toggleAll
-  }
-
-  public static function fadeOutAll(duration:Float = 1):Void
-  {
-    if (fading)
-      return;
-
-    fading = true;
-    for (s in effects) {
-      if (s.channel != null) {
-        Actuate.transform(s.channel, duration).sound(0);
+    if (opts != null) {
+      var d:Dynamic;
+      if ((d = Reflect.field(opts, "group")) != null) {
+        group = d;
+        if (group != null)
+          group.add(this);
       }
+      // end opts
     }
 
-    volumeControl = {volume: 1, remainder: duration};
-    Actuate.tween(volumeControl, duration, {volume: 0, remainder: 0})
-      .onComplete(function() { fading = false; } );
-      // end fadeOutAll
-  }
-
-  public static function setAll(mute:Bool):Void
-  {
-    if (mute)
-      muteAll();
-    else
-      unmuteAll();
-    // end setAll
-  }
-
-
-  //----------------------------------------------------------------------
-  //------------------------------------------------------------
-  public function new(sound:Sound, replay:Replay = null):Void
-  {
-    super(sound, replay);
-
-    /*
-     * Every SoundEffect is thrown into this list and then we loop
-     * over that stopping them, rather than keeping a list of playing
-     * sounds, because muting won't happen often so it's not that
-     * inefficient and in return we have neither the performance cost
-     * nor the complexity of tracking playing sounds, the latter of
-     * which gets complex with loops.
-     */
-
-    effects.push(this);
     // end function new
   }
 
   //--------------------------------------------------------------------
-  public override function play(loop:Bool=false, volume:Float = -1):Void
+  public override function play():Void
   {
-    if (mute)
+    if (group == null) {
+      super.play();
       return;
+    }
 
-    if (fading && volume == -1)
-      volume = volumeControl.volume;
+    if (group.muted) {
+      return;
+    }
 
-    super.play(loop, volume);
+    if (group.fading && volume == -1)
+      volume = group.volumeControl.volume;
+    else
+      volume = setVolume;
 
-    if (fading) {
-      Actuate.transform(channel, volumeControl.remainder).sound(0);
+    super.play();
+
+    if (group.fading) {
+      Actuate.transform(channel, group.volumeControl.remainder).sound(0);
     }
 
     // end function play

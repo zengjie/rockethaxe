@@ -30,15 +30,22 @@ import com.rocketshipgames.haxe.gfx.GameSpriteContainer;
 import com.rocketshipgames.haxe.physics.CollisionContainer;
 import com.rocketshipgames.haxe.World;
 import com.rocketshipgames.haxe.text.TextReceiver;
+import com.rocketshipgames.haxe.sfx.SoundEffectGroup;
 
 interface GameEventsFactory
 {
 
   public function demultiplexWorld(world:String):World;
+
   public function demultiplexGameSpriteContainer
     (container:String):GameSpriteContainer;
+
   public function demultiplexCollisionContainer
     (container:String):CollisionContainer;
+
+  public function demultiplexSoundEffectGroup
+    (group:String):SoundEffectGroup;
+
   public function demultiplexText(channel:String):TextReceiver;
 
   public function getCollisionClassMap():Hash<Int>;

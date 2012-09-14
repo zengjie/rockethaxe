@@ -82,7 +82,8 @@ class Asteroid
     hitXBuffer = 6; // The sprite's a bit oversized due to the
     hitYBuffer = 6; // rotation, so cut it down a bit.
 
-    sfxExplosion = new SoundEffect(Assets.getSound("assets/explosion.wav"));
+    sfxExplosion = new SoundEffect(Assets.getSound("assets/explosion.wav"),
+                                   {group: game.sounds});
 
     init(opts);
 

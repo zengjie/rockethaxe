@@ -29,6 +29,7 @@ import nme.Assets;
 import com.rocketshipgames.haxe.debug.Debug;
 
 import com.rocketshipgames.haxe.sfx.SoundEffect;
+import com.rocketshipgames.haxe.sfx.SoundEffectGroup;
 
 import com.rocketshipgames.haxe.game.GameEvent;
 
@@ -37,27 +38,28 @@ class SoundEvent
 {
 
   public var sound:SoundEffect;
-  public var loop:Bool;
   public var world:World;
   public var signal:String;
 
   public function new(eventsFactory:GameEventsFactory,
                       path:String, params:Hash<String>):Void
   {
-    if ((sound = new SoundEffect(Assets.getSound(path))) == null)
-      Debug.error("Could not load sound " + path);
+    var opts:Dynamic = {};
 
     var d:String;
     if ((d = params.get("loop")) != null && d == "true")
-      loop = true;
-    else
-      loop = false;
+      opts.loop = true;
 
     if ((d = params.get("signal")) != null) {
       signal = d;
       world = eventsFactory.demultiplexWorld(params.get("world"));
       world.addSignal(signal, stop);
     }
+
+    opts.group = eventsFactory.demultiplexSoundEffectGroup(params.get("group"));
+
+    if ((sound = new SoundEffect(Assets.getSound(path), opts)) == null)
+      Debug.error("Could not load sound " + path);
 
     // end new
   }
@@ -72,7 +74,7 @@ class SoundEvent
   public function fire():Void
   {
     if (sound != null)
-      sound.play(loop);
+      sound.play();
     // end fire
   }
 

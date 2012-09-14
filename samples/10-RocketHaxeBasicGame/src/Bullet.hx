@@ -74,7 +74,8 @@ class Bullet
     collidesAs = RocketHaxeBasicGame.COLLIDES_BULLET;
     collidesWith = RocketHaxeBasicGame.COLLIDES_ASTEROID;
 
-    laser = new SoundEffect(Assets.getSound("assets/laser.wav"));
+    laser = new SoundEffect(Assets.getSound("assets/laser.wav"),
+                            {group: game.sounds});
 
     init(opts);
 

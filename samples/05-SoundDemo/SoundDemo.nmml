@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+  <app title="RocketHaxe Sound Demo"
+       main="SoundDemo"
+       file="SoundDemo"
+       package="com.rocketshipgames.rockethaxe.samples"
+       company="RocketHaxe"
+       version="0" />
+
+  <set name="SWF_VERSION" value="10.2" />
+  
+  <set name="BUILD_DIR" value="bin" />
+  <source name="src/" />
+
+
+  <window background="#336699" if="debug" />
+  <window background="#000000" unless="debug" />
+
+  <window width="640" height="480" fps="60" orientation="*" resizable="false" />
+
+  <!-- Do not include trailing '/' in path! -->
+  <assets path="assets" include="*" />
+
+  <haxelib name="rockethaxe" />
+</project>

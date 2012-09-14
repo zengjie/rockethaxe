@@ -47,7 +47,7 @@ import com.rocketshipgames.haxe.debug.DebugConsole;
 import com.rocketshipgames.haxe.debug.FPSDisplay;
 
 import com.rocketshipgames.haxe.sfx.SoundEffect;
-
+import com.rocketshipgames.haxe.sfx.SoundEffectGroup;
 
 class RocketHaxeBasicGame
   extends com.rocketshipgames.haxe.GameLoop
@@ -58,6 +58,8 @@ class RocketHaxeBasicGame
   public static inline var COLLIDES_ASTEROID:Int = 4;
 
   public var mute:Bool;
+
+  public var sounds:SoundEffectGroup;
 
   //------------------------------------------------------------
   private var spriteContainer:GameSpriteContainer;
@@ -84,7 +86,8 @@ class RocketHaxeBasicGame
       new com.rocketshipgames.haxe.physics.collisions.SweepScanCollisionContainer();
 
     mute = true;
-    SoundEffect.setAll(mute);
+    sounds = new SoundEffectGroup();
+    sounds.setMute(mute);
 
     bulletPool = new Deadpool
       (function(opts:Array<Dynamic>) {
@@ -167,7 +170,7 @@ class RocketHaxeBasicGame
 
     if (Keyboard.isKeyPressed(Keyboard.M)) {
       mute = !mute;
-      SoundEffect.setAll(mute);
+      sounds.setMute(mute);
     }
 
     // Check for collisions and apply responses
@@ -188,7 +191,7 @@ class RocketHaxeBasicGame
     Screen.configureStandard();
 
     // Play a zero volume sound to get the sound system going.
-    new SoundEffect(Assets.getSound("assets/explosion.wav")).play(false, 0);
+    new SoundEffect(Assets.getSound("assets/explosion.wav"), {volume:0}).play();
 
     // Turn off the mouse.
     com.rocketshipgames.haxe.ui.Mouse.disable();

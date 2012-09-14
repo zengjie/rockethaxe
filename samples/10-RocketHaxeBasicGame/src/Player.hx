@@ -82,7 +82,8 @@ class Player
     collidesAs = RocketHaxeBasicGame.COLLIDES_PLAYER;
     collidesWith = RocketHaxeBasicGame.COLLIDES_ASTEROID;
 
-    sfxExplosion = new SoundEffect(Assets.getSound("assets/explosion.wav"));
+    sfxExplosion = new SoundEffect(Assets.getSound("assets/explosion.wav"),
+                                   {group: game.sounds});
 
     enginesOnFrame = sprite.keyframe("engines");
     enginesOffFrame = sprite.keyframe("idle");

@@ -29,46 +29,69 @@ import nme.media.SoundChannel;
 import nme.media.SoundTransform;
 import nme.events.Event;
 
-enum Replay {
-  Reset;
-  Continue;
+enum ReplayMode {
+  RESET;
+  CONTINUE;
 }
 
 class AudioClip {
 
-  public var playing:Bool;
+  public var playing(default,null):Bool;
+  public var paused(default,null):Bool;
+
+  public var loop(default,null):Bool;
+
   public var channel:SoundChannel;
 
   //------------------------------------------------------------
   private var sound:Sound;
-  private var loop:Bool;
-  private var replay:Replay;
+  private var volume:Float;
+  private var replay:ReplayMode;
+
+  private var position:Float;
+
 
   //----------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new(sound:Sound, ?replay:Replay):Void
+  public function new(sound:Sound, opts:Dynamic=null):Void
   {
-
     this.sound = sound;
-
-    if (replay == null)
-      this.replay = Continue;
-    else
-      this.replay = replay;
-
     loop = false;
+    volume = -1;
+    replay = ReplayMode.CONTINUE;
+
+    if (opts != null) {
+
+      var d:Dynamic;
+      if ((d = Reflect.field(opts, "loop")) != null) {
+        loop = d;
+      }
+
+      if ((d = Reflect.field(opts, "volume")) != null) {
+        volume = d;
+      }
+
+      if ((d = Reflect.field(opts, "replay")) != null) {
+        replay = d;
+      }
+
+      // end opts
+    }
 
     channel = null;
     playing = false;
+    paused = false;
+
+    position = 0.0;
 
     // end function new
   }
 
   //--------------------------------------------------------------------
-  public function play(loop:Bool=false, volume:Float=-1):Void
+  public function play():Void
   {
     if (channel != null) {
-      if (replay == Continue) {
+      if (replay == CONTINUE) {
 	return;
       } else {
 	channel.stop();
@@ -76,42 +99,73 @@ class AudioClip {
     }
 
     var trans:SoundTransform;
-    if (volume != -1)
+    if (volume != -1) {
       trans = new SoundTransform(volume);
-    else
+    } else
       trans = new SoundTransform();
 
-    this.loop = loop;
     if (loop) {
+      /*
+       * We want to call play() with a large number of repeats so that
+       * there is no gap introduced by delays in the event system
+       * calling onComplete() to restart it.  However, this is
+       * somewhat tricky and requires special casing, as noted below.
+      */
+
       #if cpp
         /*
          * Passing any value in for the number of repeats on cpp
-         * target causes the app the crash on the *second* time you do
+         * target causes the app to crash on the *second* time you do
          * so.  Not sure if it has to be the same sound or not.  No
          * idea what's going on with that.
          */
-        channel = sound.play(trans);
+        channel = sound.play(position, trans);
       #else
-        channel = sound.play(0, 32767, trans);
+        if (position == 0) {
+          /*
+           * In this case we can safely give a large number of
+           * repeats.
+           */
+          channel = sound.play(0, 32767, trans);
+        } else {
+          /*
+           * If we're resuming play, we can't give a number of repeats
+           * as Flash will then only repeat from that position.
+           */
+          channel = sound.play(position, trans);
+        }
       #end
     } else
-      channel = sound.play(trans);
+      channel = sound.play(position, trans);
 
     if (channel != null) {
       channel.addEventListener(Event.SOUND_COMPLETE, onComplete);
       playing = true;
+      paused = false;
     }
     // end function play
   }
 
   public function stop():Void
   {
-    playing = false;
-    loop = false;
-    if (channel != null)
-      channel.stop();
-    channel = null;
+    pause();
+    position = 0;
+    paused = false;
     // end function stop
+  }
+
+  public function pause():Void
+  {
+    if (channel != null) {
+      position = channel.position;
+      channel.stop();
+    } else {
+      position = 0;
+    }
+    channel = null;
+    playing = false;
+    paused = true;
+    // end pause
   }
 
 
@@ -120,8 +174,9 @@ class AudioClip {
   {
     channel = null;
     playing = false;
+    position = 0;
     if (loop)
-      play(true);
+      play();
     // end function onComplete
   }
 
