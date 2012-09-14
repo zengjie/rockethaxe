@@ -59,6 +59,7 @@ class Mouse {
   private static var offscreen:Bool = true;
   private static var idle:Bool = true;
   private static var visibleRequested:Bool = false;
+  private static var previousVisibility:Bool = false;
 
   private static var installed:Bool = false;
 
@@ -66,6 +67,8 @@ class Mouse {
   private static var idleTimeout:Int = DEFAULT_IDLE_TIMEOUT;
   private static var idleClock:Int = DEFAULT_IDLE_TIMEOUT;
   private static var idleTimestamp:Int;
+
+  private static var visibilityListeners:List<Bool->Void> = new List();
 
   #if flash
     private static var appearance:MouseAppearanceWrapper =
@@ -146,6 +149,21 @@ class Mouse {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
+  public static function addVisibilityListener(fn:Bool->Void):Void
+  {
+    visibilityListeners.add(fn);
+    // end addVisibilityListener
+  }
+
+  public static function removeVisibilityListener(fn:Bool->Void):Void
+  {
+    visibilityListeners.remove(fn);
+    // end removeVisibilityListener
+  }
+
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
   public static function setCursor(?asset:String,
                                    ?hotspotX:Float, ?hotspotY:Float):Void
   {
@@ -184,7 +202,6 @@ class Mouse {
 
     idleClock = idleTimeout;
     idleTimestamp = nme.Lib.getTimer();
-
     // end enableIdle
   }
 
@@ -215,9 +232,22 @@ class Mouse {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public static inline function updateVisibility():Void
+  public static inline function isVisible():Bool
   {
-    appearance.updateVisibility(visibleRequested && !(offscreen || idle));
+    return (visibleRequested && !(offscreen || idle));
+    // end isVisible
+  }
+
+  private static inline function updateVisibility(propagate:Bool=true):Void
+  {
+    var v:Bool = isVisible();
+    if (previousVisibility != v) {
+      for (f in visibilityListeners)
+        f(v);
+      previousVisibility = v;
+      if (propagate)
+        appearance.updateVisibility(v);
+    }
     // end updateVisibility
   }
 
@@ -231,6 +261,7 @@ class Mouse {
   public static function goIdle():Void
   {
     idle = true;
+    updateVisibility(false);
     appearance.idleOut();
   }
 

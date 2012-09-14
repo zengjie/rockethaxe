@@ -62,6 +62,17 @@ class BitmapButton
     // end new
   }
 
+  public function setBitmaps(up:BitmapData,
+                             over:BitmapData,
+                             down:BitmapData):Void
+  {
+    upBitmap = up;
+    overBitmap = over;
+    downBitmap = down;
+    updateGraphicState();
+    // end setBitmaps
+  }
+
   public function setBitmap(bmp:BitmapData):Void
   {
     upBitmap = overBitmap = downBitmap = bmp;

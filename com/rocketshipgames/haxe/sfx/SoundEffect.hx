@@ -67,6 +67,8 @@ class SoundEffect
     }
 
     if (group.muted) {
+      if (loop)
+        paused = true;
       return;
     }
 

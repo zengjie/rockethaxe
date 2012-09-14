@@ -341,7 +341,7 @@ class GameLoop
     }
 
     pausedBitmap.x = (displayWidth-pausedBitmap.width)/2;
-    pausedBitmap.y = (displayHeight-pausedBitmap.height)/2;
+    pausedBitmap.y = 3*(displayHeight-pausedBitmap.height)/8;
     addChild(pausedBitmap);
 
     pausedScreenShowing = true;
