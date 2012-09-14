@@ -31,6 +31,7 @@ import com.rocketshipgames.haxe.gfx.Screen;
 import com.rocketshipgames.haxe.debug.Debug;
 
 import nme.display.Sprite;
+import nme.display.Bitmap;
 import nme.events.Event;
 import nme.events.KeyboardEvent;
 
@@ -59,7 +60,7 @@ class GameLoop
   public var entityCount(default,null):Int;
 
   public var pauseOnUnfocus:Bool;
-
+  public var pausedBitmap:Bitmap;
 
   //------------------------------------------------------------
   private var graphicsContainers:List<GraphicsContainer>;
@@ -74,6 +75,7 @@ class GameLoop
   private var paused(default,null):Bool;
   private var clientPaused:Bool;
   private var focusPaused:Bool;
+  private var pausedScreenShowing:Bool;
 
   private var prevFrameTimestamp:Int;
 
@@ -127,6 +129,8 @@ class GameLoop
     clientPaused = false;
     pauseOnUnfocus = true;
     focusPaused = false;
+    pausedScreenShowing = false;
+    pausedBitmap = null;
 
     prevFrameTimestamp = Lib.getTimer();
 
@@ -329,27 +333,60 @@ class GameLoop
   }
 
   //------------------------------------------------------------
-  public function togglePaused()
+  private function showPausedScreen():Void
   {
-    setPaused(!clientPaused);
+    if (pausedBitmap == null) {
+      pausedBitmap =
+        com.rocketshipgames.haxe.text.TextBitmap.makeBitmap("- PAUSED -");
+    }
+
+    pausedBitmap.x = (displayWidth-pausedBitmap.width)/2;
+    pausedBitmap.y = (displayHeight-pausedBitmap.height)/2;
+    addChild(pausedBitmap);
+
+    pausedScreenShowing = true;
+    // end showPausedScreen
+  }
+
+  private function hidePausedScreen():Void
+  {
+    if (!pausedScreenShowing) {
+      Debug.error("Tried to hide pause screen while not showing.");
+      return;
+    }
+
+    removeChild(pausedBitmap);
+    pausedScreenShowing = false;
+    // end hidePausedScreen
+  }
+
+  //------------------------------------------------------------
+  public function togglePaused(?showScreen:Bool)
+  {
+    setPaused(!clientPaused, showScreen);
     // end pause
   }
 
-  public function setPaused(paused:Bool = true)
+  public function setPaused(paused:Bool = true, ?showScreen:Bool)
   {
     clientPaused = paused;
-    updatePaused();
+    updatePaused(showScreen);
     // end pause
   }
 
-  private function updatePaused():Void
+  private function updatePaused(showScreen:Bool = true):Void
   {
     var p:Bool = clientPaused || focusPaused;
 
     if (!p && paused) {
+      if (pausedScreenShowing)
+        hidePausedScreen();
       // If we're starting back up, we need to adjust the clock so
       // that the game doesn't warp speed ahead the paused interval.
       prevFrameTimestamp = Lib.getTimer();
+    } else if (p && !paused) {
+      if (showScreen)
+        showPausedScreen();
     }
 
     paused = p;
