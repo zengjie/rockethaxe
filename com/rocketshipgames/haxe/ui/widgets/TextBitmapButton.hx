@@ -83,6 +83,9 @@ class TextBitmapButton
     upBitmap = upText.bitmap;
     overBitmap = overText.bitmap;
     downBitmap = downText.bitmap;
+
+    generateDisabledBitmap();
+
     updateGraphicState();
     // end setText
   }

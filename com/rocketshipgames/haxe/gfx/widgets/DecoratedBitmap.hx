@@ -26,6 +26,7 @@ package com.rocketshipgames.haxe.gfx.widgets;
 
 import nme.geom.Matrix;
 import nme.geom.Rectangle;
+import nme.geom.ColorTransform;
 
 import nme.display.Bitmap;
 import nme.display.BitmapData;
@@ -43,6 +44,11 @@ class DecoratedBitmap {
 
   //------------------------------------------------------------
   private var bgcolor:Int;
+
+  private var alphaMultiplier:Float;
+  private var redMultiplier:Float;
+  private var greenMultiplier:Float;
+  private var blueMultiplier:Float;
 
   private var underline:Bool;
 
@@ -76,6 +82,8 @@ class DecoratedBitmap {
   {
     bgcolor = defaultBackgroundColor;
 
+    alphaMultiplier = redMultiplier = greenMultiplier = blueMultiplier = 1;
+
     width = 0;
     height = 0;
 
@@ -100,6 +108,18 @@ class DecoratedBitmap {
         bgcolor = (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
+      if ((d = Reflect.field(opts, "alphaMultiplier")) != null) {
+        alphaMultiplier = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+      }
+      if ((d = Reflect.field(opts, "redMultiplier")) != null) {
+        redMultiplier = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+      }
+      if ((d = Reflect.field(opts, "greenMultiplier")) != null) {
+        greenMultiplier = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+      }
+      if ((d = Reflect.field(opts, "blueMultiplier")) != null) {
+        blueMultiplier = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+      }
 
       if ((d = Reflect.field(opts, "padding")) != null) {
         paddingLeft = paddingRight = paddingTop = paddingBottom =
@@ -289,7 +309,14 @@ class DecoratedBitmap {
     // overwrite decorated image with transparent pixels.
     var matrix:Matrix = new Matrix();
     matrix.translate(x, y);
-    bitmap.draw(source, matrix);
+
+    var trans:ColorTransform = new ColorTransform();
+    trans.alphaMultiplier = alphaMultiplier;
+    trans.redMultiplier = redMultiplier;
+    trans.greenMultiplier = greenMultiplier;
+    trans.blueMultiplier = blueMultiplier;
+
+    bitmap.draw(source, matrix, trans);
 
     //-- Postdecorator---apply filters, etc
     if (postdecorator != null)

@@ -106,6 +106,12 @@ class DisplayObjectButton
         upDisplayObject.visible = true;
       }
 
+    case DISABLED:
+      upDisplayObject.visible = true;
+      if (overDisplayObject != null)
+        overDisplayObject.visible = false;
+      if (downDisplayObject != null)
+        downDisplayObject.visible = false;
     }
 
     // end updateGraphicState

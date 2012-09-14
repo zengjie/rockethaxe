@@ -44,6 +44,7 @@ enum ButtonState {
   UP;
   OVER;
   DOWN;
+  DISABLED;
 }
 
 class Button
@@ -134,6 +135,20 @@ class Button
     // end hide
   }
 
+  public function disable():Void
+  {
+    state = DISABLED;
+    updateGraphicState();
+    // end disable
+  }
+
+  public function enable():Void
+  {
+    state = UP;
+    updateGraphicState();
+    // end enabled
+  }
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   private function click(e:Event):Void
@@ -147,7 +162,7 @@ class Button
   private function mouseDown(e:Event):Void
   {
     //trace("Down");
-    if (state != DOWN) {
+    if (state != DISABLED && state != DOWN) {
       state = DOWN;
       updateGraphicState();
     }
@@ -157,7 +172,7 @@ class Button
   private function mouseUp(e:Event):Void
   {
     //trace("Up");
-    if (state != OVER) {
+    if (state != DISABLED && state != OVER) {
       state = OVER;
       updateGraphicState();
     }
@@ -167,7 +182,7 @@ class Button
   private function rollOver(e:Event):Void
   {
     //trace("Roll over");
-    if (state != OVER) {
+    if (state != DISABLED && state != OVER) {
       state = OVER;
       updateGraphicState();
       if (onMouseOver != null)
@@ -179,7 +194,7 @@ class Button
   private function rollOut(e:Event):Void
   {
     //trace("Roll out");
-    if (state != UP) {
+    if (state != DISABLED && state != UP) {
       state = UP;
       updateGraphicState();
       if (onMouseOut != null)

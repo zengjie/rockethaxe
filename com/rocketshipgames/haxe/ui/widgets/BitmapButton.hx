@@ -29,6 +29,8 @@ import nme.display.DisplayObjectContainer;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 
+import com.rocketshipgames.haxe.gfx.widgets.DecoratedBitmap;
+
 import com.rocketshipgames.haxe.ui.widgets.Button;
 
 
@@ -42,7 +44,7 @@ class BitmapButton
   private var upBitmap:BitmapData;
   private var overBitmap:BitmapData;
   private var downBitmap:BitmapData;
-
+  private var disabledBitmap:BitmapData;
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
@@ -50,6 +52,7 @@ class BitmapButton
                       upBitmap:BitmapData,
                       overBitmap:BitmapData = null,
                       downBitmap:BitmapData = null,
+                      disabledBitmap:BitmapData = null,
                       ?container:DisplayObjectContainer):Void
   {
     super(action, container);
@@ -58,24 +61,47 @@ class BitmapButton
     this.overBitmap = (overBitmap != null) ? overBitmap : upBitmap;
     this.downBitmap = (downBitmap != null) ? downBitmap : upBitmap;
 
+    if (disabledBitmap == null)
+      generateDisabledBitmap();
+    else
+      this.disabledBitmap = disabledBitmap;
+
     addChild(bitmap = new Bitmap(upBitmap));
     // end new
   }
 
+  private function generateDisabledBitmap():Void
+  {
+    disabledBitmap = DecoratedBitmap.makeBitmapData
+      (upBitmap,
+       {redMultiplier: 0.66,
+        greenMultiplier: 0.66,
+        blueMultiplier: 0.66,
+       });
+    // end generateDisabledBitmap
+  }
+
   public function setBitmaps(up:BitmapData,
                              over:BitmapData,
-                             down:BitmapData):Void
+                             down:BitmapData,
+                             ?disabled:BitmapData):Void
   {
     upBitmap = up;
     overBitmap = over;
     downBitmap = down;
+
+    if (disabled == null)
+      generateDisabledBitmap();
+    else
+      disabledBitmap = disabled;
+
     updateGraphicState();
     // end setBitmaps
   }
 
   public function setBitmap(bmp:BitmapData):Void
   {
-    upBitmap = overBitmap = downBitmap = bmp;
+    upBitmap = overBitmap = downBitmap = disabledBitmap = bmp;
     updateGraphicState();
     // end setBitmap
   }
@@ -101,6 +127,13 @@ class BitmapButton
     // end setDownBitmap
   }
 
+  public function setDisabledBitmap(bmp:BitmapData):Void
+  {
+    disabledBitmap = bmp;
+    updateGraphicState();
+    // end setDownBitmap
+  }
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   private override function updateGraphicState():Void
@@ -114,6 +147,9 @@ class BitmapButton
 
     case DOWN:
       bitmap.bitmapData = downBitmap;
+
+    case DISABLED:
+      bitmap.bitmapData = disabledBitmap;
     }
     // end updateGraphicState
   }
