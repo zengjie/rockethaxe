@@ -106,10 +106,12 @@ class PanelManager {
 
 
   //------------------------------------------------------------
-  public function hide(id:String, ?opts:Dynamic):Void
+  public function hide(?id:String, ?opts:Dynamic):Void
   {
     var panel:PanelHandle;
-    if ((panel = panels.get(id)) == null) {
+    if (id == null)
+      panel = current;
+    else if ((panel = panels.get(id)) == null) {
       Debug.error("Unknown panel " + id);
       return;
     }
@@ -130,6 +132,7 @@ class PanelManager {
     current = null;
     if (next != null) {
       showComplete(next, nextOpts);
+      next = null;
     }
     // end hideComplete
   }

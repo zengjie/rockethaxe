@@ -71,7 +71,9 @@ class GameLoop
   private var states:Hash<State>;
   private var timers:List<Timer>;
 
-  private var paused:Bool;
+  private var paused(default,null):Bool;
+  private var clientPaused:Bool;
+  private var focusPaused:Bool;
 
   private var prevFrameTimestamp:Int;
 
@@ -121,8 +123,10 @@ class GameLoop
     time = 0;
     elapsed = 0;
 
-    pauseOnUnfocus = true;
     paused = false;
+    clientPaused = false;
+    pauseOnUnfocus = true;
+    focusPaused = false;
 
     prevFrameTimestamp = Lib.getTimer();
 
@@ -311,34 +315,46 @@ class GameLoop
 
   private function onActivate(e:Event=null):Void
   {
-    setPaused(false);
+    focusPaused = false;
+    updatePaused();
     // end onActivate
   }
   private function onDeactivate(e:Event=null):Void
   {
-    setPaused(true);
+    if (pauseOnUnfocus) {
+      focusPaused = true;
+      updatePaused();
+    }
     // end onDeactivate
   }
 
   //------------------------------------------------------------
   public function togglePaused()
   {
-    setPaused(!paused);
+    setPaused(!clientPaused);
     // end pause
   }
 
   public function setPaused(paused:Bool = true)
   {
-    if (!paused && this.paused) {
+    clientPaused = paused;
+    updatePaused();
+    // end pause
+  }
+
+  private function updatePaused():Void
+  {
+    var p:Bool = clientPaused || focusPaused;
+
+    if (!p && paused) {
       // If we're starting back up, we need to adjust the clock so
       // that the game doesn't warp speed ahead the paused interval.
       prevFrameTimestamp = Lib.getTimer();
     }
 
-    this.paused = paused;
-    // end pause
+    paused = p;
+    // end updatePaused
   }
-
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
