@@ -156,6 +156,9 @@ class AudioClip {
 
   public function pause():Void
   {
+    if (!playing)
+      return;
+
     if (channel != null) {
       position = channel.position;
       channel.stop();

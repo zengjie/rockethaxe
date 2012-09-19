@@ -72,7 +72,7 @@ class SoundEffect
       return;
     }
 
-    if (group.fading && volume == -1)
+    if (group.fading && setVolume == -1)
       volume = group.volumeControl.volume;
     else
       volume = setVolume;

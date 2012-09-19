@@ -374,6 +374,16 @@ class GameLoop
     // end pause
   }
 
+  private function enterPaused():Void
+  {
+    // end enterPaused
+  }
+
+  private function leavePaused():Void
+  {
+    // end leavePaused
+  }
+
   private function updatePaused(showScreen:Bool = true):Void
   {
     var p:Bool = clientPaused || focusPaused;
@@ -381,12 +391,18 @@ class GameLoop
     if (!p && paused) {
       if (pausedScreenShowing)
         hidePausedScreen();
+
+      leavePaused();
+
       // If we're starting back up, we need to adjust the clock so
       // that the game doesn't warp speed ahead the paused interval.
       prevFrameTimestamp = Lib.getTimer();
+
     } else if (p && !paused) {
       if (showScreen)
         showPausedScreen();
+
+      enterPaused();
     }
 
     paused = p;

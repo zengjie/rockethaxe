@@ -74,6 +74,21 @@ class SoundEffectGroup
     // end mute
   }
 
+  public function pause():Void
+  {
+    for (s in effects)
+      s.pause();
+    // end pause
+  }
+
+  public function resume():Void
+  {
+    for (s in effects)
+      if (s.paused)
+        s.play();
+    // end pause
+  }
+
   public function mute():Void
   {
     muted = true;
