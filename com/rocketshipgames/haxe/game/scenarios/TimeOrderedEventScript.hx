@@ -76,11 +76,16 @@ class TimeOrderedEventScript
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function loadScript(xml:String):Void
+  public function loadScript(xml:String, checkpoint:String = null):Void
   {
+    var checkpointSearching:Bool = (checkpoint!=null);
+    var always:Bool = false;
+
     var root = Xml.parse(xml).firstElement();
 
     for (cmdNode in root.elements()) {
+      always = false;
+
       var cmd:String = cmdNode.nodeName;
 
       var value:String =
@@ -90,10 +95,15 @@ class TimeOrderedEventScript
       for (att in cmdNode.attributes())
         params.set(att, cmdNode.get(att));
 
-      if (cmd == "checkpoint") {
-        trace("Found checkpoint " + value);
-      } else {
+      if (params.get("always") != null) {
+        params.remove("always");
+        always = true;
+      }
 
+      if (checkpointSearching && cmd == "checkpoint" && value == checkpoint) {
+        checkpointSearching = false;
+
+      } else if (!checkpointSearching || always) {
         var wrapper:GameEventWrapper;
         if (params.exists("when"))
           wrapper = new BlockingGameEventWrapper(eventsFactory, params);
@@ -142,6 +152,11 @@ class TimeOrderedEventScript
 
       // end parse command
     }
+
+    if (checkpointSearching) {
+      Debug.error("Did not find checkpoint " + checkpoint);
+    }
+
     // end loadScript
   }
 
