@@ -34,7 +34,7 @@ class BlockingGameEventWrapper
   //------------------------------------------------------------
   private var world:World;
   private var signals:List<String>;
-  private var states:List<String>;
+  private var states:List<StateReference>;
 
   private var registered:Bool;
 
@@ -65,8 +65,15 @@ class BlockingGameEventWrapper
 
       var id:String = str.substr(s, i-s);
       if (id.charAt(0) == "@") {
-        id = id.substr(1);
-        states.push(id);
+        var negate:Bool = false;
+
+        if (id.charAt(1) == "!") {
+          negate = true;
+          id = id.substr(2);
+        } else
+          id = id.substr(1);
+
+        states.push(new StateReference(id, negate));
       } else {
         signals.push(id);
       }
@@ -106,8 +113,11 @@ class BlockingGameEventWrapper
     var statesReady:Bool = true;
     var d:Dynamic;
     for (i in states) {
-      d = world.getStateValue(i);
-      if (d == null || d == false) {
+      d = world.getStateValue(i.state);
+      if (i.negate && (d != null && d != false)) {
+        statesReady = false;
+        break;
+      } else if (!i.negate && (d == null || d == false)) {
         statesReady = false;
         break;
       }
@@ -123,4 +133,20 @@ class BlockingGameEventWrapper
   }
 
   // end BlockingGameEventWrapper
+}
+
+
+private class StateReference
+{
+  public var state:String;
+  public var negate:Bool;
+
+  public function new(state:String, negate:Bool):Void
+  {
+    this.state = state;
+    this.negate = negate;
+    // end new
+  }
+
+  // end StateReference
 }

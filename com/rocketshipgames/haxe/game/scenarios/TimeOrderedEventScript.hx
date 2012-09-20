@@ -90,48 +90,55 @@ class TimeOrderedEventScript
       for (att in cmdNode.attributes())
         params.set(att, cmdNode.get(att));
 
-      var wrapper:GameEventWrapper;
-      if (params.exists("when"))
-        wrapper = new BlockingGameEventWrapper(eventsFactory, params);
-      else
-        wrapper = new TimeoutGameEventWrapper(params);
-
-      var event:GameEvent = null;
-
-      //------------------------------------------------
-      //-- Parse specific events
-
-      if (cmd == "text") {
-        event = new TextEvent(eventsFactory, value, params);
-
-      } else if (cmd == "sound") {
-        event = new SoundEvent(eventsFactory, value, params);
-
-      } else if (cmd == "area-trigger") {
-        event = new SpawnAreaTriggerEvent(eventsFactory, params);
-
-      } else if (cmd == "signal") {
-        event = new SignalEvent(eventsFactory, value, params);
-
-      } else if (cmd == "state") {
-        event = new StateEvent(eventsFactory, value, params);
-
+      if (cmd == "checkpoint") {
+        trace("Found checkpoint " + value);
       } else {
-        event = eventsFactory.generateEvent(cmd, params, value);
 
-        // end custom event
+        var wrapper:GameEventWrapper;
+        if (params.exists("when"))
+          wrapper = new BlockingGameEventWrapper(eventsFactory, params);
+        else
+          wrapper = new TimeoutGameEventWrapper(params);
+
+        var event:GameEvent = null;
+
+        //------------------------------------------------
+        //-- Parse specific events
+
+        if (cmd == "text") {
+          event = new TextEvent(eventsFactory, value, params);
+
+        } else if (cmd == "sound") {
+          event = new SoundEvent(eventsFactory, value, params);
+
+        } else if (cmd == "area-trigger") {
+          event = new SpawnAreaTriggerEvent(eventsFactory, params);
+
+        } else if (cmd == "signal") {
+          event = new SignalEvent(eventsFactory, value, params);
+
+        } else if (cmd == "state") {
+          event = new StateEvent(eventsFactory, value, params);
+
+        } else {
+          event = eventsFactory.generateEvent(cmd, params, value);
+
+          // end custom event
+        }
+
+        //-- End parsing specific events
+        //------------------------------------------------
+
+        if (event == null) {
+          Debug.error("Unknown event " + cmd + " or other error parsing.");
+          continue;
+        }
+
+        wrapper.setEvent(event);
+        eventQueue.add(wrapper);
+
+        // end not a checkpoint
       }
-
-      //-- End parsing specific events
-      //------------------------------------------------
-
-      if (event == null) {
-        Debug.error("Unknown event " + cmd + " or other error parsing.");
-        continue;
-      }
-
-      wrapper.setEvent(event);
-      eventQueue.add(wrapper);
 
       // end parse command
     }

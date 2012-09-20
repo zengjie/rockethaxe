@@ -142,6 +142,8 @@ class SoundEffectGroup
     volumeControl = {volume: 1, remainder: duration};
     Actuate.tween(volumeControl, duration, {volume: 0, remainder: 0})
       .onComplete(function() { fading = false; } );
+
+    muted = true;
       // end fadeout
   }
 
