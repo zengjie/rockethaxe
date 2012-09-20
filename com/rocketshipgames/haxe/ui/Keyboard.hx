@@ -206,6 +206,7 @@ class Keyboard
 
   public static function isKeyDown(code:Int):Bool
   {
+    keyTrack[code] = false;
     return keyDown[code];
   }
 
