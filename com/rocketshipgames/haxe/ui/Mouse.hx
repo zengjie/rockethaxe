@@ -56,7 +56,7 @@ class Mouse {
 
 
   //------------------------------------------------------------
-  private static var offscreen:Bool = true;
+  private static var offscreen:Bool = false;
   private static var idle:Bool = true;
   private static var visibleRequested:Bool = false;
   private static var previousVisibility:Bool = false;
