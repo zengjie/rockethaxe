@@ -26,6 +26,11 @@ package com.rocketshipgames.haxe.debug;
 
 class Debug {
 
+  public static function debug(v:Dynamic, ?pos:haxe.PosInfos):Void
+  {
+    haxe.Log.trace(v, pos);
+  }
+
   public static function error(v:Dynamic, ?pos:haxe.PosInfos):Void
   {
     haxe.Log.trace("[ERROR] " + v, pos);

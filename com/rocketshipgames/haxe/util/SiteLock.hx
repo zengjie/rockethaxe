@@ -33,17 +33,10 @@ class SiteLock
   public static function permitted(allowed:Array<String>):Bool
   {
     var components:URLParser = URLParser.parse(nme.Lib.current.loaderInfo.url);
-    /*
-    trace(nme.Lib.current.loaderInfo.url);
-    trace(components.protocol);
-    trace(components.host);
-    */
 
     var domain:String = components.host.toLowerCase();
     if (domain.substr(0, 4) == "www.")
       domain = domain.substr(4);
-
-    //trace("Checking " + domain);
 
     for (h in allowed) {
       if (domain == h)

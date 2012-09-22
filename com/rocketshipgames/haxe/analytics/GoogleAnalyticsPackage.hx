@@ -77,7 +77,7 @@ class GoogleAnalyticsPackage
     try {
       tracker.trackEvent(category, eventID, str, value);
       #if debug
-        trace("Event " + category + ":" + eventID + " -> " +
+        Debug.debug("Event " + category + ":" + eventID + " -> " +
               str + ((value != null) ? (" " + value) : ""));
       #end
     } catch (e:Dynamic) {
@@ -108,7 +108,7 @@ class GoogleAnalyticsPackage
     try {
       tracker.trackPageview(str);
       #if debug
-        trace("Pageview " + str);
+        Debug.debug("Pageview " + str);
       #end
     } catch (e:Dynamic) {
       Debug.error("Could not post to Google Analytics: " + e);

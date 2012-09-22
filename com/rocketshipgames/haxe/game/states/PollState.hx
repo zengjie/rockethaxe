@@ -49,7 +49,6 @@ class PollState
     this.object = object;
     this.property = property;
 
-    trace("Adding state " + id);
     world.addState(id, this);
     // end new
   }
@@ -64,9 +63,6 @@ class PollState
   //------------------------------------------------------------
   public function getValue(id:String):Dynamic
   {
-    trace(object + "[" + property + "] =" +
-          Reflect.getProperty(object, property));
-
     return Reflect.getProperty(object, property);
     // end getValue
   }
