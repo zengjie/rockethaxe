@@ -38,11 +38,14 @@ class Screen
   //------------------------------------------------------------
   public static function configure(align:StageAlign, scale:StageScaleMode):Void
   {
-    width = nme.Lib.current.stage.stageWidth;
-    height = nme.Lib.current.stage.stageHeight;
-
     nme.Lib.current.stage.align = align;
     nme.Lib.current.stage.scaleMode = scale;
+
+    width = nme.Lib.current.loaderInfo.width;
+    height = nme.Lib.current.loaderInfo.height;
+
+    //width = nme.Lib.current.stage.stageWidth;
+    //height = nme.Lib.current.stage.stageHeight;
     // end configure
   }
 
