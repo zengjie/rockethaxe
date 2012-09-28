@@ -105,7 +105,6 @@ class Button
 
 
   //------------------------------------------------------------
-  /*
   public function getX():Float { return x; }
   public function getY():Float { return y; }
 
@@ -114,7 +113,7 @@ class Button
 
   public function getWidth():Float { return width; }
   public function getHeight():Float { return height; }
-  */
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------

@@ -96,32 +96,14 @@ class UIWidgetList
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   //------------------------------------------------------------
-  /*
   public function getX():Float { return x; }
   public function getY():Float { return y; }
 
-  public function setX(x:Float):Float
-  {
-    for (w in widgets)
-      w.setX(w.getX() + (x-this.x));
-    this.x = x;
-    return x;
-    // end setX
-  }
+  public function setX(x:Float):Float { return this.x = x; }
+  public function setY(y:Float):Float { return this.y = y; }
 
-  public function setY(y:Float):Float
-  {
-    for (w in widgets)
-      w.setY(w.getY() + (y-this.y));
-    this.y = y;
-    return y;
-    // end setY
-  }
-
-  public function getWidth():Float { return subWidth; }
-  public function getHeight():Float { return subHeight; }
-  */
-
+  public function getWidth():Float { return width; }
+  public function getHeight():Float { return height; }
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------

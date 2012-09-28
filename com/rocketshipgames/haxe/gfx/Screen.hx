@@ -41,11 +41,24 @@ class Screen
     nme.Lib.current.stage.align = align;
     nme.Lib.current.stage.scaleMode = scale;
 
-    width = nme.Lib.current.loaderInfo.width;
-    height = nme.Lib.current.loaderInfo.height;
+    /*
+     * This little oddity is to account for the fact that the
+     * standalone Flash player starts at some default window size, and
+     * then adjust to your requested stage size.  If you poll
+     * stageWidth/stageHeight too early, before it does that, you'll
+     * get funny values.  However, the loaderInfo width and height are
+     * always correct.  Unfortunately, the Android target doesn't have
+     * width and height properties on all the objects...
+     */
 
-    //width = nme.Lib.current.stage.stageWidth;
-    //height = nme.Lib.current.stage.stageHeight;
+    #if flash
+      width = nme.Lib.current.loaderInfo.width;
+      height = nme.Lib.current.loaderInfo.height;
+    #else
+      width = nme.Lib.current.stage.stageWidth;
+      height = nme.Lib.current.stage.stageHeight;
+    #end
+
     // end configure
   }
 

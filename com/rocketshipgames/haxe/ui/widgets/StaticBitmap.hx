@@ -73,6 +73,19 @@ class StaticBitmap
     // end setBitmapData
   }
 
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function getX():Float { return x; }
+  public function getY():Float { return y; }
+
+  public function setX(x:Float):Float { return this.x = x; }
+  public function setY(y:Float):Float { return this.y = y; }
+
+  public function getWidth():Float { return width; }
+  public function getHeight():Float { return height; }
+
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public function show(?opts:Dynamic):Void

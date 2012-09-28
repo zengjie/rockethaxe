@@ -140,27 +140,27 @@ class LinearUIWidgetList
       subWidth = -margin;
       subHeight = 0;
       for (w in widgets) {
-        subWidth += w.width + margin;
-        subHeight = Math.max(w.height, subHeight);
+        subWidth += w.getWidth() + margin;
+        subHeight = Math.max(w.getHeight(), subHeight);
       }
 
       var tx:Float = 0;
       for (w in widgets) {
         switch (verticalJustification) {
         case TOP:
-          w.y = 0;
+          w.setY(0);
 
         case MIDDLE:
-          w.y = (subHeight-w.height)/2;
+          w.setY((subHeight-w.getHeight())/2);
 
         case BOTTOM:
-          w.y = subHeight-w.height;
+          w.setY(subHeight-w.getHeight());
 
           // end vertical alignment
         }
 
-        w.x = tx;
-        tx += w.width + margin;
+        w.setX(tx);
+        tx += w.getWidth() + margin;
 
       }
 
@@ -170,8 +170,8 @@ class LinearUIWidgetList
       subWidth = 0;
       subHeight = -margin;
       for (w in widgets) {
-        subWidth = Math.max(w.width, subWidth);
-        subHeight += w.height + margin;
+        subWidth = Math.max(w.getWidth(), subWidth);
+        subHeight += w.getHeight() + margin;
       }
 
       var ty:Float = 0;
@@ -179,17 +179,17 @@ class LinearUIWidgetList
 
         switch (horizontalJustification) {
         case LEFT:
-          w.x = 0;
+          w.setX(0);
 
         case CENTER:
-          w.x = (subWidth-w.width)/2;
+          w.setX((subWidth-w.getWidth())/2);
 
         case RIGHT:
-          w.x = subWidth-w.width;
+          w.setX(subWidth-w.getWidth());
         }
 
-        w.y = ty;
-        ty += w.height + margin;
+        w.setY(ty);
+        ty += w.getHeight() + margin;
       }
 
       // end switch orientation
