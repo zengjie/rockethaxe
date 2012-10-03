@@ -399,8 +399,10 @@ class GameLoop
       prevFrameTimestamp = Lib.getTimer();
 
     } else if (p && !paused) {
-      if (showScreen)
-        showPausedScreen();
+      #if !nopausescreen
+        if (showScreen)
+          showPausedScreen();
+      #end
 
       enterPaused();
     }
