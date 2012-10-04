@@ -80,6 +80,7 @@ class TimeOrderedEventScript
   {
     var checkpointSearching:Bool = (checkpoint!=null);
     var always:Bool = false;
+    var str:String;
 
     var root = Xml.parse(xml).firstElement();
 
@@ -94,6 +95,17 @@ class TimeOrderedEventScript
       var params:Hash<String> = new Hash();
       for (att in cmdNode.attributes())
         params.set(att, cmdNode.get(att));
+
+      if ((str = params.get("platform")) != null) {
+        if (str.charAt(0) == "!") {
+          if (str.substr(1) == com.rocketshipgames.haxe.util.Platform.LABEL)
+            continue;
+        } else {
+          if (str != com.rocketshipgames.haxe.util.Platform.LABEL)
+            continue;
+        }
+        // has a platform specifier
+      }
 
       if (params.get("always") != null) {
         params.remove("always");
