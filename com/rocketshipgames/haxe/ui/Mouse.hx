@@ -208,6 +208,7 @@ class Mouse {
   public static function disableIdle():Void
   {
     idleEnabled = false;
+    updateVisibility();
     // end disableIdle
   }
 
@@ -260,6 +261,8 @@ class Mouse {
 
   public static function goIdle():Void
   {
+    if (!idleEnabled)
+      return;
     idle = true;
     updateVisibility(false);
     appearance.idleOut();
