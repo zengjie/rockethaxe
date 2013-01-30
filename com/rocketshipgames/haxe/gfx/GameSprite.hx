@@ -95,10 +95,10 @@ class GameSprite {
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function new(name:String, baseIndex:Int, width:Int, height:Int):Void
+  public function new(name:String, width:Int, height:Int):Void
   {
     this.name = name;
-    this.baseIndex = baseIndex;
+    this.baseIndex = -1;
     this.width = width;
     this.height = height;
 
@@ -108,11 +108,27 @@ class GameSprite {
     numFrames = 0;
   }
 
+  //------------------------------------------------------------
+  public function addFrame(frame:Int):Void
+  {
+
+    // Don't actually need to track the frames
+
+    numFrames++;
+
+    if (baseIndex == -1)
+      baseIndex = frame;
+
+    // end addFrame
+  }
+
+  //------------------------------------------------------------
   public function hasAnimation(label:String):Bool
   {
     return animations.exists(label);
     // end hasAnimation
   }
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------

@@ -148,7 +148,7 @@ class RocketHaxeBasicGame
     if (Keyboard.isKeyPressed(Keyboard.T)) {
       trace("Time " + TimeUtils.getHumanTime(time) + " (" + time + "); " +
             entityCount + " entities; " +
-            spriteContainer.instanceCount + " sprites");
+            spriteContainer.getNumInstances() + " sprites");
     }
 
     if (Keyboard.isKeyPressed(Keyboard.EQUAL)) {
