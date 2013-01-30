@@ -47,7 +47,7 @@ class Asteroid
 
 
   //------------------------------------------------------------
-  private static inline var ACCELERATION:Float = 100;
+  private static inline var ACCELERATION:Float = 200;
   private static inline var MIN_VELOCITY:Float = 2;
   private static inline var MAX_VELOCITY:Float = 50;
 
@@ -63,7 +63,7 @@ class Asteroid
     super(game, collisionContainer, gfxContainer, "asteroid");
 
     var physics:ShooterPhysicsPackage = new ShooterPhysicsPackage(this);
-    physics.xdrag = physics.ydrag = ACCELERATION/2;
+    physics.xdrag = physics.ydrag = 0;
     physics.xvelMin = physics.yvelMin = MIN_VELOCITY;
     physics.xvelMax = physics.yvelMax = MAX_VELOCITY;
 
@@ -96,7 +96,7 @@ class Asteroid
     super.init(_opts);
 
     x = Math.random()*world.worldWidth;
-    y = -sprite.height/2;
+    y = sprite.height; //-sprite.height/2;
     physics.xvel = physics.yvel = 0;
     physics.xacc = (Math.random() * 2 * ACCELERATION) - ACCELERATION;
     physics.yacc = ACCELERATION;
