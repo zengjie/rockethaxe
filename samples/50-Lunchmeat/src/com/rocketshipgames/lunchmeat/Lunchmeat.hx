@@ -30,8 +30,6 @@ import nme.Assets;
 
 import com.eclecticdesignstudio.motion.Actuate;
 
-import mochi.as3.MochiServices;
-
 // Provides a helper to configure the screen coordinate system, as
 // well as the screen dimensions prescribed by the build.
 import com.rocketshipgames.haxe.gfx.Screen;
