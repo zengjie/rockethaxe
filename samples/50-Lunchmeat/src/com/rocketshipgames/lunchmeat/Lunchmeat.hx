@@ -30,10 +30,13 @@ import nme.Assets;
 
 import com.eclecticdesignstudio.motion.Actuate;
 
+import mochi.as3.MochiServices;
+
 // Provides a helper to configure the screen coordinate system, as
 // well as the screen dimensions prescribed by the build.
 import com.rocketshipgames.haxe.gfx.Screen;
 
+import com.rocketshipgames.haxe.debug.Debug;
 import com.rocketshipgames.haxe.debug.DebugConsole;
 import com.rocketshipgames.haxe.debug.FPSDisplay;
 
@@ -116,6 +119,16 @@ class Lunchmeat
     #end
 
     // Instate analytics and Mochi here
+
+      //    #if mochi
+      var mochiConnected = true;
+    MochiServices.connect
+        ("adf4226b47b7bdc8", game,
+         function(status:String) {
+          mochiConnected = false;
+          Debug.error("Could not connect to Mochi: " + status);
+        });
+      //    #end
 
     #if debug
       nme.Lib.current.stage.addChild

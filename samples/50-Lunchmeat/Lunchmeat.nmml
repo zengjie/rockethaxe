@@ -24,10 +24,11 @@
   <assets path="assets" include="*" />
 
   <haxelib name="rockethaxe" />
-  <haxelib name="nme" />
 
-  <haxeflag name="-Dnetwork-sandbox" />
+<!--  <haxeflag name="-Dnetwork-sandbox" /> -->
+
 <!--
+  <haxelib name="nme" />
   <ndll name="std" />
   <ndll name="regexp" />
   <ndll name="zlib" />
