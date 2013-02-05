@@ -120,16 +120,6 @@ class Lunchmeat
 
     // Instate analytics and Mochi here
 
-      //    #if mochi
-      var mochiConnected = true;
-    MochiServices.connect
-        ("adf4226b47b7bdc8", game,
-         function(status:String) {
-          mochiConnected = false;
-          Debug.error("Could not connect to Mochi: " + status);
-        });
-      //    #end
-
     #if debug
       nme.Lib.current.stage.addChild
         (new com.rocketshipgames.haxe.debug.FPSDisplay
