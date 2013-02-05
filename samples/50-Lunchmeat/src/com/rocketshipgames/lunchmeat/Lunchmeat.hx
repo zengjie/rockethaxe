@@ -115,28 +115,7 @@ class Lunchmeat
       new DebugConsole();
     #end
 
-      /*
-    //-- Set up analytics
-    #if flash
-      // This must be done after addChild() so it has a pointer to stage.
-      Analytics.addPackage
-        (new com.rocketshipgames.haxe.analytics.GoogleAnalyticsPackage
-         (game, "UA-34269443-2", "lunchmeat"));
-    #end
-    Analytics.event("load");
-      */
-
-    /*
-    #if mochi
-      GoldLeader.mochiConnected = true;
-      MochiServices.connect
-        ("adf4226b47b7bdc8", game,
-         function(status:String) {
-          GoldLeader.mochiConnected = false;
-          Debug.error("Could not connect to Mochi: " + status);
-        });
-    #end
-    */
+    // Instate analytics and Mochi here
 
     #if debug
       nme.Lib.current.stage.addChild

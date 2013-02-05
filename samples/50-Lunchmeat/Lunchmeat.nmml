@@ -26,6 +26,7 @@
   <haxelib name="rockethaxe" />
   <haxelib name="nme" />
 
+  <haxeflag name="-Dnetwork-sandbox" />
 <!--
   <ndll name="std" />
   <ndll name="regexp" />
