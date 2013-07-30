@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project>
+<extension>
   <!-- Do not include trailing '/' in path! -->
   <assets path="assets" rename="assets" include="*" />
 
   <section if="flash">
-    <source name="lib/google/analytics_flash/hxclasses/" />
-    <haxeflag name="-swf-lib lib/google/analytics_flash/library.swf" />
+
+    <section if="google">
+      <source name="lib/google/analytics_flash/hxclasses/" />
+      <haxeflag name="-swf-lib lib/google/analytics_flash/library.swf" />
+    </section>
+
+    <section if="mochi">
+      <source name="lib/mochi/" />
+      <haxeflag name="-swf-lib lib/mochi/mochi.swf" />
+    </section>
+
   </section>
-</project>
+
+</extension>

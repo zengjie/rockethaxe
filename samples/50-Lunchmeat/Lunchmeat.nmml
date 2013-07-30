@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+  <app title="Lunchmeat"
+       main="com.rocketshipgames.lunchmeat.Lunchmeat"
+       file="Lunchmeat"
+       package="com.rocketshipgames.lunchmeat"
+       company="Rocketship Games"
+       version="0" />
+
+  <set name="SWF_VERSION" value="10.2" />
+  
+  <set name="BUILD_DIR" value="bin" />
+  <source name="src/" />
+
+
+  <window background="#336699" if="debug" />
+  <window background="#000000" unless="debug" />
+
+  <window width="412" height="480" fps="60"
+          orientation="landscape" resizable="false" />
+
+  <!-- Do not include trailing '/' in path! -->
+  <assets path="assets" include="*" />
+
+  <haxelib name="rockethaxe" />
+
+<!--  <haxeflag name="-Dnetwork-sandbox" /> -->
+
+<!--
+  <haxelib name="nme" />
+  <ndll name="std" />
+  <ndll name="regexp" />
+  <ndll name="zlib" />
+  <ndll name="nme" haxelib="nme" />
+-->
+
+</project>

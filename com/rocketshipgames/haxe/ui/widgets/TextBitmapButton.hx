@@ -46,6 +46,9 @@ class TextBitmapButton
                       ?downStyle:Dynamic,
                       ?container:DisplayObjectContainer):Void
   {
+    if (defaultStyle == null)
+      defaultStyle = {};
+
     var _up = Reflect.copy(defaultStyle);
     if (upStyle != null) {
       for (f in Reflect.fields(upStyle))
