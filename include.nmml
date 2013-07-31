@@ -5,7 +5,6 @@
   <assets path="assets" rename="assets" include="*" />
 
   <section if="flash">
-
     <section if="google">
       <source name="lib/google/analytics_flash/hxclasses/" />
       <haxeflag name="-swf-lib lib/google/analytics_flash/library.swf" />
@@ -15,7 +14,6 @@
       <source name="lib/mochi/" />
       <haxeflag name="-swf-lib lib/mochi/mochi.swf" />
     </section>
-
   </section>
 
 </extension>

@@ -4,12 +4,12 @@
 
   <user name="tjkopena"/>
 
-  <description>A simple game library built over NME.</description>
+  <description>A simple game library built over OpenFL.</description>
 
-  <version name="1.0">
-    Initial release, enough components to build fairly fancy shooter games.
+  <version name="2.0">
+    Second release.  Time to clean things up!
   </version>
 
-  <depends name="nme" />
+  <depends name="openfl" />
   <depends name="actuate" />
 </project>
