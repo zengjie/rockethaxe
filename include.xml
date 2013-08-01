@@ -16,4 +16,9 @@
     </section>
   </section>
 
+
+  <!-- This is here because simply including openfl as a dependency
+       does not seem to bring in the associated template files. -->
+  <haxelib name="openfl" />
+
 </extension>
