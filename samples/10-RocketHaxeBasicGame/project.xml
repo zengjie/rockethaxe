@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project>
+
+  <meta title="RocketHaxe Basic Game"
+        package="com.rocketshipgames.haxe.samples"
+        company="Rocketship Games"
+        version="1.5" />
+
+  <app main="Main" path="export" file="RocketHaxeBasicGame" />
+
+  <source path="src" />
+
+  <window background="#336699" if="debug" />
+  <window background="#000000" unless="debug" />
+
+  <window width="640" height="480" unless="android" />
+  <window width="0" height="0" if="android" />
+
+  <window fps="60" orientation="landscape" resizable="false" />
+
+  <!--  <set name="SWF_VERSION" value="10.2" /> -->
+
+  <!-- Do not include trailing '/' in path! -->
+  <assets path="assets" include="*" />
+
+  <haxelib name="rockethaxe" version="2.0" />
+</project>
