@@ -11,6 +11,10 @@ package com.rocketshipgames.haxe.ui.widgets;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
+#if android
+  import flash.events.TouchEvent;
+#end
+
 import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 
@@ -52,10 +56,17 @@ class Button
 
     addEventListener(MouseEvent.CLICK, click);
 
-    addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
-    addEventListener(MouseEvent.MOUSE_UP, mouseUp);
-    addEventListener(MouseEvent.ROLL_OVER, rollOver);
-    addEventListener(MouseEvent.ROLL_OUT, rollOut);
+    #if android
+      addEventListener(TouchEvent.TOUCH_BEGIN, mouseDown);
+      addEventListener(TouchEvent.TOUCH_END, mouseUp);
+      addEventListener(TouchEvent.TOUCH_ROLL_OVER, rollOver);
+      addEventListener(TouchEvent.TOUCH_ROLL_OUT, rollOut);
+    #else
+      addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+      addEventListener(MouseEvent.MOUSE_UP, mouseUp);
+      addEventListener(MouseEvent.ROLL_OVER, rollOver);
+      addEventListener(MouseEvent.ROLL_OUT, rollOut);
+    #end
 
     onMouseOver = onMouseOut = null;
 
