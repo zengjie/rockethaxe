@@ -49,13 +49,7 @@ class Mouse {
 
   private static var visibilityListeners:List<Bool->Void> = new List();
 
-  #if flash
-    private static var appearance:MouseAppearanceWrapper =
-      new com.rocketshipgames.haxe.device.platforms.FlashMouseAppearance();
-  #else
-    private static var appearance:MouseAppearanceWrapper =
-      new com.rocketshipgames.haxe.device.platforms.DefaultMouseAppearance();
-  #end
+  private static var appearance:MouseAppearanceWrapper = null;
 
 
   //--------------------------------------------------------------------
@@ -74,6 +68,14 @@ class Mouse {
         appearance.setCursor(cursor, hotspotX, hotspotY);
       show();
       return;
+    } else if (appearance == null) {
+      #if flash
+        appearance
+          = new com.rocketshipgames.haxe.device.platforms.FlashMouseAppearance();
+      #else
+        appearance
+          = new com.rocketshipgames.haxe.device.platforms.DefaultMouseAppearance();
+      #end
     }
 
     var stage = flash.Lib.current.stage;
@@ -104,11 +106,11 @@ class Mouse {
   //------------------------------------------------------------
   public static function disable():Void
   {
-    appearance.disable();
-
     if (!installed) {
       return;
     }
+
+    appearance.disable();
 
     var stage = flash.Lib.current.stage;
     stage.removeEventListener(Event.ENTER_FRAME,        onEnterFrame);
@@ -150,24 +152,32 @@ class Mouse {
   public static function setCursor(?asset:String,
                                    ?hotspotX:Float, ?hotspotY:Float):Void
   {
+    if (!installed)
+      return;
     appearance.setCursor(asset, hotspotX, hotspotY);
     // end setCursor
   }
 
   public static function setCursorHand():Void
   {
+    if (!installed)
+      return;
     appearance.setCursor(CURSOR_HAND, CURSOR_HAND_X, CURSOR_HAND_Y);
     // end setCursorHand
   }
 
   public static function setCursorPointer():Void
   {
+    if (!installed)
+      return;
     appearance.setCursor(CURSOR_POINTER, 0, 0);
     // end setCursorDefault
   }
 
   public static function setCursorMiniPointer():Void
   {
+    if (!installed)
+      return;
     appearance.setCursor(CURSOR_MINIPOINTER, 0, 0);
     // end setCursorDefault
   }

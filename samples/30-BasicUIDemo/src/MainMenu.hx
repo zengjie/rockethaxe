@@ -44,8 +44,8 @@ class MainMenu
         padding: 2,
         justification: TextFormatAlign.LEFT,
       };
-    var upColors:Dynamic = { bgcolor: 0xffffffff, color: 0x000000 };
-    var overColors:Dynamic = { bgcolor: 0xff000000, color: 0xffffff };
+    var upColors:Dynamic = { bgcolor: 0xcfffffff, color: 0x000000 };
+    var overColors:Dynamic = { bgcolor: 0xffffffff, color: 0x000000 };
     var downColors:Dynamic = { bgcolor: 0xff000000, color: 0x333333 };
 
     uiList = new LinearWidgetList
