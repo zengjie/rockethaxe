@@ -71,6 +71,7 @@ class Button
     onMouseOver = onMouseOut = null;
 
     visible = false;
+
     if (container != null)
       container.addChild(this);
 

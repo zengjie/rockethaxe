@@ -110,7 +110,7 @@ class TextBitmapButton
                       defaultStyle, upStyle, overStyle, downStyle));
     }
 
-    // end makeList
+    // end populateList
   }
 
   // end TextButton
