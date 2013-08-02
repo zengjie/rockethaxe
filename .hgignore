@@ -1,8 +1,0 @@
-syntax: glob
-
-syntax: regexp
-^.*\~$
-^samples/.*/bin/.*$
-^samples/.*.build$
-^tests/.*/bin/.*$
-^tests/.*.build$
