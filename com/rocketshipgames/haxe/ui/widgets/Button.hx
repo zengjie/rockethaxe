@@ -144,7 +144,7 @@ class Button
   //------------------------------------------------------------
   private function click(e:Event):Void
   {
-    trace("Click");
+    //trace("Click");
     if (action != null)
       action();
     // end click
@@ -152,7 +152,7 @@ class Button
 
   private function mouseDown(e:Event):Void
   {
-    trace("Down");
+    //trace("Down");
     if (state != DISABLED && state != DOWN) {
       state = DOWN;
       updateGraphicState();
@@ -162,7 +162,7 @@ class Button
 
   private function mouseUp(e:Event):Void
   {
-    trace("Up");
+    //trace("Up");
     if (state != DISABLED && state != OVER) {
 
       #if android
@@ -178,7 +178,7 @@ class Button
 
   private function rollOver(e:Event):Void
   {
-    trace("Roll over");
+    //trace("Roll over");
     if (state != DISABLED && state != OVER) {
       state = OVER;
       updateGraphicState();
@@ -190,7 +190,7 @@ class Button
 
   private function rollOut(e:Event):Void
   {
-    trace("Roll out");
+    //trace("Roll out");
     if (state != DISABLED && state != UP) {
       state = UP;
       updateGraphicState();

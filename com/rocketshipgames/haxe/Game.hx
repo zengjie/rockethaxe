@@ -10,9 +10,6 @@ class Game
 
   public function new():Void
   {
-    #if verbose
-      haxe.Log.trace("New Game");
-    #end
 
     // Set up the display coordinate system and get dimensions
     Display.configureStandard();

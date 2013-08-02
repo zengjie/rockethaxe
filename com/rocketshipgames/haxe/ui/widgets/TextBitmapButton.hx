@@ -24,8 +24,6 @@ class TextBitmapButton
                       ?downStyle:Dynamic,
                       ?container:DisplayObjectContainer):Void
   {
-    haxe.Log.trace("TextBitmap " + text);
-
     if (defaultStyle == null)
       defaultStyle = {};
 

@@ -34,8 +34,6 @@ class BitmapButton
   {
     super(action, container);
 
-    haxe.Log.trace("NEW BitmapButton");
-
     this.upBitmap = upBitmap;
     this.overBitmap = (overBitmap != null) ? overBitmap : upBitmap;
     this.downBitmap = (downBitmap != null) ? downBitmap : upBitmap;
