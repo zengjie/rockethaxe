@@ -11,5 +11,5 @@
   </version>
 
   <depends name="openfl" />
-<!--  <depends name="actuate" /> -->
+  <depends name="actuate" />
 </project>

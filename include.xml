@@ -5,6 +5,7 @@
   <assets path="assets" rename="assets" include="*" />
 
   <section if="flash">
+
     <section if="google">
       <source name="lib/google/analytics_flash/hxclasses/" />
       <haxeflag name="-swf-lib lib/google/analytics_flash/library.swf" />
@@ -18,7 +19,7 @@
 
 
   <!-- This is here because simply including openfl as a dependency
-       does not seem to bring in the associated template files. -->
+       does not seem to bring in the associated libraries. -->Xb
   <haxelib name="openfl" />
-
+  <haxelib name="actuate" />
 </extension>

@@ -21,7 +21,7 @@ class Game
     // platforms (i.e., Flash) have a delay on the first sound played.
 
     // Turn off the mouse?
-
+    flash.ui.Mouse.hide();
 
     // ScreenManager organizes what is currently on display
     ScreenManager.initialize();
