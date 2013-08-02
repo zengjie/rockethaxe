@@ -19,8 +19,6 @@
 
   <window fps="60" orientation="landscape" resizable="false" />
 
-  <!--  <set name="SWF_VERSION" value="10.2" /> -->
-
   <!-- Do not include trailing '/' in path! -->
   <assets path="assets" include="*" />
 
