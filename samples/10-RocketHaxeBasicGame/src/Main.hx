@@ -14,6 +14,7 @@ class Main
     haxe.Log.trace("Basic Game");
 
     ScreenManager.add("menu", new Menu());
+    ScreenManager.add("game", new ShooterStage());
     ScreenManager.show("menu");
 
     // end new
