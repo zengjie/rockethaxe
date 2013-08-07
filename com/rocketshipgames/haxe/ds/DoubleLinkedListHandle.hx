@@ -24,5 +24,11 @@ class DoubleLinkedListHandle<T>
     // end new
   }
 
+  public function remove():Void
+  {
+    list.remove(this);
+    // end remove
+  }
+
   // end DoubleLinkedListHandle
 }
