@@ -2,12 +2,14 @@ package com.rocketshipgames.haxe.world;
 
 import com.rocketshipgames.haxe.debug.Debug;
 
+import com.rocketshipgames.haxe.ds.Heap;
+
 
 class World
 {
 
-  var width(default,null):Float;
-  var height(default,null):Float;
+  // var width(default,null):Float;
+  // var height(default,null):Float;
 
   var time(default,null):Int;
 
@@ -20,7 +22,7 @@ class World
 
   private var signals:Map<String, List<Signal>>;
   private var states:Map<String, State>;
-  // private var timers:List<Timer>;
+  private var events:Heap<ScheduledEvent>;
 
 
   //--------------------------------------------------------------------
@@ -47,7 +49,8 @@ class World
 
     signals = new Map();
     states = new Map();
-    // timers = new List();
+    events = new Heap(earlier);
+
 
     //-- Setup the game clocks and initial state
     time = 0;
@@ -178,21 +181,27 @@ class World
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  /*
-  public function addTimer(timer:Timer):Timer
+  private function earlier(a:ScheduledEvent, b:ScheduledEvent):Bool
   {
-    timers.push(timer);
-    timer.setContainer(this);
-    return timer;
-    // end addTimer
+    return (a.time < b.time);
+    // end earlier
   }
 
-  public function removeTimer(timer:Timer):Void
+  public function schedule(t:Int, event:Event):EventTicket
   {
-    timers.remove(timer);
-    // end removeTimer
+    var sched = new ScheduledEvent(time+t, event);
+    events.add(sched);
+    return sched;
+    // end schedule
   }
-  */
+
+  public function scheduleAt(t:Int, event:Event):EventTicket
+  {
+    var sched = new ScheduledEvent(t, event);
+    events.add(sched);
+    return sched;
+    // end schedule
+  }
 
 
   //--------------------------------------------------------------------
@@ -202,11 +211,13 @@ class World
 
     time += elapsed;
 
-    // Update all timers
-    /*
-    for (t in timers)
-      t.update(elapsed);
-    */
+    // Run all scheduled events that have come due
+    var event:ScheduledEvent;
+    while ((event = events.peek()) != null && event.time >= time) {
+      event = events.pop();
+      event.fire();
+    }
+
 
     // Update all entities
     var curr:Entity = entitiesHead;
@@ -224,4 +235,42 @@ class World
   }
 
   // end World
+}
+
+
+//----------------------------------------------------------------------
+//----------------------------------------------------------------------
+private class ScheduledEvent
+  implements EventTicket
+{
+  public var time:Int;
+  public var event:Event;
+
+  public var cancelled:Bool;
+
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function new(time:Int, event:Event):Void
+  {
+    this.time = time;
+    this.event = event;
+    this.cancelled = false;
+  }
+
+
+  //----------------------------------------------------
+  public function cancel():Void
+  {
+    cancelled = true;
+  }
+
+  //----------------------------------------------------
+  public function fire():Void
+  {
+    if (!cancelled)
+      event();
+  }
+
+  // end ScheduledEvent
 }
