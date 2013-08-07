@@ -3,6 +3,7 @@ package com.rocketshipgames.haxe.ds;
 
 @:allow(com.rocketshipgames.haxe.ds.DoubleLinkedList)
 class DoubleLinkedListHandle<T>
+    implements DeadpoolObject
 {
 
   //--------------------------------------------------------------------
@@ -28,6 +29,19 @@ class DoubleLinkedListHandle<T>
   {
     list.remove(this);
     // end remove
+  }
+
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function setDeadpool(deadpool:Dynamic):Void
+  {
+  }
+
+  public function init(?opts:Array<Dynamic>):Void
+  {
+    list = opts[0];
+    item = opts[1];
   }
 
   // end DoubleLinkedListHandle

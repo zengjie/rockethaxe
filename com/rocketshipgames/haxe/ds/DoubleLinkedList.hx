@@ -13,11 +13,19 @@ class DoubleLinkedList<T>
 
   public var count(default,null):Int;
 
+  private var handlePool:Deadpool<DoubleLinkedListHandle<T>>;
+
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
   public function new():Void
   {
+
+    handlePool = new Deadpool<DoubleLinkedListHandle<T>>
+      (function(opts:Array<Dynamic>):DoubleLinkedListHandle<T> {
+        return new DoubleLinkedListHandle<T>(opts[0], opts[1]);
+      });
+
     // end new
   }
 
@@ -26,7 +34,7 @@ class DoubleLinkedList<T>
   //----------------------------------------------------
   public function add(item:T):DoubleLinkedListHandle<T>
   {
-    var handle = new DoubleLinkedListHandle<T>(this, item);
+    var handle = handlePool.newObject([this, item]);
 
     /*
     if (handle.prev != null || handle.next != null || head == handle) {
@@ -71,6 +79,8 @@ class DoubleLinkedList<T>
 
     handle.prev = handle.next = null;
     handle.list = null;
+
+    handlePool.returnObject(handle);
 
     count--;
     // end remove
