@@ -10,7 +10,7 @@ class TestDoubleLinkedList
   public static function main():Void
   {
 
-    trace("Double linked list test.");
+    trace("Test DoubleLinkedList");
 
     var list:DoubleLinkedList<Item> = new DoubleLinkedList();
 
