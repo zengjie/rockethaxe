@@ -1,0 +1,42 @@
+TestDoubleLinkedList.hx:13: Double linked list test.
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+TestDoubleLinkedList.hx:23: Iterating, removing four (every third):
+TestDoubleLinkedList.hx:26: Item 0
+TestDoubleLinkedList.hx:26: Item 1
+TestDoubleLinkedList.hx:26: Item 2
+TestDoubleLinkedList.hx:26: Item 3
+TestDoubleLinkedList.hx:26: Item 4
+TestDoubleLinkedList.hx:26: Item 5
+TestDoubleLinkedList.hx:26: Item 6
+TestDoubleLinkedList.hx:26: Item 7
+TestDoubleLinkedList.hx:26: Item 8
+TestDoubleLinkedList.hx:26: Item 9
+TestDoubleLinkedList.hx:35: Iterating again:
+TestDoubleLinkedList.hx:38: Item 1
+TestDoubleLinkedList.hx:38: Item 2
+TestDoubleLinkedList.hx:38: Item 4
+TestDoubleLinkedList.hx:38: Item 5
+TestDoubleLinkedList.hx:38: Item 7
+TestDoubleLinkedList.hx:38: Item 8
+DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+TestDoubleLinkedList.hx:47: Added 5 more; iterating again:
+TestDoubleLinkedList.hx:50: Item 1
+TestDoubleLinkedList.hx:50: Item 2
+TestDoubleLinkedList.hx:50: Item 4
+TestDoubleLinkedList.hx:50: Item 5
+TestDoubleLinkedList.hx:50: Item 7
+TestDoubleLinkedList.hx:50: Item 8
+TestDoubleLinkedList.hx:50: Item 10
+TestDoubleLinkedList.hx:50: Item 11
+TestDoubleLinkedList.hx:50: Item 12
+TestDoubleLinkedList.hx:50: Item 13
+TestDoubleLinkedList.hx:50: Item 14

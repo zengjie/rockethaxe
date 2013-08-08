@@ -20,6 +20,10 @@ class DoubleLinkedListHandle<T>
   //----------------------------------------------------
   public function new(list:DoubleLinkedList<T>, item:T):Void
   {
+    #if verbose_ds
+      trace("New DoubleLinkedListHandle");
+    #end
+
     this.list = list;
     this.item = item;
     // end new
