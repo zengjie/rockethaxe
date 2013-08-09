@@ -5,12 +5,12 @@ import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 import com.rocketshipgames.haxe.ds.DoubleLinkedListIterator;
 
 
-class ComponentContainer
+class ComponentContainer<T:Component>
 {
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  private var components:DoubleLinkedList<ComponentHandle>;
+  private var components:DoubleLinkedList<ComponentHandle<T>>;
 
 
   //--------------------------------------------------------------------
@@ -24,31 +24,31 @@ class ComponentContainer
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function addComponent(component:Component):ComponentHandle
+  public function addComponent(component:T):ComponentHandle<T>
   {
-    var containerFacade = new ComponentHandle
+    var containerHandle = new ComponentHandle<T>
       (this, component);
 
-    var listHandle = components.add(containerFacade);
-    containerFacade.listHandle = listHandle;
+    var listHandle = components.add(containerHandle);
+    containerHandle.listHandle = listHandle;
 
-    component.attach(containerFacade);
+    component.attach(containerHandle);
 
-    return containerFacade;
+    return containerHandle;
     // end addComponent
   }
 
-  public function removeComponent(facade:ComponentHandle):Void
+  public function removeComponent(handle:ComponentHandle<T>):Void
   {
-    components.remove(facade.listHandle);
-    facade.component.detach();
+    components.remove(handle.listHandle);
+    handle.component.detach();
     // end removeComponent
   }
 
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function iterator():DoubleLinkedListIterator<ComponentHandle>
+  public function iterator():DoubleLinkedListIterator<ComponentHandle<T>>
   {
     return components.iterator();
   }
@@ -60,8 +60,8 @@ class ComponentContainer
 
     // Update all entities
 
-    var curr:DoubleLinkedListHandle<ComponentHandle> = components.head;
-    var next:DoubleLinkedListHandle<ComponentHandle>;
+    var curr:DoubleLinkedListHandle<ComponentHandle<T>> = components.head;
+    var next:DoubleLinkedListHandle<ComponentHandle<T>>;
     while (curr != null) {
       next = curr.next; // Cache this in case curr gets removed
                         // but it also means new entities won't

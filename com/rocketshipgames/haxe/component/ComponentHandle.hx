@@ -4,20 +4,20 @@ import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 
 
 @:allow(com.rocketshipgames.haxe.component.ComponentContainer)
-class ComponentHandle
+class ComponentHandle<T:Component>
 {
 
   //--------------------------------------------------------------------
-  public var container(default, null):ComponentContainer;
-  public var component(default, null):Component;
+  public var container(default, null):ComponentContainer<T>;
+  public var component(default, null):T;
 
-  private var listHandle:DoubleLinkedListHandle<ComponentHandle>;
-
+  private var listHandle:DoubleLinkedListHandle<ComponentHandle<T>>;
+  
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function new(container:ComponentContainer,
-                      component:Component):Void
+  public function new(container:ComponentContainer<T>,
+                      component:T):Void
   {
     this.container = container;
     this.component = component;

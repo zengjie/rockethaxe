@@ -13,9 +13,9 @@ class TestComponentContainer
 
     trace("Test ComponentContainer");
 
-    var container = new ComponentContainer();
+    var container = new ComponentContainer<Thing>();
 
-    var ref:ComponentHandle = null;
+    var ref:ComponentHandle<Thing> = null;
     for (i in 0...5) {
       var handle = container.addComponent(new Thing(i));
 
@@ -39,7 +39,9 @@ class TestComponentContainer
 
     trace("Iterate over");
     for (x in container) {
-      trace("Thing " + cast(x.component, Thing).id);
+      trace("Iterate Thing " + cast(x.component, Thing).id);
+
+      x.component.thingSpecificFunction("TEST");
     }
 
     // end main
@@ -59,7 +61,7 @@ class Thing
     trace("New widget " + id);
   }
 
-  public function attach(containerHandle:ComponentHandle):Void
+  public function attach(containerHandle:ComponentHandle<Dynamic>):Void
   {
     trace("Attach " + id);
   }
@@ -72,6 +74,11 @@ class Thing
   public function update(elapsed:Int):Void
   {
     trace("Update " + id + ": " + elapsed);
+  }
+
+  public function thingSpecificFunction(s:String):Void
+  {
+    trace("Thing " + id + " function " + s);
   }
 
   // end Thing
