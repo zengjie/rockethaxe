@@ -27,16 +27,16 @@ TestDoubleLinkedList.hx:38: Item 4
 TestDoubleLinkedList.hx:38: Item 5
 TestDoubleLinkedList.hx:38: Item 7
 TestDoubleLinkedList.hx:38: Item 8
+TestDoubleLinkedList.hx:42: Adding 5 more; iterating again:
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestDoubleLinkedList.hx:47: Added 5 more; iterating again:
-TestDoubleLinkedList.hx:50: Item 1
-TestDoubleLinkedList.hx:50: Item 2
-TestDoubleLinkedList.hx:50: Item 4
-TestDoubleLinkedList.hx:50: Item 5
-TestDoubleLinkedList.hx:50: Item 7
-TestDoubleLinkedList.hx:50: Item 8
-TestDoubleLinkedList.hx:50: Item 10
-TestDoubleLinkedList.hx:50: Item 11
-TestDoubleLinkedList.hx:50: Item 12
-TestDoubleLinkedList.hx:50: Item 13
-TestDoubleLinkedList.hx:50: Item 14
+TestDoubleLinkedList.hx:49: Item 1
+TestDoubleLinkedList.hx:49: Item 2
+TestDoubleLinkedList.hx:49: Item 4
+TestDoubleLinkedList.hx:49: Item 5
+TestDoubleLinkedList.hx:49: Item 7
+TestDoubleLinkedList.hx:49: Item 8
+TestDoubleLinkedList.hx:49: Item 10
+TestDoubleLinkedList.hx:49: Item 11
+TestDoubleLinkedList.hx:49: Item 12
+TestDoubleLinkedList.hx:49: Item 13
+TestDoubleLinkedList.hx:49: Item 14

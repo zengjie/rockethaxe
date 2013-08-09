@@ -87,5 +87,13 @@ class DoubleLinkedList<T>
   }
 
 
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function iterator():DoubleLinkedListIterator<T>
+  {
+    return new DoubleLinkedListIterator<T>(head);
+    // end iterator
+  }
+
   // end DoubleLinkedList
 }

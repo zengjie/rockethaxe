@@ -39,16 +39,14 @@ class TestDoubleLinkedList
       curr = curr.next;
     }
 
+    trace("Adding 5 more; iterating again:");
     while (i < 15) {
       list.add(new Item(i));
       i++;
     }
 
-    trace("Added 5 more; iterating again:");
-    curr = list.head;
-    while (curr != null) {
-      trace("Item " + curr.item.id);
-      curr = curr.next;
+    for (x in list) {
+      trace("Item " + x.id);
     }
 
     // end main
