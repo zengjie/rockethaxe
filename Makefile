@@ -31,7 +31,7 @@ $(BIN_DIR)TestComponentContainer-debug: \
                 com/rocketshipgames/haxe/component/ComponentContainer.hx \
                 com/rocketshipgames/haxe/component/ComponentHandle.hx \
                 tests/src/TestComponentContainer.hx
-	haxe -cp com -cp tests/src/ -cpp $(BIN_DIR) -debug -main TestComponentContainer -D debug -D verbose -D verbose_ds
+	haxe -cp com -cp tests/src/ -cpp $(BIN_DIR) -debug -main TestComponentContainer -D debug -D verbose -D verbose_ds -D verbose_cmp
 
 
 #-----------------------------------------------------------------------

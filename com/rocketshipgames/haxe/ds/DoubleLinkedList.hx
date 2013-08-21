@@ -86,6 +86,18 @@ class DoubleLinkedList<T>
     // end remove
   }
 
+  public function removeItem(item:T):Void
+  {
+    var i = head;
+    while (i != null && i.item != item)
+      i = i.next;
+
+    if (i != null) {
+      remove(i);
+    }
+    // end removeManual
+  }
+
 
   //--------------------------------------------------------------------
   //----------------------------------------------------

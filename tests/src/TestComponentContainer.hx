@@ -44,6 +44,31 @@ class TestComponentContainer
       x.component.thingSpecificFunction("TEST");
     }
 
+    trace("Creating magic provider");
+    var providers = new ComponentContainer<Provider>();
+
+    var prov:Provider = new Provider();
+    var provHandle = providers.addComponent(prov);
+
+    trace("Looking for magic provider");
+    var c:ComponentHandle<Provider> = providers.findCapability("magic");
+    if (c != null) {
+      trace("Magic available");
+      cast(c.component, Provider).magic("story");
+    } else {
+      trace("No magic available");
+    }
+
+    provHandle.remove();
+
+    trace("Looking for magic provider again");
+    c = providers.findCapability("magic");
+    if (c != null) {
+      trace("Magic still available");
+    } else {
+      trace("No magic available");
+    }
+
     // end main
   }
 
@@ -82,4 +107,34 @@ class Thing
   }
 
   // end Thing
+}
+
+
+class Provider
+  implements Component
+{
+  public function new():Void {}
+
+  public function attach(containerHandle:ComponentHandle<Dynamic>):Void
+  {
+    trace("Attach Provider");
+    containerHandle.claimCapability("magic");
+    containerHandle.claimCapability("science");
+  }
+
+  public function detach():Void
+  {
+    trace("Detach Provider");
+  }
+
+  public function update(elapsed:Int):Void
+  {
+    trace("Update Provider: " + elapsed);
+  }
+
+  public function magic(s:String):Void
+  {
+    trace("Provider magic on " + s);
+  }
+
 }

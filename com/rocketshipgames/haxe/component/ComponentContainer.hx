@@ -12,12 +12,14 @@ class ComponentContainer<T:Component>
   //----------------------------------------------------
   private var components:DoubleLinkedList<ComponentHandle<T>>;
 
+  private var capabilities:Map<String,ComponentHandle<T>>;
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
   public function new():Void
   {
     components = new DoubleLinkedList();
+    capabilities = new Map();
     // end new
   }
 
@@ -45,6 +47,29 @@ class ComponentContainer<T:Component>
     // end removeComponent
   }
 
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function claimCapability(capability:String,
+                                  component:ComponentHandle<T>):Void
+  {
+    capabilities.set(capability, component);
+    // end claimCapability
+  }
+
+  public function releaseCapability(capability:String,
+                                    component:ComponentHandle<T>):Void
+  {
+    if (capabilities.get(capability) == component)
+      capabilities.remove(capability);
+    // end claimCapability
+  }
+
+  public function findCapability(capability:String):ComponentHandle<T>
+  {
+    return capabilities.get(capability);
+    // end findCapability
+  }
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
