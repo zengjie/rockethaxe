@@ -5,14 +5,14 @@ import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 import com.rocketshipgames.haxe.ds.DoubleLinkedListIterator;
 
 
-class ComponentContainer<T:Component>
+class ComponentContainer
 {
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  private var components:DoubleLinkedList<ComponentHandle<T>>;
+  private var components:DoubleLinkedList<ComponentHandle>;
 
-  private var capabilities:Map<String,ComponentHandle<T>>;
+  private var capabilities:Map<String,ComponentHandle>;
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
@@ -26,10 +26,9 @@ class ComponentContainer<T:Component>
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function addComponent(component:T):ComponentHandle<T>
+  public function addComponent(component:Component):ComponentHandle
   {
-    var containerHandle = new ComponentHandle<T>
-      (this, component);
+    var containerHandle = new ComponentHandle(this, component);
 
     var listHandle = components.add(containerHandle);
     containerHandle.listHandle = listHandle;
@@ -40,7 +39,7 @@ class ComponentContainer<T:Component>
     // end addComponent
   }
 
-  public function removeComponent(handle:ComponentHandle<T>):Void
+  public function removeComponent(handle:ComponentHandle):Void
   {
     components.remove(handle.listHandle);
     handle.component.detach();
@@ -51,21 +50,21 @@ class ComponentContainer<T:Component>
   //--------------------------------------------------------------------
   //----------------------------------------------------
   public function claimCapability(capability:String,
-                                  component:ComponentHandle<T>):Void
+                                  component:ComponentHandle):Void
   {
     capabilities.set(capability, component);
     // end claimCapability
   }
 
   public function releaseCapability(capability:String,
-                                    component:ComponentHandle<T>):Void
+                                    component:ComponentHandle):Void
   {
     if (capabilities.get(capability) == component)
       capabilities.remove(capability);
     // end claimCapability
   }
 
-  public function findCapability(capability:String):ComponentHandle<T>
+  public function findCapability(capability:String):ComponentHandle
   {
     return capabilities.get(capability);
     // end findCapability
@@ -73,10 +72,11 @@ class ComponentContainer<T:Component>
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function iterator():DoubleLinkedListIterator<ComponentHandle<T>>
+  public function iterator():DoubleLinkedListIterator<ComponentHandle>
   {
     return components.iterator();
   }
+
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
@@ -85,8 +85,8 @@ class ComponentContainer<T:Component>
 
     // Update all entities
 
-    var curr:DoubleLinkedListHandle<ComponentHandle<T>> = components.head;
-    var next:DoubleLinkedListHandle<ComponentHandle<T>>;
+    var curr:DoubleLinkedListHandle<ComponentHandle> = components.head;
+    var next:DoubleLinkedListHandle<ComponentHandle>;
     while (curr != null) {
       next = curr.next; // Cache this in case curr gets removed
                         // but it also means new entities won't

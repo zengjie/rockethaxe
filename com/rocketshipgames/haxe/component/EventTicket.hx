@@ -1,4 +1,4 @@
-package com.rocketshipgames.haxe.world;
+package com.rocketshipgames.haxe.component;
 
 
 interface EventTicket

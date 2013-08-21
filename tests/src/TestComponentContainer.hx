@@ -13,9 +13,9 @@ class TestComponentContainer
 
     trace("Test ComponentContainer");
 
-    var container = new ComponentContainer<Thing>();
+    var container = new ComponentContainer();
 
-    var ref:ComponentHandle<Thing> = null;
+    var ref:ComponentHandle = null;
     for (i in 0...5) {
       var handle = container.addComponent(new Thing(i));
 
@@ -41,17 +41,17 @@ class TestComponentContainer
     for (x in container) {
       trace("Iterate Thing " + cast(x.component, Thing).id);
 
-      x.component.thingSpecificFunction("TEST");
+      cast(x.component, Thing).thingSpecificFunction("TEST");
     }
 
     trace("Creating magic provider");
-    var providers = new ComponentContainer<Provider>();
+    var providers = new ComponentContainer();
 
     var prov:Provider = new Provider();
     var provHandle = providers.addComponent(prov);
 
     trace("Looking for magic provider");
-    var c:ComponentHandle<Provider> = providers.findCapability("magic");
+    var c:ComponentHandle = providers.findCapability("magic");
     if (c != null) {
       trace("Magic available");
       cast(c.component, Provider).magic("story");
@@ -86,7 +86,7 @@ class Thing
     trace("New widget " + id);
   }
 
-  public function attach(containerHandle:ComponentHandle<Dynamic>):Void
+  public function attach(containerHandle:ComponentHandle):Void
   {
     trace("Attach " + id);
   }
@@ -115,7 +115,7 @@ class Provider
 {
   public function new():Void {}
 
-  public function attach(containerHandle:ComponentHandle<Dynamic>):Void
+  public function attach(containerHandle:ComponentHandle):Void
   {
     trace("Attach Provider");
     containerHandle.claimCapability("magic");
