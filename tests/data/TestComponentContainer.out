@@ -1,41 +1,46 @@
 TestComponentContainer.hx:14: Test ComponentContainer
-TestComponentContainer.hx:59: New widget 0
+TestComponentContainer.hx:61: New widget 0
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:64: Attach 0
-TestComponentContainer.hx:59: New widget 1
+TestComponentContainer.hx:66: Attach 0
+TestComponentContainer.hx:61: New widget 1
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:64: Attach 1
-TestComponentContainer.hx:59: New widget 2
+TestComponentContainer.hx:66: Attach 1
+TestComponentContainer.hx:61: New widget 2
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:64: Attach 2
-TestComponentContainer.hx:59: New widget 3
+TestComponentContainer.hx:66: Attach 2
+TestComponentContainer.hx:61: New widget 3
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:64: Attach 3
-TestComponentContainer.hx:59: New widget 4
+TestComponentContainer.hx:66: Attach 3
+TestComponentContainer.hx:61: New widget 4
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:64: Attach 4
-TestComponentContainer.hx:74: Update 0: 1
-TestComponentContainer.hx:74: Update 1: 1
-TestComponentContainer.hx:74: Update 2: 1
-TestComponentContainer.hx:74: Update 3: 1
-TestComponentContainer.hx:74: Update 4: 1
+TestComponentContainer.hx:66: Attach 4
+TestComponentContainer.hx:76: Update 0: 1
+TestComponentContainer.hx:76: Update 1: 1
+TestComponentContainer.hx:76: Update 2: 1
+TestComponentContainer.hx:76: Update 3: 1
+TestComponentContainer.hx:76: Update 4: 1
 TestComponentContainer.hx:30: Removing third
-TestComponentContainer.hx:69: Detach 3
-TestComponentContainer.hx:74: Update 0: 2
-TestComponentContainer.hx:74: Update 1: 2
-TestComponentContainer.hx:74: Update 2: 2
-TestComponentContainer.hx:74: Update 4: 2
+TestComponentContainer.hx:71: Detach 3
+TestComponentContainer.hx:76: Update 0: 2
+TestComponentContainer.hx:76: Update 1: 2
+TestComponentContainer.hx:76: Update 2: 2
+TestComponentContainer.hx:76: Update 4: 2
 TestComponentContainer.hx:35: Add another
-TestComponentContainer.hx:59: New widget 5
-TestComponentContainer.hx:64: Attach 5
-TestComponentContainer.hx:74: Update 0: 3
-TestComponentContainer.hx:74: Update 1: 3
-TestComponentContainer.hx:74: Update 2: 3
-TestComponentContainer.hx:74: Update 4: 3
-TestComponentContainer.hx:74: Update 5: 3
+TestComponentContainer.hx:61: New widget 5
+TestComponentContainer.hx:66: Attach 5
+TestComponentContainer.hx:76: Update 0: 3
+TestComponentContainer.hx:76: Update 1: 3
+TestComponentContainer.hx:76: Update 2: 3
+TestComponentContainer.hx:76: Update 4: 3
+TestComponentContainer.hx:76: Update 5: 3
 TestComponentContainer.hx:40: Iterate over
-TestComponentContainer.hx:42: Thing 0
-TestComponentContainer.hx:42: Thing 1
-TestComponentContainer.hx:42: Thing 2
-TestComponentContainer.hx:42: Thing 4
-TestComponentContainer.hx:42: Thing 5
+TestComponentContainer.hx:42: Iterate Thing 0
+TestComponentContainer.hx:81: Thing 0 function TEST
+TestComponentContainer.hx:42: Iterate Thing 1
+TestComponentContainer.hx:81: Thing 1 function TEST
+TestComponentContainer.hx:42: Iterate Thing 2
+TestComponentContainer.hx:81: Thing 2 function TEST
+TestComponentContainer.hx:42: Iterate Thing 4
+TestComponentContainer.hx:81: Thing 4 function TEST
+TestComponentContainer.hx:42: Iterate Thing 5
+TestComponentContainer.hx:81: Thing 5 function TEST
