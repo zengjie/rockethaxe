@@ -7,7 +7,7 @@ class Scheduler
   implements Component
 {
 
-  public static var CAPABILITY_ID:String = "_scheduler_";
+  public static var CAPABILITY_ID:String = "scheduler";
 
   private var container:ComponentHandle;
 

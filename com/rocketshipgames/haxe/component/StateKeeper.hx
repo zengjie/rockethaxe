@@ -5,7 +5,7 @@ class StateKeeper
   implements Component
 {
 
-  public static var CAPABILITY_ID:String = "_states_";
+  public static var CAPABILITY_ID:String = "states";
 
   private var container:ComponentHandle;
 
