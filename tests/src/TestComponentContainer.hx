@@ -51,10 +51,10 @@ class TestComponentContainer
     var provHandle = providers.addComponent(prov);
 
     trace("Looking for magic provider");
-    var c:ComponentHandle = providers.findCapability("magic");
+    var c:Component = providers.findCapability("magic");
     if (c != null) {
       trace("Magic available");
-      cast(c.component, Provider).magic("story");
+      cast(c, Provider).magic("story");
     } else {
       trace("No magic available");
     }

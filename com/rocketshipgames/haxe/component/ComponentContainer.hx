@@ -64,11 +64,21 @@ class ComponentContainer
     // end claimCapability
   }
 
-  public function findCapability(capability:String):ComponentHandle
+  public function findCapability(capability:String):Component
   {
-    return capabilities.get(capability);
+    var x = capabilities.get(capability);
+    if (x != null)
+      return x.component;
+    return null;
     // end findCapability
   }
+
+  public function findCapabilityHandle(capability:String):ComponentHandle
+  {
+    return capabilities.get(capability);
+    // end findCapabilityHandle
+  }
+
 
   //--------------------------------------------------------------------
   //----------------------------------------------------

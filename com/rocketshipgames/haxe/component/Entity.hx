@@ -17,9 +17,18 @@ class Entity
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public override function findCapability(capability:String):ComponentHandle
+  public override function findCapability(capability:String):Component
   {
-    var res = super.findCapability(capability);
+    var x = findCapabilityHandle(capability);
+    if (x != null)
+      return x.component;
+    return null;
+    // end findCapability
+  }
+
+  public override function findCapabilityHandle(capability:String):ComponentHandle
+  {
+    var res = super.findCapabilityHandle(capability);
 
     if (res == null) {
 
