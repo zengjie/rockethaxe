@@ -62,5 +62,11 @@ class ComponentHandle
     // end releaseCapability
   }
 
+  public function findCapability(capability:String):ComponentHandle
+  {
+    return container.findCapability(capability);
+    // end findCapability
+  }
+
   // end ComponentHandle
 }

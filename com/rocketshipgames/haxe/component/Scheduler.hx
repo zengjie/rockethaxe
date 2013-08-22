@@ -1,11 +1,13 @@
 package com.rocketshipgames.haxe.component;
 
+import com.rocketshipgames.haxe.ds.Heap;
+
 
 class Scheduler
   implements Component
 {
 
-  public static final var CAPABILITY_ID:String = "_scheduler_";
+  public static var CAPABILITY_ID:String = "_scheduler_";
 
   private var container:ComponentHandle;
 

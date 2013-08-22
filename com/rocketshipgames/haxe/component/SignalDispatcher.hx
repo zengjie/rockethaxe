@@ -5,9 +5,9 @@ class SignalDispatcher
   implements Component
 {
 
-  public static final var CAPABILITY_ID:String = "_dispatcher_";
+  public static var CAPABILITY_ID:String = "_dispatcher_";
 
-  private var container<ComponentHandle;
+  private var container:ComponentHandle;
 
   private var signals:Map<String, List<Signal>>;
 

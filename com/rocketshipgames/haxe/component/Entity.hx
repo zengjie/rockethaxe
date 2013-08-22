@@ -17,7 +17,7 @@ class Entity
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function findCapability(capability:String):ComponentHandle
+  public override function findCapability(capability:String):ComponentHandle
   {
     var res = super.findCapability(capability);
 
@@ -26,7 +26,7 @@ class Entity
       if (capability == SignalDispatcher.CAPABILITY_ID) {
         res = addComponent(new SignalDispatcher());
 
-      } else if (capability == StateKeepr.CAPABILITY_ID) {
+      } else if (capability == StateKeeper.CAPABILITY_ID) {
         res = addComponent(new StateKeeper());
 
       } else if (capability == Scheduler.CAPABILITY_ID) {
@@ -51,10 +51,10 @@ class Entity
   {
   }
 
-  public function update(elapsed:Int):Void
+  public override function update(elapsed:Int):Void
   {
-    super.update();
     logic(elapsed);
+    super.update(elapsed);
     // end update
   }
 
