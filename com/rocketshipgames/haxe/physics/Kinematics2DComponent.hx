@@ -1,14 +1,12 @@
 package com.rocketshipgames.haxe.physics;
 
-enum BoundsBehavior {
-  BOUNDS_NONE;
-  BOUNDS_DETECT;
-  BOUNDS_STOP;
-}
+import com.rocketshipgames.haxe.component.Component;
+import com.rocketshipgames.haxe.component.ComponentHandle;
 
 
 class Kinematics2DComponent
-  implements com.rocketshipgames.haxe.component.Component
+  implements Component
+  implements Position2D
 {
 
   public var x:Float;
@@ -31,21 +29,6 @@ class Kinematics2DComponent
   public var mass:Float;
 
 
-  //----------------------------------------------------
-  public var boundsCheckType:BoundsBehavior;
-
-  public var left:Float;
-  public var top:Float;
-
-  public var right:Float;
-  public var bottom:Float;
-
-  public var offBoundsLeft:Void->Void;
-  public var offBoundsRight:Void->Void;
-  public var offBoundsTop:Void->Void;
-  public var offBoundsBottom:Void->Void;
-
-
   //--------------------------------------------------------------------
   public function new(?opts:Dynamic):Void
   {
@@ -54,10 +37,6 @@ class Kinematics2DComponent
     y = yvel = yacc = ydrag = yvelMin = yvelMax = 0.0;
 
     mass = 1.0;
-
-    boundsCheckType = BOUNDS_NONE;
-    left = top = right = bottom = 0.0;
-    offBoundsLeft = offBoundsRight = offBoundsTop = offBoundsBottom = null;
 
     init(opts);
 
@@ -93,9 +72,10 @@ class Kinematics2DComponent
 
 
   //--------------------------------------------------------------------
-  public function attach(containerHandle:com.rocketshipgames.haxe.component.ComponentHandle):Void
+  public function attach(containerHandle:ComponentHandle):Void
   {
-    containerHandle.claimCapability("physics");
+    containerHandle.claimCapability("position-2d");
+    containerHandle.claimCapability("kinematics-2d");
   }
 
   public function detach():Void
@@ -156,154 +136,9 @@ class Kinematics2DComponent
     x += xvel*elapsed;
     y += yvel*elapsed;
 
-    checkBounds();
-
     // end update
   }
 
-  public function setBounds(?type:BoundsBehavior=null,
-			    ?left:Float = 0,
-			    ?top:Float = 0,
-			    ?right:Float = 0,
-			    ?bottom:Float = 0):Void
-  {
-    if (type == null) type = BOUNDS_NONE;
-
-    /*
-    if (right == 0 && world != null) right = world.worldWidth;
-    if (bottom == 0 && world != null) bottom = world.worldHeight;
-    */
-
-    this.left = Math.min(left, right);
-    this.right = Math.max(left, right);
-
-    this.top = Math.min(top, bottom);
-    this.bottom = Math.max(top, bottom);
-
-    boundsCheckType = type;
-
-    // trace("Bounds set to " + this.left + "," + this.top + "  " +
-    //      this.right + "," + this.bottom);
-
-    // end setBounds
-  }
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  public function cannotLeaveLeft():Void
-  {
-    if (xvel <= 0) {
-      x = left;
-      xvel = 0;
-    }
-  }
-  public function cannotLeaveRight():Void
-  {
-    if (xvel >= 0) {
-      x = right;
-      xvel = 0;
-    }
-  }
-  public function cannotLeaveTop():Void
-  {
-    if (yvel <= 0) {
-      y = top;
-      yvel = 0;
-    }
-  }
-  public function cannotLeaveBottom():Void
-  {
-    if (yvel >= 0) {
-      y = bottom;
-      yvel = 0;
-    }
-  }
-
-  //------------------------------------------------------------
-  public function stopLeft():Void
-  {
-    x = left;
-    xvel = 0;
-  }
-  public function stopRight():Void
-  {
-    x = right;
-    xvel = 0;
-  }
-  public function stopTop():Void
-  {
-    y = top;
-    yvel = 0;
-  }
-  public function stopBottom():Void
-  {
-    y = bottom;
-    yvel = 0;
-  }
-
-  //------------------------------------------------------------
-  public function cycleLeft():Void
-  {
-    x = right;
-  }
-  public function cycleRight():Void
-  {
-    x = left;
-  }
-  public function cycleTop():Void
-  {
-    y = bottom;
-  }
-  public function cycleBottom():Void
-  {
-    y = top;
-  }
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  private function checkBounds():Void
-  {
-
-    if (boundsCheckType == BOUNDS_NONE)
-      return;
-
-    if (x < left) {
-      if (boundsCheckType == BOUNDS_STOP)
-        stopLeft();
-
-      if (offBoundsLeft != null)
-        offBoundsLeft();
-
-      // end x off left
-    } else if (x > right) {
-      if (boundsCheckType == BOUNDS_STOP)
-        stopRight();
-
-      if (offBoundsRight != null)
-        offBoundsRight();
-
-      // end x off right
-    }
-
-    if (y < top) {
-      if (boundsCheckType == BOUNDS_STOP)
-        stopTop();
-
-      if (offBoundsTop != null)
-        offBoundsTop();
-
-      // end y off top
-    } else if (y > bottom) {
-      if (boundsCheckType == BOUNDS_STOP)
-        stopBottom();
-
-      if (offBoundsBottom != null)
-        offBoundsBottom();
-      // end y off bottom
-    }
-
-    // end checkBounds
-  }
 
   // end class Kinematics2DComponent
 }

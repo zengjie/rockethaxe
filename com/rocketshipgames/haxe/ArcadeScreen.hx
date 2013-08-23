@@ -9,6 +9,8 @@ import com.rocketshipgames.haxe.component.Entity;
 
 import com.rocketshipgames.haxe.device.Display;
 
+import com.rocketshipgames.haxe.world.World;
+
 
 class ArcadeScreen
   extends com.rocketshipgames.haxe.ui.Screen
@@ -16,7 +18,7 @@ class ArcadeScreen
 
   //------------------------------------------------------------
 
-  public var world(default, null):Entity;
+  public var world(default, null):World;
 
   public var time(default,null):Int;
   public var elapsed(default,null):Int;
@@ -37,12 +39,12 @@ class ArcadeScreen
 
 
   //------------------------------------------------------------
-  public function new(?world:Entity):Void
+  public function new(?world:World):Void
   {
     super();
 
     if (world == null)
-      world = new Entity();
+      world = new World();
     this.world = world;
 
 

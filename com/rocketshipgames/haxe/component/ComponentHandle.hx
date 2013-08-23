@@ -62,15 +62,15 @@ class ComponentHandle
     // end releaseCapability
   }
 
-  public function findCapability(capability:String):Component
+  public function findCapability(capability:String, necessary:Bool=true):Component
   {
-    return container.findCapability(capability);
+    return container.findCapability(capability, necessary);
     // end findCapability
   }
 
-  public function findCapabilityHandle(capability:String):ComponentHandle
+  public function findCapabilityHandle(capability:String, necessary:Bool=true):ComponentHandle
   {
-    return container.findCapabilityHandle(capability);
+    return container.findCapabilityHandle(capability, necessary);
     // end findCapabilityHandle
   }
 

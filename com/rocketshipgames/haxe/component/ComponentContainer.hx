@@ -1,5 +1,7 @@
 package com.rocketshipgames.haxe.component;
 
+import com.rocketshipgames.haxe.debug.Debug;
+
 import com.rocketshipgames.haxe.ds.DoubleLinkedList;
 import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 import com.rocketshipgames.haxe.ds.DoubleLinkedListIterator;
@@ -64,18 +66,28 @@ class ComponentContainer
     // end claimCapability
   }
 
-  public function findCapability(capability:String):Component
+  public function findCapability(capability:String, necessary:Bool=true):Component
   {
     var x = capabilities.get(capability);
+
     if (x != null)
       return x.component;
+
+    if (necessary)
+      Debug.error("Capability " + capability + " not found.");
+
     return null;
     // end findCapability
   }
 
-  public function findCapabilityHandle(capability:String):ComponentHandle
+  public function findCapabilityHandle(capability:String, necessary:Bool=true):ComponentHandle
   {
-    return capabilities.get(capability);
+    var res = capabilities.get(capability);
+
+    if (necessary && res == null)
+      Debug.error("Capability " + capability + " not found.");
+
+    return res;
     // end findCapabilityHandle
   }
 

@@ -3,7 +3,11 @@ package;
 import com.rocketshipgames.haxe.component.Entity;
 import com.rocketshipgames.haxe.component.ComponentHandle;
 
+import com.rocketshipgames.haxe.physics.Position2D;
 import com.rocketshipgames.haxe.physics.Kinematics2DComponent;
+import com.rocketshipgames.haxe.physics.Bounds2DComponent;
+
+import com.rocketshipgames.haxe.device.Display;
 
 
 class Main
@@ -17,13 +21,27 @@ class Main
 
     var game = new com.rocketshipgames.haxe.ArcadeScreen();
 
+    //-- Create a ball!
     var ball = new Entity();
 
-    var opts = { xvel: 200, yvel: 200};
-    ball.addComponent(new Kinematics2DComponent(opts));
-    ball.addComponent(new BallShape(game));
-    game.world.addComponent(ball);
+    var kinematics = new Kinematics2DComponent({ xvel: 200, yvel: 200});
+    ball.addComponent(kinematics);
 
+    var bounds = new Bounds2DComponent();
+    bounds.setBounds(BOUNDS_DETECT,
+                     25, 25,
+                     Display.width-25, Display.height-25);
+    bounds.offBoundsLeft = bounds.bounceLeft;
+    bounds.offBoundsRight = bounds.bounceRight;
+    bounds.offBoundsTop = bounds.bounceTop;
+    bounds.offBoundsBottom = bounds.bounceBottom;
+    ball.addComponent(bounds);
+
+    ball.addComponent(new BallShape(game));
+    game.world.entities.addComponent(ball);
+
+
+    //-- Start the game
     flash.Lib.current.addChild(game);
 
     // end new
@@ -40,14 +58,14 @@ private class BallShape
   implements com.rocketshipgames.haxe.component.Component
 {
 
-  private var physics:Kinematics2DComponent;
+  private var position:Position2D;
 
   public function new(parent:flash.display.Sprite):Void
   {
     super();
 
     graphics.beginFill(0xFF0000);
-    graphics.drawCircle(0, 0, 100);
+    graphics.drawCircle(0, 0, 25);
     graphics.endFill();
 
     parent.addChild(this);
@@ -55,8 +73,8 @@ private class BallShape
 
   public function attach(containerHandle:ComponentHandle):Void
   {
-    physics = cast(containerHandle.findCapability("physics"),
-                   Kinematics2DComponent);
+    position = cast(containerHandle.findCapability("position-2d"),
+                    Position2D);
 
     update(0);
     // and attach
@@ -67,8 +85,8 @@ private class BallShape
   //------------------------------------------------------------------
   public function update(elapsed:Int):Void
   {
-    x = physics.x-50;
-    y = physics.y-50;
+    x = position.x;
+    y = position.y;
   }
 
   // end BallShape
