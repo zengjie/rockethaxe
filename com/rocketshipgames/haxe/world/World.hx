@@ -42,6 +42,11 @@ class World
   //------------------------------------------------------------
   public function update(elapsed:Int):Void
   {
+
+    signals.update(elapsed);
+    states.update(elapsed);
+    scheduler.update(elapsed);
+
     entities.update(elapsed);
     mechanics.update(elapsed);
     // end update

@@ -47,12 +47,11 @@ class Scheduler
   //------------------------------------------------------------
   public function update(elapsed:Int):Void
   {
-
     time += elapsed;
 
     // Run all scheduled events that have come due
     var event:ScheduledEvent;
-    while ((event = events.peek()) != null && event.time >= time) {
+    while ((event = events.peek()) != null && event.time <= time) {
       event = events.pop();
       event.fire();
     }
