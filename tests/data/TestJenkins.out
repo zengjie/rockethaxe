@@ -1,0 +1,8 @@
+TestJenkins.hx:22: Jenkins Hash Test
+TestJenkins.hx:38: ''  DEADBEEF  DEADBEEF
+TestJenkins.hx:38: 'Four score and seven years ago'  703EC786  703EC786
+TestJenkins.hx:38: 'deadbeef'  6A5435FF  6A5435FF
+TestJenkins.hx:38: 'Jenkins'  EFDAA071  EFDAA071
+TestJenkins.hx:38: 'Murmur'  80000000  80000000
+TestJenkins.hx:38: 'City'  E6C4214F  E6C4214F
+TestJenkins.hx:38: '0'  859715F6  859715F6

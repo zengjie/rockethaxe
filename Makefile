@@ -49,17 +49,25 @@ $(BIN_DIR)TestEntity/TestEntity-debug: \
                 tests/src/TestEntity.hx
 	haxe -cp com -cp tests/src/ -cpp $(BIN_DIR)TestEntity/ -debug -main TestEntity -D debug -D verbose -D verbose_ds -D verbose_cmp
 
+$(BIN_DIR)TestJenkins/TestJenkins-debug: \
+                com/rocketshipgames/haxe/util/Jenkins.hx \
+                tests/src/TestJenkins.hx
+	haxe -cp com -cp tests/src/ -cpp $(BIN_DIR)TestJenkins/ -debug -main TestJenkins -D debug -D verbose -D verbose_ds
+
 
 #-----------------------------------------------------------------------
 #-------------------------------------------------------
 test: $(BIN_DIR)TestDoubleLinkedList/TestDoubleLinkedList-debug \
       $(BIN_DIR)TestHeap/TestHeap-debug \
       $(BIN_DIR)TestComponentContainer/TestComponentContainer-debug \
-      $(BIN_DIR)TestEntity/TestEntity-debug
+      $(BIN_DIR)TestEntity/TestEntity-debug \
+      $(BIN_DIR)TestJenkins/TestJenkins-debug
 	$(BIN_DIR)TestDoubleLinkedList/TestDoubleLinkedList-debug | diff -q tests/data/TestDoubleLinkedList.out -
 	$(BIN_DIR)TestHeap/TestHeap-debug | diff -q tests/data/TestHeap.out -
 	$(BIN_DIR)TestComponentContainer/TestComponentContainer-debug | diff -q tests/data/TestComponentContainer.out -
 	$(BIN_DIR)TestEntity/TestEntity-debug | diff -q tests/data/TestEntity.out -
+	$(BIN_DIR)TestJenkins/TestJenkins-debug | diff -q tests/data/TestJenkins.out -
+
 
 #-----------------------------------------------------------------------
 #-------------------------------------------------------
