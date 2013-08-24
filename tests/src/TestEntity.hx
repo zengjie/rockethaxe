@@ -61,8 +61,8 @@ class SignalSink
     var dispatcher = cast(containerHandle.findCapability
                           (SignalDispatcher.CAPABILITY_ID),
                           SignalDispatcher);
-    dispatcher.addSignal("lightning",
-                         function(s:String, opts:Dynamic):Bool
+    dispatcher.addSignal(SignalDispatcher.hashID("lightning"),
+                         function(s:SignalID, opts:Dynamic):Bool
                          {
                            trace("Lightning strikes!  Signal received.");
                            return false;
@@ -91,7 +91,7 @@ class SignalSource
     var dispatcher = cast(containerHandle.findCapability
                           (SignalDispatcher.CAPABILITY_ID),
                           SignalDispatcher);
-    dispatcher.signal("lightning", {});
+    dispatcher.signalID("lightning", {});
     // end attach
   }
 

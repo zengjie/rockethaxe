@@ -41,7 +41,6 @@ $(BIN_DIR)TestEntity/TestEntity-debug: \
                 com/rocketshipgames/haxe/component/ComponentHandle.hx \
                 com/rocketshipgames/haxe/component/Entity.hx \
                 com/rocketshipgames/haxe/component/SignalDispatcher.hx \
-                com/rocketshipgames/haxe/component/Signal.hx \
                 com/rocketshipgames/haxe/component/StateKeeper.hx \
                 com/rocketshipgames/haxe/component/State.hx \
                 com/rocketshipgames/haxe/component/Scheduler.hx \

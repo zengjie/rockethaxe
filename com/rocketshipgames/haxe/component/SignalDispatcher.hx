@@ -1,6 +1,13 @@
 package com.rocketshipgames.haxe.component;
 
 
+// Returning true on activation removes the signal.
+typedef Signal = SignalID->Dynamic->Bool;
+
+
+typedef SignalID = Int;
+
+
 class SignalDispatcher
   implements Component
 {
@@ -9,7 +16,7 @@ class SignalDispatcher
 
   private var container:ComponentHandle;
 
-  private var signals:Map<String, List<Signal>>;
+  private var signals:Map<SignalID, List<Signal>>;
 
 
   //--------------------------------------------------------------------
@@ -37,9 +44,19 @@ class SignalDispatcher
   {
   }
 
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function addSignal(id:String, signal:Signal):Signal
+  public static function hashID(id:String):SignalID
+  {
+    return com.rocketshipgames.haxe.util.Jenkins.hash32(id);
+    // end hash
+  }
+
+
+  //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public function addSignal(id:SignalID, signal:Signal):Signal
   {
     var a:List<Signal> = signals.get(id);
     if (a == null) {
@@ -52,7 +69,7 @@ class SignalDispatcher
     // end addSignal
   }
 
-  public function removeSignal(id:String, signal:Signal):Void
+  public function removeSignal(id:SignalID, signal:Signal):Void
   {
     var a:List<Signal> = signals.get(id);
     if (a != null) {
@@ -61,7 +78,7 @@ class SignalDispatcher
     // end removeSignal
   }
 
-  public function signal(id:String, msg:Dynamic):Void
+  public function signal(id:SignalID, msg:Dynamic):Void
   {
     var a:List<Signal> = signals.get(id);
     if (a != null) {
@@ -71,6 +88,23 @@ class SignalDispatcher
       }
     }
     // end signal
+  }
+
+
+  //----------------------------------------------------
+  public function addSignalID(id:String, signal:Signal):Signal
+  {
+    return addSignal(hashID(id), signal);
+  }
+
+  public function removeSignalID(id:String, signal:Signal):Void
+  {
+    removeSignal(hashID(id), signal);
+  }
+
+  public function signalID(id:String, msg:Dynamic):Void
+  {
+    signal(hashID(id), msg);
   }
 
   // end SignalDispatcher
