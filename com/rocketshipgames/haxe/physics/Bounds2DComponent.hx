@@ -17,6 +17,9 @@ class Bounds2DComponent
   implements Component
 {
 
+  public static var CAPABILITY_ID:com.rocketshipgames.haxe.component.CapabilityID =
+    com.rocketshipgames.haxe.component.ComponentContainer.hashID("bounds-2d");
+
   public var boundsCheckType:BoundsBehavior;
 
   public var left:Float;
@@ -61,14 +64,24 @@ class Bounds2DComponent
   //--------------------------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
-    containerHandle.claimCapability("bounds-2d");
+    containerHandle.claimCapability(CAPABILITY_ID);
 
-    kinematics = cast(containerHandle.findCapability("kinematics-2d"),
+    kinematics = cast(containerHandle.findCapability(Kinematics2DComponent.CAPABILITY_ID),
                       Kinematics2DComponent);
     // end attach
   }
 
   public function detach():Void
+  {
+  }
+
+
+  //------------------------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
   {
   }
 

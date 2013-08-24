@@ -3,11 +3,16 @@ package com.rocketshipgames.haxe.physics;
 import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
 
+import com.rocketshipgames.haxe.util.Jenkins;
+
 
 class Kinematics2DComponent
   implements Component
   implements Position2D
 {
+
+  public static var CAPABILITY_ID:com.rocketshipgames.haxe.component.CapabilityID =
+    com.rocketshipgames.haxe.component.ComponentContainer.hashID("kinematics-2d");
 
   public var x:Float;
   public var y:Float;
@@ -74,11 +79,20 @@ class Kinematics2DComponent
   //--------------------------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
-    containerHandle.claimCapability("position-2d");
-    containerHandle.claimCapability("kinematics-2d");
+    containerHandle.claimCapability(CAPABILITY_ID);
   }
 
   public function detach():Void
+  {
+  }
+
+
+  //------------------------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
   {
   }
 

@@ -93,7 +93,7 @@ private class BallShape
 
   public function attach(containerHandle:ComponentHandle):Void
   {
-    position = cast(containerHandle.findCapability("position-2d"),
+    position = cast(containerHandle.findCapability(Kinematics2DComponent.CAPABILITY_ID),
                     Position2D);
 
     update(0);
@@ -101,6 +101,17 @@ private class BallShape
   }
 
   public function detach():Void { }
+
+
+  //------------------------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
+  {
+  }
+
 
   //------------------------------------------------------------------
   public function update(elapsed:Int):Void
