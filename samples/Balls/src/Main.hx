@@ -2,14 +2,9 @@ package;
 
 import com.rocketshipgames.haxe.ArcadeScreen;
 
-import com.rocketshipgames.haxe.component.Entity;
-import com.rocketshipgames.haxe.component.ComponentHandle;
+import com.rocketshipgames.haxe.physics.SweepScanCollisionContainer;
 
-import com.rocketshipgames.haxe.physics.Position2D;
-import com.rocketshipgames.haxe.physics.Kinematics2DComponent;
-import com.rocketshipgames.haxe.physics.Bounds2DComponent;
-
-import com.rocketshipgames.haxe.device.Display;
+import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer;
 
 
 class Main
@@ -18,107 +13,65 @@ class Main
 
   private var game:ArcadeScreen;
 
+  private var collisionGroup:SweepScanCollisionContainer;
+
+  private var graphics:DisplayListGraphicsContainer;
+
+
   private var bouncerCount:Int;
 
+
+  //--------------------------------------------------------------------
   public function new():Void
   {
-    super();
     trace("Balls Demo");
 
+    //-- The base Game class sets up the display, mouse, audio, etc
+    super();
+
+    //-- ArcadeScreen is a Screen which drives a game World (entities,
+    //-- mechanics, etc), renders graphics, pauses on unfocus, etc.
     game = new ArcadeScreen();
+
+    //-- Create the container to collectively collide all the bouncers
+    collisionGroup = new SweepScanCollisionContainer();
+    game.world.mechanics.addComponent(collisionGroup);
+
+    //-- Create the container for the bouncers' graphics.  It takes a
+    //-- flash.display.Sprite (which an ArcadeScreen ultimately is) as
+    //-- the root layer in which to place the graphics.
+    graphics = new DisplayListGraphicsContainer(game);
+    game.addGraphicsContainer(graphics);
+
+    //-- Add an entity to the world and schedule more
     generateBouncer();
 
-    //-- Start the game
+    //-- Add the game to the display.  In a real game this would be
+    //-- done using ScreenManager to transition between menus, etc.
     flash.Lib.current.addChild(game);
 
     // end new
   }
 
 
+  //--------------------------------------------------------------------
   private function generateBouncer():Void
   {
 
-    //-- Create a ball!
-    var ball = new Entity();
+    //-- Bouncer is a simple entity defined in this sample
+    var ball = new Bouncer(collisionGroup, graphics);
 
-    var kinematics = new Kinematics2DComponent
-      ({ xvel: 200, yvel: 200});
-    ball.addComponent(kinematics);
-
-    var bounds = new Bounds2DComponent();
-    bounds.setBounds(BOUNDS_DETECT,
-                     25, 25,
-                     Display.width-25, Display.height-25);
-    bounds.offBoundsLeft = bounds.bounceLeft;
-    bounds.offBoundsRight = bounds.bounceRight;
-    bounds.offBoundsTop = bounds.bounceTop;
-    bounds.offBoundsBottom = bounds.bounceBottom;
-    ball.addComponent(bounds);
-
-    ball.addComponent(new BallShape(game));
+    //-- Add the new Bouncer to the game and make it live!
     game.world.entities.addComponent(ball);
+    
+    //-- Schedule another Bouncer to be created in a second
+    game.world.scheduler.schedule(1000, generateBouncer);
 
     bouncerCount++;
     trace(bouncerCount + " bouncers");
-    
-    game.world.scheduler.schedule(1000, generateBouncer);
 
     // end generateBouncer
   }
 
-
   // end Main
-}
-
-
-//----------------------------------------------------------------------
-//----------------------------------------------------------------------
-private class BallShape
-  extends flash.display.Shape
-  implements com.rocketshipgames.haxe.component.Component
-{
-
-  private var position:Position2D;
-
-  public function new(parent:flash.display.Sprite):Void
-  {
-    super();
-
-    graphics.beginFill(0xFF0000);
-    graphics.drawCircle(0, 0, 25);
-    graphics.endFill();
-
-    parent.addChild(this);
-  }
-
-  public function attach(containerHandle:ComponentHandle):Void
-  {
-    position = cast(containerHandle.findCapability(Kinematics2DComponent.CAPABILITY_ID),
-                    Position2D);
-
-    update(0);
-    // and attach
-  }
-
-  public function detach():Void { }
-
-
-  //------------------------------------------------------------------
-  public function activate(?opts:Dynamic):Void
-  {
-  }
-
-  public function deactivate():Void
-  {
-  }
-
-
-  //------------------------------------------------------------------
-  public function update(elapsed:Int):Void
-  {
-    x = position.x;
-    y = position.y;
-  }
-
-  // end BallShape
 }

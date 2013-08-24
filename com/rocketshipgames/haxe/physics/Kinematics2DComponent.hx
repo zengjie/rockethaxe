@@ -3,8 +3,6 @@ package com.rocketshipgames.haxe.physics;
 import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
 
-import com.rocketshipgames.haxe.util.Jenkins;
-
 
 class Kinematics2DComponent
   implements Component

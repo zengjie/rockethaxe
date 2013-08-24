@@ -7,9 +7,11 @@ import com.rocketshipgames.haxe.debug.Debug;
 
 import com.rocketshipgames.haxe.component.Entity;
 
-import com.rocketshipgames.haxe.device.Display;
-
 import com.rocketshipgames.haxe.world.World;
+
+import com.rocketshipgames.haxe.gfx.GraphicsContainer;
+
+import com.rocketshipgames.haxe.device.Display;
 
 
 class ArcadeScreen
@@ -28,7 +30,7 @@ class ArcadeScreen
 
 
   //------------------------------------------------------------
-  // private var graphicsContainers:List<GraphicsContainer>;
+  private var graphicsContainers:List<GraphicsContainer>;
 
   private var paused(default,null):Bool;
   private var clientPaused:Bool;
@@ -48,7 +50,7 @@ class ArcadeScreen
     this.world = world;
 
 
-    // graphicsContainers = new List();
+    graphicsContainers = new List();
 
 
     //-- Setup the game clocks and initial state
@@ -100,13 +102,11 @@ class ArcadeScreen
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  /*
   public function addGraphicsContainer(gc:GraphicsContainer):Void
   {
     graphicsContainers.add(gc);
     // end addGraphicsContainer
   }
-  */
 
 
   //--------------------------------------------------------------------
@@ -236,27 +236,30 @@ class ArcadeScreen
     // update when paused.  Otherwise, you couldn't unpause...
     update();
 
-    // render();
+    // Show the fancy graphics!
+    render();
 
     // end onEnterFrame
   }
 
+
+  //------------------------------------------------------------
   private function update():Void
   {
     // Empty function for user to override.
     // end update
   }
 
-  /*
+
+  //------------------------------------------------------------
   private function render():Void
   {
     graphics.clear();
     for (gc in graphicsContainers) {
-      gc.render(graphics, elapsed);
+      gc.render(graphics);
     }
     // end render
   }
-  */
 
   // end ArcadeScreen
 }
