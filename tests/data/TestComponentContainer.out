@@ -58,4 +58,5 @@ ComponentHandle.hx:58: Releasing capability magic
 ComponentHandle.hx:58: Releasing capability science
 TestComponentContainer.hx:127: Detach Provider
 TestComponentContainer.hx:64: Looking for magic provider again
+ComponentContainer.hx:77: [ERROR] Capability magic not found.
 TestComponentContainer.hx:69: No magic available

@@ -6,12 +6,12 @@ class Deadpool<T: (DeadpoolObject)>
   //------------------------------------------------------------
   private var totalList:List<T>;
   private var freeList:List<T>;
-  private var instantiate:Array<Dynamic>->T;
+  private var instantiate:Dynamic->T;
 
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function new(instantiate:Array<Dynamic>->T):Void
+  public function new(instantiate:Dynamic->T):Void
   {
     this.instantiate = instantiate;
     totalList = new List();
@@ -27,7 +27,7 @@ class Deadpool<T: (DeadpoolObject)>
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function newObject(opts:Array<Dynamic> = null):T
+  public function newObject(opts:Dynamic = null):T
   {
     var object:T;
 

@@ -5,7 +5,7 @@ interface DeadpoolObject
 {
 
   function setDeadpool(deadpool:Dynamic):Void;
-  function init(?opts:Array<Dynamic>):Void;
+  function init(?opts:Dynamic):Void;
 
   // end DeadpoolObject
 }

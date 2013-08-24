@@ -42,10 +42,10 @@ class DoubleLinkedListHandle<T>
   {
   }
 
-  public function init(?opts:Array<Dynamic>):Void
+  public function init(?opts:Dynamic):Void
   {
-    list = opts[0];
-    item = opts[1];
+    list = opts.list;
+    item = opts.item;
   }
 
   // end DoubleLinkedListHandle

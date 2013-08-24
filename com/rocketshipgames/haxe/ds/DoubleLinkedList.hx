@@ -22,8 +22,8 @@ class DoubleLinkedList<T>
   {
 
     handlePool = new Deadpool<DoubleLinkedListHandle<T>>
-      (function(opts:Array<Dynamic>):DoubleLinkedListHandle<T> {
-        return new DoubleLinkedListHandle<T>(opts[0], opts[1]);
+      (function(opts:Dynamic):DoubleLinkedListHandle<T> {
+        return new DoubleLinkedListHandle<T>(opts.list, opts.item);
       });
 
     // end new
@@ -34,7 +34,7 @@ class DoubleLinkedList<T>
   //----------------------------------------------------
   public function add(item:T):DoubleLinkedListHandle<T>
   {
-    var handle = handlePool.newObject([this, item]);
+    var handle = handlePool.newObject({list: this, item: item});
 
     /*
     if (handle.prev != null || handle.next != null || head == handle) {
