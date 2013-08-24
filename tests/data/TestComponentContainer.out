@@ -1,62 +1,58 @@
 TestComponentContainer.hx:14: Test ComponentContainer
-TestComponentContainer.hx:86: New widget 0
+TestComponentContainer.hx:87: New widget 0
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:91: Attach 0
-TestComponentContainer.hx:86: New widget 1
+TestComponentContainer.hx:94: Attach 0
+TestComponentContainer.hx:87: New widget 1
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:91: Attach 1
-TestComponentContainer.hx:86: New widget 2
+TestComponentContainer.hx:94: Attach 1
+TestComponentContainer.hx:87: New widget 2
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:91: Attach 2
-TestComponentContainer.hx:86: New widget 3
+TestComponentContainer.hx:94: Attach 2
+TestComponentContainer.hx:87: New widget 3
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:91: Attach 3
-TestComponentContainer.hx:86: New widget 4
+TestComponentContainer.hx:94: Attach 3
+TestComponentContainer.hx:87: New widget 4
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:91: Attach 4
-TestComponentContainer.hx:101: Update 0: 1
-TestComponentContainer.hx:101: Update 1: 1
-TestComponentContainer.hx:101: Update 2: 1
-TestComponentContainer.hx:101: Update 3: 1
-TestComponentContainer.hx:101: Update 4: 1
+TestComponentContainer.hx:94: Attach 4
+TestComponentContainer.hx:116: Update 0: 1
+TestComponentContainer.hx:116: Update 1: 1
+TestComponentContainer.hx:116: Update 2: 1
+TestComponentContainer.hx:116: Update 3: 1
+TestComponentContainer.hx:116: Update 4: 1
 TestComponentContainer.hx:30: Removing third
-TestComponentContainer.hx:96: Detach 3
-TestComponentContainer.hx:101: Update 0: 2
-TestComponentContainer.hx:101: Update 1: 2
-TestComponentContainer.hx:101: Update 2: 2
-TestComponentContainer.hx:101: Update 4: 2
+TestComponentContainer.hx:99: Detach 3
+TestComponentContainer.hx:116: Update 0: 2
+TestComponentContainer.hx:116: Update 1: 2
+TestComponentContainer.hx:116: Update 2: 2
+TestComponentContainer.hx:116: Update 4: 2
 TestComponentContainer.hx:35: Add another
-TestComponentContainer.hx:86: New widget 5
-TestComponentContainer.hx:91: Attach 5
-TestComponentContainer.hx:101: Update 0: 3
-TestComponentContainer.hx:101: Update 1: 3
-TestComponentContainer.hx:101: Update 2: 3
-TestComponentContainer.hx:101: Update 4: 3
-TestComponentContainer.hx:101: Update 5: 3
+TestComponentContainer.hx:87: New widget 5
+TestComponentContainer.hx:94: Attach 5
+TestComponentContainer.hx:116: Update 0: 3
+TestComponentContainer.hx:116: Update 1: 3
+TestComponentContainer.hx:116: Update 2: 3
+TestComponentContainer.hx:116: Update 4: 3
+TestComponentContainer.hx:116: Update 5: 3
 TestComponentContainer.hx:40: Iterate over
 TestComponentContainer.hx:42: Iterate Thing 0
-TestComponentContainer.hx:106: Thing 0 function TEST
+TestComponentContainer.hx:123: Thing 0 function TEST
 TestComponentContainer.hx:42: Iterate Thing 1
-TestComponentContainer.hx:106: Thing 1 function TEST
+TestComponentContainer.hx:123: Thing 1 function TEST
 TestComponentContainer.hx:42: Iterate Thing 2
-TestComponentContainer.hx:106: Thing 2 function TEST
+TestComponentContainer.hx:123: Thing 2 function TEST
 TestComponentContainer.hx:42: Iterate Thing 4
-TestComponentContainer.hx:106: Thing 4 function TEST
+TestComponentContainer.hx:123: Thing 4 function TEST
 TestComponentContainer.hx:42: Iterate Thing 5
-TestComponentContainer.hx:106: Thing 5 function TEST
+TestComponentContainer.hx:123: Thing 5 function TEST
 TestComponentContainer.hx:47: Creating magic provider
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestComponentContainer.hx:120: Attach Provider
-ComponentHandle.hx:48: Claiming capability magic
+TestComponentContainer.hx:138: Attach Provider
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-ComponentHandle.hx:48: Claiming capability science
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
 TestComponentContainer.hx:53: Looking for magic provider
-TestComponentContainer.hx:56: Magic available
-TestComponentContainer.hx:137: Provider magic on story
-ComponentHandle.hx:58: Releasing capability magic
-ComponentHandle.hx:58: Releasing capability science
-TestComponentContainer.hx:127: Detach Provider
-TestComponentContainer.hx:64: Looking for magic provider again
-ComponentContainer.hx:77: [ERROR] Capability magic not found.
-TestComponentContainer.hx:69: No magic available
+TestComponentContainer.hx:57: Magic available
+TestComponentContainer.hx:169: Provider magic on story
+TestComponentContainer.hx:145: Detach Provider
+TestComponentContainer.hx:65: Looking for magic provider again
+ComponentContainer.hx:96: [ERROR] Capability magic (-2147483648) not found.
+TestComponentContainer.hx:70: No magic available

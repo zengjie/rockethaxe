@@ -72,6 +72,10 @@ class SignalSink
 
   public function detach():Void {}
 
+  public function activate(?opts:Dynamic):Void {}
+
+  public function deactivate():Void {}
+
   public function update(elapsed:Int):Void {}
 
   // end SignalSink
@@ -96,6 +100,10 @@ class SignalSource
   }
 
   public function detach():Void {}
+
+  public function activate(?opts:Dynamic):Void {}
+
+  public function deactivate():Void {}
 
   public function update(elapsed:Int):Void {}
 

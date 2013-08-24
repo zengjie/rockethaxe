@@ -7,7 +7,8 @@ class Scheduler
   implements Component
 {
 
-  public static var CAPABILITY_ID:String = "scheduler";
+  public static var CAPABILITY_ID:CapabilityID =
+    ComponentContainer.hashID("scheduler");
 
   private var container:ComponentHandle;
 
@@ -42,6 +43,18 @@ class Scheduler
   public function detach():Void
   {
   }
+
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
+  {
+  }
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------

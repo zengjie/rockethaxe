@@ -14,7 +14,7 @@ class ComponentHandle
 
   private var listHandle:DoubleLinkedListHandle<ComponentHandle>;
   
-  private var capabilities:DoubleLinkedList<String>;
+  private var capabilities:DoubleLinkedList<CapabilityID>;
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
@@ -42,37 +42,59 @@ class ComponentHandle
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function claimCapability(capability:String):Void
+  public function claimCapability(capability:CapabilityID):Void
   {
-    #if verbose_cmp
-      trace("Claiming capability " + capability);
-    #end
-      capabilities.add(capability);
+    capabilities.add(capability);
     container.claimCapability(capability, this);
     // end claimCapability
   }
 
-  public function releaseCapability(capability:String):Void
+  public function releaseCapability(capability:CapabilityID):Void
   {
-    #if verbose_cmp
-      trace("Releasing capability " + capability);
-    #end
     capabilities.removeItem(capability);
     container.releaseCapability(capability, this);
     // end releaseCapability
   }
 
-  public function findCapability(capability:String, necessary:Bool=true):Component
+  public function findCapability(capability:CapabilityID,
+                                 necessary:Bool=true):Component
   {
     return container.findCapability(capability, necessary);
     // end findCapability
   }
 
-  public function findCapabilityHandle(capability:String, necessary:Bool=true):ComponentHandle
+  public function findCapabilityHandle(capability:CapabilityID,
+                                       necessary:Bool=true):ComponentHandle
   {
     return container.findCapabilityHandle(capability, necessary);
     // end findCapabilityHandle
   }
+
+  //----------------------------------------------------
+  public function claimCapabilityID(capability:String):Void
+  {
+    claimCapability(ComponentContainer.hashID(capability));
+  }
+
+  public function releaseCapabilityID(capability:String):Void
+  {
+    releaseCapability(ComponentContainer.hashID(capability));
+  }
+
+  public function findCapabilityID(capability:String,
+                                   necessary:Bool=true):Component
+  {
+    return findCapability(ComponentContainer.hashID(capability),
+                          necessary);
+  }
+
+  public function findCapabilityHandleID(capability:String,
+                                         necessary:Bool=true):ComponentHandle
+  {
+    return findCapabilityHandle(ComponentContainer.hashID(capability),
+                                necessary);
+  }
+
 
   // end ComponentHandle
 }

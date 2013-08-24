@@ -2,22 +2,19 @@ TestEntity.hx:19: Test Entity
 TestEntity.hx:23: Testing signal dispatcher
 TestEntity.hx:56: New signal sink
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-ComponentContainer.hx:88: [ERROR] Capability dispatcher not found.
+ComponentContainer.hx:109: [ERROR] Capability dispatcher (-152254436) not found.
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-ComponentHandle.hx:48: Claiming capability dispatcher
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestEntity.hx:86: New signal source
+TestEntity.hx:90: New signal source
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
 TestEntity.hx:67: Lightning strikes!  Signal received.
 TestEntity.hx:28: Testing state keeper
-ComponentContainer.hx:88: [ERROR] Capability states not found.
+ComponentContainer.hx:109: [ERROR] Capability states (-174899015) not found.
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-ComponentHandle.hx:48: Claiming capability states
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
 TestEntity.hx:33: Feeling happy
 TestEntity.hx:36: Testing scheduler
-ComponentContainer.hx:88: [ERROR] Capability scheduler not found.
+ComponentContainer.hx:109: [ERROR] Capability scheduler (-2147483648) not found.
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-ComponentHandle.hx:48: Claiming capability scheduler
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
 TestEntity.hx:40: EVENT FIRED!

@@ -5,7 +5,8 @@ class StateKeeper
   implements Component
 {
 
-  public static var CAPABILITY_ID:String = "states";
+  public static var CAPABILITY_ID:CapabilityID =
+    ComponentContainer.hashID("states");
 
   private var container:ComponentHandle;
 
@@ -33,6 +34,20 @@ class StateKeeper
   {
   }
 
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
+  {
+  }
+
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
   public function update(elapsed:Int):Void
   {
   }

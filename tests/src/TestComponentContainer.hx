@@ -51,7 +51,8 @@ class TestComponentContainer
     var provHandle = providers.addComponent(prov);
 
     trace("Looking for magic provider");
-    var c:Component = providers.findCapability("magic");
+    var c:Component = providers.findCapability
+      (ComponentContainer.hashID("magic"));
     if (c != null) {
       trace("Magic available");
       cast(c, Provider).magic("story");
@@ -62,7 +63,7 @@ class TestComponentContainer
     provHandle.remove();
 
     trace("Looking for magic provider again");
-    c = providers.findCapability("magic");
+    c = providers.findCapabilityID("magic");
     if (c != null) {
       trace("Magic still available");
     } else {
@@ -86,6 +87,8 @@ class Thing
     trace("New widget " + id);
   }
 
+
+  //--------------------------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
     trace("Attach " + id);
@@ -96,11 +99,25 @@ class Thing
     trace("Detach " + id);
   }
 
+
+  //--------------------------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
+  {
+  }
+
+
+  //--------------------------------------------------------------------
   public function update(elapsed:Int):Void
   {
     trace("Update " + id + ": " + elapsed);
   }
 
+
+  //--------------------------------------------------------------------
   public function thingSpecificFunction(s:String):Void
   {
     trace("Thing " + id + " function " + s);
@@ -115,11 +132,12 @@ class Provider
 {
   public function new():Void {}
 
+  //--------------------------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
     trace("Attach Provider");
-    containerHandle.claimCapability("magic");
-    containerHandle.claimCapability("science");
+    containerHandle.claimCapability(ComponentContainer.hashID("magic"));
+    containerHandle.claimCapabilityID("science");
   }
 
   public function detach():Void
@@ -127,11 +145,25 @@ class Provider
     trace("Detach Provider");
   }
 
+
+  //--------------------------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
+  {
+  }
+
+
+  //--------------------------------------------------------------------
   public function update(elapsed:Int):Void
   {
     trace("Update Provider: " + elapsed);
   }
 
+
+  //--------------------------------------------------------------------
   public function magic(s:String):Void
   {
     trace("Provider magic on " + s);

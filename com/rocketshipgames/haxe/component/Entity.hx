@@ -1,5 +1,6 @@
 package com.rocketshipgames.haxe.component;
 
+
 class Entity
   extends ComponentContainer
   implements Component
@@ -17,7 +18,8 @@ class Entity
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public override function findCapability(capability:String, necessary:Bool=true):Component
+  public override function findCapability(capability:CapabilityID,
+                                          necessary:Bool=true):Component
   {
     var x = findCapabilityHandle(capability, necessary);
     if (x != null)
@@ -26,7 +28,8 @@ class Entity
     // end findCapability
   }
 
-  public override function findCapabilityHandle(capability:String, necessary:Bool=true):ComponentHandle
+  public override function findCapabilityHandle(capability:CapabilityID,
+                                                necessary:Bool=true):ComponentHandle
   {
     var res = super.findCapabilityHandle(capability, necessary);
 
@@ -60,12 +63,27 @@ class Entity
   {
   }
 
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
+  {
+  }
+
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
   public override function update(elapsed:Int):Void
   {
     logic(elapsed);
     super.update(elapsed);
     // end update
   }
+
 
   //--------------------------------------------------------------------
   //----------------------------------------------------

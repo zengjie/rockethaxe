@@ -17,17 +17,40 @@ package com.rocketshipgames.haxe.util;
 class Jenkins
 {
 
+  private static var reverse32Lookup:Map<Int, String> = new Map();
+  private static var reverse64Lookup:Map<Int, String> = new Map();
+
+  //--------------------------------------------------------------------
+  //--------------------------------------------------------------------
+  public static function reverse32(hash:Int):String
+  {
+    return reverse32Lookup.get(hash);
+  }
+
+  public static function reverse64(hash:Int):String
+  {
+    return reverse64Lookup.get(hash);
+  }
+
+
+  //--------------------------------------------------------------------
+  //--------------------------------------------------------------------
   public static function hash32(msg:String):Int
   {
-    return lookup3(msg).c;
+    var h = lookup3(msg).c;
+    reverse32Lookup.set(h, msg);
+    return h;
   }
 
   public static function hash64(msg:String):Int
   {
-    var h = lookup3(msg);
-    return (h.b) + (h.c);
+    var l = lookup3(msg);
+    var h = (l.b) + (l.c);
+    reverse64Lookup.set(h, msg);
+    return h;
   }
 
+  //----------------------------------------------------
   public static function lookup3(k:String):Dynamic
   {
     var length = k.length;

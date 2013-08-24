@@ -1,5 +1,7 @@
 package com.rocketshipgames.haxe.component;
 
+import com.rocketshipgames.haxe.util.Jenkins;
+
 
 // Returning true on activation removes the signal.
 typedef Signal = SignalID->Dynamic->Bool;
@@ -12,7 +14,8 @@ class SignalDispatcher
   implements Component
 {
 
-  public static var CAPABILITY_ID:String = "dispatcher";
+  public static var CAPABILITY_ID:CapabilityID =
+    ComponentContainer.hashID("dispatcher");
 
   private var container:ComponentHandle;
 
@@ -29,6 +32,21 @@ class SignalDispatcher
 
 
   //--------------------------------------------------------------------
+  //------------------------------------------------------------
+  public static function hashID(id:String):SignalID
+  {
+    return Jenkins.hash32(id);
+    // end hashID
+  }
+
+  public static function reverseID(id:CapabilityID):String
+  {
+    return Jenkins.reverse32(id);
+    // end reverseID
+  }
+
+
+  //--------------------------------------------------------------------
   //----------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
@@ -40,17 +58,22 @@ class SignalDispatcher
   {
   }
 
-  public function update(elapsed:Int):Void
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+
+  public function deactivate():Void
   {
   }
 
 
   //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  public static function hashID(id:String):SignalID
+  //----------------------------------------------------
+  public function update(elapsed:Int):Void
   {
-    return com.rocketshipgames.haxe.util.Jenkins.hash32(id);
-    // end hash
   }
 
 
