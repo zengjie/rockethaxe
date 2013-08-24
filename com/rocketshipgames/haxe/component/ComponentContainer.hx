@@ -93,8 +93,7 @@ class ComponentContainer
       return x.component;
 
     if (necessary)
-      Debug.error("Capability " + reverseID(capability) +
-                  " (" + capability + ") not found.");
+      reportMissingCapability(capability);
 
     return null;
     // end findCapability
@@ -106,12 +105,27 @@ class ComponentContainer
     var res = capabilities.get(capability);
 
     if (necessary && res == null)
-      Debug.error("Capability " + reverseID(capability) +
-                  " (" + capability + ") not found.");
+      reportMissingCapability(capability);
 
     return res;
     // end findCapabilityHandle
   }
+
+  private function reportMissingCapability(capability:CapabilityID):Void
+  {
+    var s:StringBuf = new StringBuf();
+    s.add("Available: ");
+    for (k in capabilities.keys()) {
+      s.add(reverseID(k));
+      s.add(" ");
+    }
+
+    Debug.error("Capability " + reverseID(capability) +
+                " (" + capability + ") not found.");
+    Debug.error(s.toString());
+      // end reportMissingCapability
+  }
+
 
   //----------------------------------------------------
   public function claimCapabilityID(capability:String,

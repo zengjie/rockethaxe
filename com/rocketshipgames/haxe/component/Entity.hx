@@ -31,17 +31,23 @@ class Entity
   public override function findCapabilityHandle(capability:CapabilityID,
                                                 necessary:Bool=true):ComponentHandle
   {
+
+    if (capability == SignalDispatcher.CID_SIGNALS ||
+        capability == StateKeeper.CID_STATES ||
+        capability == Scheduler.CID_EVENTS)
+      necessary = false;
+
     var res = super.findCapabilityHandle(capability, necessary);
 
     if (res == null) {
 
-      if (capability == SignalDispatcher.CAPABILITY_ID) {
+      if (capability == SignalDispatcher.CID_SIGNALS) {
         res = addComponent(new SignalDispatcher());
 
-      } else if (capability == StateKeeper.CAPABILITY_ID) {
+      } else if (capability == StateKeeper.CID_STATES) {
         res = addComponent(new StateKeeper());
 
-      } else if (capability == Scheduler.CAPABILITY_ID) {
+      } else if (capability == Scheduler.CID_EVENTS) {
         res = addComponent(new Scheduler());
       }
 

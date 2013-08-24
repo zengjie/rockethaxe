@@ -54,5 +54,6 @@ TestComponentContainer.hx:57: Magic available
 TestComponentContainer.hx:169: Provider magic on story
 TestComponentContainer.hx:145: Detach Provider
 TestComponentContainer.hx:65: Looking for magic provider again
-ComponentContainer.hx:96: [ERROR] Capability magic (-2147483648) not found.
+ComponentContainer.hx:123: [ERROR] Capability magic (-2147483648) not found.
+ComponentContainer.hx:125: [ERROR] Available: 
 TestComponentContainer.hx:70: No magic available

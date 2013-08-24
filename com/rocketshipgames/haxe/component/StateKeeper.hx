@@ -5,8 +5,8 @@ class StateKeeper
   implements Component
 {
 
-  public static var CAPABILITY_ID:CapabilityID =
-    ComponentContainer.hashID("states");
+  public static var CID_STATES:CapabilityID =
+    ComponentContainer.hashID("_states_");
 
   private var container:ComponentHandle;
 
@@ -27,7 +27,7 @@ class StateKeeper
   public function attach(containerHandle:ComponentHandle):Void
   {
     container = containerHandle;
-    container.claimCapability(CAPABILITY_ID);
+    container.claimCapability(CID_STATES);
   }
 
   public function detach():Void

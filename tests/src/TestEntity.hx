@@ -26,7 +26,7 @@ class TestEntity
 
 
     trace("Testing state keeper");
-    var keeper = cast(world.findCapability(StateKeeper.CAPABILITY_ID),
+    var keeper = cast(world.findCapability(StateKeeper.CID_STATES),
                       StateKeeper);
     keeper.addState("feeling", new TestState());
 
@@ -34,7 +34,7 @@ class TestEntity
 
 
     trace("Testing scheduler");
-    var scheduler = cast(world.findCapability(Scheduler.CAPABILITY_ID),
+    var scheduler = cast(world.findCapability(Scheduler.CID_EVENTS),
                          Scheduler);
 
     scheduler.schedule(100, function():Void { trace("EVENT FIRED!"); });
@@ -59,7 +59,7 @@ class SignalSink
   public function attach(containerHandle:ComponentHandle):Void
   {
     var dispatcher = cast(containerHandle.findCapability
-                          (SignalDispatcher.CAPABILITY_ID),
+                          (SignalDispatcher.CID_SIGNALS),
                           SignalDispatcher);
     dispatcher.addSignal(SignalDispatcher.hashID("lightning"),
                          function(s:SignalID, opts:Dynamic):Bool
@@ -93,7 +93,7 @@ class SignalSource
   public function attach(containerHandle:ComponentHandle):Void
   {
     var dispatcher = cast(containerHandle.findCapability
-                          (SignalDispatcher.CAPABILITY_ID),
+                          (SignalDispatcher.CID_SIGNALS),
                           SignalDispatcher);
     dispatcher.signalID("lightning", {});
     // end attach

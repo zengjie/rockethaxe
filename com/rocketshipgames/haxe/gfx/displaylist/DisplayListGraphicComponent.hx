@@ -32,7 +32,7 @@ class DisplayListGraphicComponent
   public function attach(containerHandle:ComponentHandle):Void
   {
     kinematics =
-      cast(containerHandle.findCapability(Kinematics2DComponent.CAPABILITY_ID),
+      cast(containerHandle.findCapability(Kinematics2DComponent.CID_KINEMATICS2D),
            Kinematics2DComponent);
 
     activate();
@@ -40,6 +40,7 @@ class DisplayListGraphicComponent
 
   public function detach():Void
   {
+    deactivate();
   }
 
 

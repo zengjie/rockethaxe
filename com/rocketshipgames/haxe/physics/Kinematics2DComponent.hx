@@ -9,8 +9,10 @@ class Kinematics2DComponent
   implements Position2D
 {
 
-  public static var CAPABILITY_ID:com.rocketshipgames.haxe.component.CapabilityID =
+  public static var CID_KINEMATICS2D:
+    com.rocketshipgames.haxe.component.CapabilityID =
     com.rocketshipgames.haxe.component.ComponentContainer.hashID("kinematics-2d");
+
 
   public var x:Float;
   public var y:Float;
@@ -77,7 +79,7 @@ class Kinematics2DComponent
   //--------------------------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
-    containerHandle.claimCapability(CAPABILITY_ID);
+    containerHandle.claimCapability(CID_KINEMATICS2D);
   }
 
   public function detach():Void

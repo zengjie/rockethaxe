@@ -4,6 +4,7 @@ import com.rocketshipgames.haxe.debug.Debug;
 
 import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
+import com.rocketshipgames.haxe.component.SignalDispatcher;
 
 
 enum BoundsBehavior {
@@ -12,14 +13,28 @@ enum BoundsBehavior {
   BOUNDS_STOP;
 }
 
+enum BoundsSignalData {
+  BOUNDS_LEFT;
+  BOUNDS_RIGHT;
+  BOUNDS_TOP;
+  BOUNDS_BOTTOM;
+}
+
 
 class Bounds2DComponent
   implements Component
 {
 
-  public static var CAPABILITY_ID:com.rocketshipgames.haxe.component.CapabilityID =
+  public static var CID_BOUNDS2D:
+    com.rocketshipgames.haxe.component.CapabilityID =
     com.rocketshipgames.haxe.component.ComponentContainer.hashID("bounds-2d");
 
+  public static var SIG_BOUNDS2D:
+    com.rocketshipgames.haxe.component.SignalID =
+    com.rocketshipgames.haxe.component.SignalDispatcher.hashID("bounds");
+
+
+  //------------------------------------------------------------
   public var boundsCheckType:BoundsBehavior;
 
   public var left:Float;
@@ -33,9 +48,12 @@ class Bounds2DComponent
   public var offBoundsTop:Void->Void;
   public var offBoundsBottom:Void->Void;
 
-  //------------------------------------------------------------
-  public var kinematics:Kinematics2DComponent;
+  public var signal:Bool;
 
+
+  //------------------------------------------------------------
+  private var kinematics:Kinematics2DComponent;
+  private var dispatcher:SignalDispatcher;
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
@@ -44,7 +62,9 @@ class Bounds2DComponent
 
     boundsCheckType = BOUNDS_NONE;
     left = top = right = bottom = 0.0;
-    offBoundsLeft = offBoundsRight = offBoundsTop = offBoundsBottom = null;
+    offBoundsLeft = offBoundsRight = offBoundsTop = offBoundsBottom = doNothing;
+
+    signal = false;
 
     init(opts);
 
@@ -64,10 +84,16 @@ class Bounds2DComponent
   //--------------------------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
-    containerHandle.claimCapability(CAPABILITY_ID);
+    containerHandle.claimCapability(CID_BOUNDS2D);
 
-    kinematics = cast(containerHandle.findCapability(Kinematics2DComponent.CAPABILITY_ID),
-                      Kinematics2DComponent);
+    kinematics =
+      cast(containerHandle.findCapability(Kinematics2DComponent.CID_KINEMATICS2D),
+           Kinematics2DComponent);
+
+    dispatcher =
+      cast(containerHandle.findCapability(SignalDispatcher.CID_SIGNALS),
+           SignalDispatcher);
+
     // end attach
   }
 
@@ -126,16 +152,20 @@ class Bounds2DComponent
       if (boundsCheckType == BOUNDS_STOP)
         stopLeft();
 
-      if (offBoundsLeft != null)
-        offBoundsLeft();
+      offBoundsLeft();
+
+      if (signal)
+        dispatcher.signal(SIG_BOUNDS2D, BOUNDS_LEFT);
 
       // end x off left
     } else if (kinematics.x > right) {
       if (boundsCheckType == BOUNDS_STOP)
         stopRight();
 
-      if (offBoundsRight != null)
-        offBoundsRight();
+      offBoundsRight();
+
+      if (signal)
+        dispatcher.signal(SIG_BOUNDS2D, BOUNDS_RIGHT);
 
       // end x off right
     }
@@ -144,16 +174,21 @@ class Bounds2DComponent
       if (boundsCheckType == BOUNDS_STOP)
         stopTop();
 
-      if (offBoundsTop != null)
-        offBoundsTop();
+      offBoundsTop();
+
+      if (signal)
+        dispatcher.signal(SIG_BOUNDS2D, BOUNDS_TOP);
 
       // end y off top
     } else if (kinematics.y > bottom) {
       if (boundsCheckType == BOUNDS_STOP)
         stopBottom();
 
-      if (offBoundsBottom != null)
-        offBoundsBottom();
+      offBoundsBottom();
+
+      if (signal)
+        dispatcher.signal(SIG_BOUNDS2D, BOUNDS_BOTTOM);
+
       // end y off bottom
     }
 
@@ -163,6 +198,10 @@ class Bounds2DComponent
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
+  public function doNothing():Void { }
+
+
+  //------------------------------------------------------------
   public function cannotLeaveLeft():Void
   {
     if (kinematics.xvel <= 0) {
@@ -192,6 +231,7 @@ class Bounds2DComponent
     }
   }
 
+
   //------------------------------------------------------------
   public function stopLeft():Void
   {
@@ -214,6 +254,7 @@ class Bounds2DComponent
     kinematics.yvel = 0;
   }
 
+
   //------------------------------------------------------------
   public function cycleLeft():Void
   {
@@ -231,6 +272,7 @@ class Bounds2DComponent
   {
     kinematics.y = top;
   }
+
 
   //------------------------------------------------------------
   public function bounceLeft():Void
