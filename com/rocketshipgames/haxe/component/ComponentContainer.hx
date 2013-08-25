@@ -10,6 +10,7 @@ import com.rocketshipgames.haxe.util.Jenkins;
 
 
 class ComponentContainer
+  implements Component
 {
 
   //--------------------------------------------------------------------
@@ -18,6 +19,10 @@ class ComponentContainer
 
   private var capabilities:Map<CapabilityID,ComponentHandle>;
 
+  private var container:ComponentHandle;
+
+  private var active:Bool;
+
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
@@ -25,7 +30,69 @@ class ComponentContainer
   {
     components = new DoubleLinkedList();
     capabilities = new Map();
+    active = true;
     // end new
+  }
+
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function attach(containerHandle:ComponentHandle):Void
+  {
+    container = containerHandle;
+  }
+
+  public function detach():Void
+  {
+    container = null;
+  }
+
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function activate(?opts:Dynamic):Void
+  {
+    active = true;
+    for (c in components) {
+      c.component.activate(opts);
+    }
+    // end activate
+  }
+
+  public function deactivate():Void
+  {
+    active = false;
+    for (c in components) {
+      c.component.deactivate();
+    }
+    // end deactivate
+  }
+
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function update(elapsed:Int):Void
+  {
+
+    if (!active)
+      return;
+
+    //-- Update all entities
+
+    // This loop is laid out explicitly so an iterator isn't created
+
+    var curr:DoubleLinkedListHandle<ComponentHandle> = components.head;
+    var next:DoubleLinkedListHandle<ComponentHandle>;
+    while (curr != null) {
+      next = curr.next; // Cache this in case curr gets removed but it
+                        // also means new entities created by the last
+                        // entity won't be processed this update...
+
+      curr.item.component.update(elapsed);
+      curr = next;
+    }
+
+    // end update
   }
 
 
@@ -159,29 +226,6 @@ class ComponentContainer
   {
     return components.iterator();
   }
-
-
-  //--------------------------------------------------------------------
-  //----------------------------------------------------
-  public function update(elapsed:Int):Void
-  {
-
-    // Update all entities
-
-    var curr:DoubleLinkedListHandle<ComponentHandle> = components.head;
-    var next:DoubleLinkedListHandle<ComponentHandle>;
-    while (curr != null) {
-      next = curr.next; // Cache this in case curr gets removed but it
-                        // also means new entities created by the last
-                        // entity won't be processed this update...
-
-      curr.item.component.update(elapsed);
-      curr = next;
-    }
-
-    // end update
-  }
-
 
   // end ComponentContainer
 }

@@ -3,10 +3,7 @@ package com.rocketshipgames.haxe.component;
 
 class Entity
   extends ComponentContainer
-  implements Component
 {
-
-  private var container:ComponentHandle;
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
@@ -28,8 +25,9 @@ class Entity
     // end findCapability
   }
 
-  public override function findCapabilityHandle(capability:CapabilityID,
-                                                necessary:Bool=true):ComponentHandle
+  public override function findCapabilityHandle
+    (capability:CapabilityID,
+     necessary:Bool=true):ComponentHandle
   {
 
     if (capability == SignalDispatcher.CID_SIGNALS ||
@@ -55,51 +53,6 @@ class Entity
 
     // end findCapability
     return res;
-  }
-
-
-  //--------------------------------------------------------------------
-  //----------------------------------------------------
-  public function attach(containerHandle:ComponentHandle):Void
-  {
-    container = containerHandle;
-  }
-
-  public function detach():Void
-  {
-  }
-
-
-  //--------------------------------------------------------------------
-  //----------------------------------------------------
-  public function activate(?opts:Dynamic):Void
-  {
-  }
-
-  public function deactivate():Void
-  {
-  }
-
-
-  //--------------------------------------------------------------------
-  //----------------------------------------------------
-  public override function update(elapsed:Int):Void
-  {
-    logic(elapsed);
-    super.update(elapsed);
-    // end update
-  }
-
-
-  //--------------------------------------------------------------------
-  //----------------------------------------------------
-  public function logic(elapsed:Int):Void
-  {
-
-    // Empty function for users to overload without worrying about
-    // call to super.update().
-
-    // end logic
   }
 
   // end Entity
