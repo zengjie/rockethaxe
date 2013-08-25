@@ -13,7 +13,7 @@ enum BoundsBehavior {
   BOUNDS_STOP;
 }
 
-enum BoundsSignalData {
+enum Bounds2DSignalData {
   BOUNDS_LEFT;
   BOUNDS_RIGHT;
   BOUNDS_TOP;
@@ -48,12 +48,15 @@ class Bounds2DComponent
   public var offBoundsTop:Void->Void;
   public var offBoundsBottom:Void->Void;
 
-  public var signal:Bool;
-
 
   //------------------------------------------------------------
+  private var container:ComponentHandle;
+
   private var kinematics:Kinematics2DComponent;
   private var dispatcher:SignalDispatcher;
+
+  private var signal:Bool;
+
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
@@ -66,33 +69,37 @@ class Bounds2DComponent
 
     signal = false;
 
-    init(opts);
-
     // end new
   }
 
-  public function init(?opts:Dynamic):Void
+
+  public function enableSignal(enable:Bool=true):Void
   {
 
-    if (opts == null)
-      return;
+    signal = enable;
 
-    // end init
+    if (signal && dispatcher == null && container != null) {
+      dispatcher =
+        cast(container.findCapability(SignalDispatcher.CID_SIGNALS),
+             SignalDispatcher);
+    }
+
+    // end enableSignal
   }
-
 
   //--------------------------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
-    containerHandle.claimCapability(CID_BOUNDS2D);
+    container = containerHandle;
+
+    container.claimCapability(CID_BOUNDS2D);
 
     kinematics =
-      cast(containerHandle.findCapability(Kinematics2DComponent.CID_KINEMATICS2D),
+      cast(container.findCapability(Kinematics2DComponent.CID_KINEMATICS2D),
            Kinematics2DComponent);
 
-    dispatcher =
-      cast(containerHandle.findCapability(SignalDispatcher.CID_SIGNALS),
-           SignalDispatcher);
+    if (signal)
+      enableSignal();
 
     // end attach
   }
