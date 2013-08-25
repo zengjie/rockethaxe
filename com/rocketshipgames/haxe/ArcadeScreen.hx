@@ -10,6 +10,7 @@ import com.rocketshipgames.haxe.component.Entity;
 import com.rocketshipgames.haxe.world.World;
 
 import com.rocketshipgames.haxe.gfx.GraphicsContainer;
+import com.rocketshipgames.haxe.gfx.Viewport;
 
 import com.rocketshipgames.haxe.device.Display;
 
@@ -28,6 +29,7 @@ class ArcadeScreen
   public var pauseOnUnfocus:Bool;
   public var pausedBitmap:Bitmap;
 
+  public var viewport(default, null):Viewport;
 
   //------------------------------------------------------------
   private var graphicsContainers:List<GraphicsContainer>;
@@ -49,6 +51,8 @@ class ArcadeScreen
       world = new World();
     this.world = world;
 
+
+    viewport = new Viewport();
 
     graphicsContainers = new List();
 
@@ -256,7 +260,7 @@ class ArcadeScreen
   {
     graphics.clear();
     for (gc in graphicsContainers) {
-      gc.render(graphics);
+      gc.render(graphics, viewport);
     }
     // end render
   }

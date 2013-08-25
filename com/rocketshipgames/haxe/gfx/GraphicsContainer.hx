@@ -2,5 +2,5 @@ package com.rocketshipgames.haxe.gfx;
 
 interface GraphicsContainer
 {
-  function render(graphics:flash.display.Graphics):Void;
+  function render(graphics:flash.display.Graphics, viewport:Viewport):Void;
 }

@@ -8,6 +8,8 @@ import com.rocketshipgames.haxe.component.ComponentHandle;
 
 import com.rocketshipgames.haxe.physics.Kinematics2DComponent;
 
+import com.rocketshipgames.haxe.gfx.Viewport;
+
 
 class DisplayListGraphicComponent
   implements Component
@@ -62,11 +64,11 @@ class DisplayListGraphicComponent
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function render():Void
+  public function render(viewport:Viewport):Void
   {
-    graphic.x = kinematics.x;
-    graphic.y = kinematics.y;
+    graphic.x = kinematics.x - viewport.x;
+    graphic.y = kinematics.y - viewport.y;
   }
 
-  // end SweepScanCollisionContainer
+  // end DisplayListGraphicComponent
 }

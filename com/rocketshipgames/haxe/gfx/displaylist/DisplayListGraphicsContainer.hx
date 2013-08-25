@@ -8,6 +8,8 @@ import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 
 import com.rocketshipgames.haxe.component.Entity;
 
+import com.rocketshipgames.haxe.gfx.Viewport;
+
 
 class DisplayListGraphicsContainer
   implements com.rocketshipgames.haxe.gfx.GraphicsContainer
@@ -28,10 +30,10 @@ class DisplayListGraphicsContainer
 
 
   //--------------------------------------------------------------------
-  public function render(graphics:flash.display.Graphics):Void
+  public function render(graphics:flash.display.Graphics, viewport:Viewport):Void
   {
     for (g in graphicsList)
-      g.render();
+      g.render(viewport);
     // end render
   }
 
