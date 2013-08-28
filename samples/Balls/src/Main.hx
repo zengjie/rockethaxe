@@ -67,10 +67,11 @@ class Main
     //-- Add new behavior on the basic Bouncer, in this case bounds
     placeBounds(ball);
 
-    //-- Add the new Bouncer to the game and make it live!
-    game.world.entities.add(ball);
-    graphics.add(ball);
+
+    //-- Add the new Bouncer to the game world and display and make it live!
     collisionGroup.add(ball);
+    graphics.add(ball);
+    game.world.entities.add(ball);
 
 
     //-- Schedule another Bouncer to be created in a second

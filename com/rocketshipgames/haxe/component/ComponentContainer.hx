@@ -12,6 +12,7 @@ import com.rocketshipgames.haxe.util.Jenkins;
 class ComponentContainer
   implements Component
 {
+  public static var CID_NULL:CapabilityID = 0;
 
   public var signals(get_signals,null):SignalDispatcher;
   public var states(get_states,null):StateKeeper;

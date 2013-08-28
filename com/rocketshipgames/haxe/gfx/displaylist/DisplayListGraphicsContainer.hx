@@ -7,6 +7,7 @@ import com.rocketshipgames.haxe.ds.DoubleLinkedList;
 import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 
 import com.rocketshipgames.haxe.component.ComponentContainer;
+import com.rocketshipgames.haxe.component.CapabilityID;
 
 import com.rocketshipgames.haxe.gfx.Viewport;
 
@@ -19,12 +20,21 @@ class DisplayListGraphicsContainer
 
   private var graphicsList:DoubleLinkedList<DisplayListGraphicComponent>;
 
+  private var tag:CapabilityID;
 
-  public function new(root:Sprite):Void
+
+  public function new(root:Sprite,
+                      ?tag:CapabilityID):Void
   {
     this.root = root;
 
     graphicsList = new DoubleLinkedList();
+
+    if (tag != ComponentContainer.CID_NULL)
+      this.tag = tag;
+    else
+      this.tag = DisplayListGraphicComponent.CID;
+
     // end new
   }
 
@@ -41,8 +51,7 @@ class DisplayListGraphicsContainer
   //--------------------------------------------------------------------
   public function add(entity:ComponentContainer):Void
   {
-    var gc = cast(entity.find(DisplayListGraphicComponent.CID_DISPLAYOBJECT),
-                  DisplayListGraphicComponent);
+    var gc = cast(entity.find(tag), DisplayListGraphicComponent);
     gc.setRoot(root);
     graphicsList.add(gc);
   }

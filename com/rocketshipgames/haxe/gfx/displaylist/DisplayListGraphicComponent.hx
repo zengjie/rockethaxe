@@ -3,8 +3,10 @@ package com.rocketshipgames.haxe.gfx.displaylist;
 import flash.display.Sprite;
 import flash.display.DisplayObject;
 
-import com.rocketshipgames.haxe.component.Component;
+import com.rocketshipgames.haxe.component.ComponentContainer;
 import com.rocketshipgames.haxe.component.ComponentHandle;
+import com.rocketshipgames.haxe.component.Component;
+import com.rocketshipgames.haxe.component.CapabilityID;
 
 import com.rocketshipgames.haxe.physics.PhysicsCapabilities;
 import com.rocketshipgames.haxe.physics.Position2D;
@@ -16,9 +18,9 @@ class DisplayListGraphicComponent
   implements Component
 {
 
-  public static var CID_DISPLAYOBJECT:
-    com.rocketshipgames.haxe.component.CapabilityID =
-    com.rocketshipgames.haxe.component.ComponentContainer.hashID("display-object");
+  public static var CID:CapabilityID =
+    ComponentContainer.hashID("display-object");
+
 
   //----------------------------------------------------
   private var root:Sprite;
@@ -28,11 +30,21 @@ class DisplayListGraphicComponent
 
   private var active:Bool;
 
+  private var tag:CapabilityID;
+
+
   //--------------------------------------------------------------------
-  public function new(graphic:DisplayObject):Void
+  public function new(graphic:DisplayObject,
+                      ?tag:CapabilityID):Void
   {
     this.graphic = graphic;
     active = true;
+
+    if (tag != ComponentContainer.CID_NULL)
+      this.tag = tag;
+    else
+      this.tag = CID;
+
     // end new
   }
 
@@ -40,7 +52,7 @@ class DisplayListGraphicComponent
   //--------------------------------------------------------------------
   public function attach(container:ComponentHandle):Void
   {
-    container.claim(CID_DISPLAYOBJECT);
+    container.claim(tag);
 
     position =
       cast(container.find(PhysicsCapabilities.CID_POSITION2D), Position2D);
