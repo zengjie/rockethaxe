@@ -7,8 +7,7 @@ class Scheduler
   implements Component
 {
 
-  public static var CID_EVENTS:CapabilityID =
-    ComponentContainer.hashID("_events_");
+  public static var CID:CapabilityID = ComponentContainer.hashID("_events_");
 
   private var container:ComponentHandle;
 
@@ -37,7 +36,7 @@ class Scheduler
   public function attach(containerHandle:ComponentHandle):Void
   {
     container = containerHandle;
-    container.claim(CID_EVENTS);
+    container.claim(CID);
   }
 
   public function detach():Void

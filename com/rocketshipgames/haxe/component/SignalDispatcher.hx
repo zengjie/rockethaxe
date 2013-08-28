@@ -14,8 +14,7 @@ class SignalDispatcher
   implements Component
 {
 
-  public static var CID_SIGNALS:CapabilityID =
-    ComponentContainer.hashID("_signals_");
+  public static var CID:CapabilityID = ComponentContainer.hashID("_signals_");
 
   private var container:ComponentHandle;
 
@@ -51,7 +50,7 @@ class SignalDispatcher
   public function attach(containerHandle:ComponentHandle):Void
   {
     container = containerHandle;
-    container.claim(CID_SIGNALS);
+    container.claim(CID);
   }
 
   public function detach():Void
