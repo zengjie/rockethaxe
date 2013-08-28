@@ -6,6 +6,9 @@ import com.rocketshipgames.haxe.physics.SweepScanCollisionContainer;
 
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer;
 
+import com.rocketshipgames.haxe.physics.Bounds2DComponent;
+import com.rocketshipgames.haxe.device.Display;
+
 
 class Main
   extends com.rocketshipgames.haxe.Game
@@ -59,18 +62,58 @@ class Main
   {
 
     //-- Bouncer is a simple entity defined in this sample
-    var ball = new Bouncer(collisionGroup, graphics);
+    var ball = new Bouncer();
+
+    //-- Add new behavior on the basic Bouncer, in this case bounds
+    placeBounds(ball);
 
     //-- Add the new Bouncer to the game and make it live!
     game.world.entities.add(ball);
-    
+    graphics.add(ball);
+    collisionGroup.add(ball);
+
+
     //-- Schedule another Bouncer to be created in a second
-    game.world.scheduler.schedule(1000, generateBouncer);
+    if (bouncerCount < 4)
+      game.world.scheduler.schedule(1000, generateBouncer);
 
     bouncerCount++;
     trace(bouncerCount + " bouncers");
 
     // end generateBouncer
+  }
+
+
+  private function placeBounds(ball:Bouncer):Void
+  {
+
+    /*
+     * The Bouncer could impose bounds on itself, but in this sample
+     * it's just a basic object that flies around.  The outer game
+     * imposes bounds on that movement by adding a new component.
+     */
+
+    var bounds = new Bounds2DComponent();
+    bounds.setBounds(0, 0, Display.width, Display.height);
+
+    //-- Bounds2DComponent contains a number of common bounds
+    //-- reactions, such as stopX, bounceX, cannotLeaveX, cycleX, and
+    //-- doNothing, where X is Left, Right, Top, Bottom.
+    bounds.offBoundsLeft = bounds.bounceLeft;
+    bounds.offBoundsRight = bounds.bounceRight;
+    bounds.offBoundsTop = bounds.bounceTop;
+
+    //-- But a user defined function can also be specified.
+    bounds.offBoundsBottom = function() { trace("BOTTOM");
+                                          bounds.bounceBottom(); }
+
+    //-- By default Bounds2DComponent doesn't issue a signal, but we
+    //-- can turn it on so other components are notified.
+    bounds.enableSignal();
+
+    ball.add(bounds);
+
+    // end placeBounds
   }
 
   // end Main
