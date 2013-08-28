@@ -15,7 +15,7 @@ import com.rocketshipgames.haxe.device.Display;
 
 
 class Bouncer
-  extends com.rocketshipgames.haxe.component.Entity
+  extends com.rocketshipgames.haxe.component.ComponentContainer
 {
 
   public function new(collisions:SweepScanCollisionContainer,
@@ -25,7 +25,7 @@ class Bouncer
 
     var kinematics = new Kinematics2DComponent
       ({ xvel: 200, yvel: 200});
-    addComponent(kinematics);
+    add(kinematics);
 
     var bounds = new Bounds2DComponent();
     bounds.setBounds(BOUNDS_DETECT,
@@ -36,23 +36,19 @@ class Bouncer
     bounds.offBoundsTop = bounds.bounceTop;
     bounds.offBoundsBottom = bounds.bounceBottom;
     bounds.enableSignal();
-    addComponent(bounds);
+    add(bounds);
 
     collisions.addCircleBody(this);
 
-    var dispatcher =
-      cast(findCapability(SignalDispatcher.CID_SIGNALS),
-           SignalDispatcher);
-
-    dispatcher.addSignal(Bounds2DComponent.SIG_BOUNDS2D,
-              function(SignalID, opt:Dynamic):Bool
-              {
-                var s = cast(opt, Bounds2DSignalData);
-                if (s == BOUNDS_RIGHT) {
-                  trace("RIGHT");
-                }
-                return false;
-              });
+    signals.add(Bounds2DComponent.SIG_BOUNDS2D,
+                function(SignalID, opt:Dynamic):Bool
+                {
+                  var s = cast(opt, Bounds2DSignalData);
+                  if (s == BOUNDS_RIGHT) {
+                    trace("RIGHT");
+                  }
+                  return false;
+                });
 
     //-- Create and add a Flash Shape object to draw the Bouncer
     var shape = new flash.display.Shape();

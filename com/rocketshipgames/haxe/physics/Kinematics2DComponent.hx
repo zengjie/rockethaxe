@@ -79,7 +79,7 @@ class Kinematics2DComponent
   //--------------------------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
   {
-    containerHandle.claimCapability(CID_KINEMATICS2D);
+    containerHandle.claim(CID_KINEMATICS2D);
   }
 
   public function detach():Void

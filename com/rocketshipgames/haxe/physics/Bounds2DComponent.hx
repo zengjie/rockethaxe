@@ -79,9 +79,7 @@ class Bounds2DComponent
     signal = enable;
 
     if (signal && dispatcher == null && container != null) {
-      dispatcher =
-        cast(container.findCapability(SignalDispatcher.CID_SIGNALS),
-             SignalDispatcher);
+      dispatcher = container.signals;
     }
 
     // end enableSignal
@@ -92,10 +90,10 @@ class Bounds2DComponent
   {
     container = containerHandle;
 
-    container.claimCapability(CID_BOUNDS2D);
+    container.claim(CID_BOUNDS2D);
 
     kinematics =
-      cast(container.findCapability(Kinematics2DComponent.CID_KINEMATICS2D),
+      cast(container.find(Kinematics2DComponent.CID_KINEMATICS2D),
            Kinematics2DComponent);
 
     if (signal)

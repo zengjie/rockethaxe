@@ -1,17 +1,10 @@
 TestEntity.hx:19: Test Entity
-TestEntity.hx:23: Testing signal dispatcher
-TestEntity.hx:56: New signal sink
+TestEntity.hx:24: Testing signal dispatcher
+TestEntity.hx:51: New signal sink
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
+TestEntity.hx:84: New signal source
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestEntity.hx:90: New signal source
-DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestEntity.hx:67: Lightning strikes!  Signal received.
-TestEntity.hx:28: Testing state keeper
-DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestEntity.hx:33: Feeling happy
-TestEntity.hx:36: Testing scheduler
-DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-TestEntity.hx:40: EVENT FIRED!
+TestEntity.hx:61: Lightning strikes!  Signal received.
+TestEntity.hx:29: Testing state keeper
+TestEntity.hx:32: Feeling happy
+TestEntity.hx:35: Testing scheduler

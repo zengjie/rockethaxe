@@ -13,6 +13,10 @@ class ComponentContainer
   implements Component
 {
 
+  public var signals(get_signals,null):SignalDispatcher;
+  public var states(get_states,null):StateKeeper;
+  public var events(get_events,null):Scheduler;
+
   //--------------------------------------------------------------------
   //----------------------------------------------------
   private var components:DoubleLinkedList<ComponentHandle>;
@@ -32,6 +36,31 @@ class ComponentContainer
     capabilities = new Map();
     active = true;
     // end new
+  }
+
+  //----------------------------------------------------
+  public function get_signals():SignalDispatcher
+  {
+    if (signals == null)
+      signals = new SignalDispatcher();
+    return signals;
+    // end get_signals
+  }
+
+  public function get_states():StateKeeper
+  {
+    if (states == null)
+      states = new StateKeeper();
+    return states;
+    // end get_states
+  }
+
+  public function get_events():Scheduler
+  {
+    if (events == null)
+      events = new Scheduler();
+    return events;
+    // end get_events
   }
 
 
@@ -113,7 +142,7 @@ class ComponentContainer
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function addComponent(component:Component):ComponentHandle
+  public function add(component:Component):ComponentHandle
   {
     var containerHandle = new ComponentHandle(this, component);
 
@@ -123,36 +152,36 @@ class ComponentContainer
     component.attach(containerHandle);
 
     return containerHandle;
-    // end addComponent
+    // end add
   }
 
-  public function removeComponent(handle:ComponentHandle):Void
+  public function remove(handle:ComponentHandle):Void
   {
     components.remove(handle.listHandle);
     handle.component.detach();
-    // end removeComponent
+    // end remove
   }
 
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
-  public function claimCapability(capability:CapabilityID,
-                                  component:ComponentHandle):Void
+  public function claim(capability:CapabilityID,
+                        component:ComponentHandle):Void
   {
     capabilities.set(capability, component);
-    // end claimCapability
+    // end claim
   }
 
-  public function releaseCapability(capability:CapabilityID,
-                                    component:ComponentHandle):Void
+  public function release(capability:CapabilityID,
+                          component:ComponentHandle):Void
   {
     if (capabilities.get(capability) == component)
       capabilities.remove(capability);
-    // end claimCapability
+    // end release
   }
 
-  public function findCapability(capability:CapabilityID,
-                                 necessary:Bool=true):Component
+  public function find(capability:CapabilityID,
+                       necessary:Bool=true):Component
   {
     var x = capabilities.get(capability);
 
@@ -160,25 +189,25 @@ class ComponentContainer
       return x.component;
 
     if (necessary)
-      reportMissingCapability(capability);
+      reportMissing(capability);
 
     return null;
-    // end findCapability
+    // end find
   }
 
-  public function findCapabilityHandle(capability:CapabilityID,
-                                       necessary:Bool=true):ComponentHandle
+  public function findHandle(capability:CapabilityID,
+                             necessary:Bool=true):ComponentHandle
   {
     var res = capabilities.get(capability);
 
     if (necessary && res == null)
-      reportMissingCapability(capability);
+      reportMissing(capability);
 
     return res;
     // end findCapabilityHandle
   }
 
-  private function reportMissingCapability(capability:CapabilityID):Void
+  private function reportMissing(capability:CapabilityID):Void
   {
     var s:StringBuf = new StringBuf();
     s.add("Available: ");
@@ -195,28 +224,28 @@ class ComponentContainer
 
 
   //----------------------------------------------------
-  public function claimCapabilityID(capability:String,
-                                    component:ComponentHandle):Void
+  public function claimByID(capability:String,
+                            component:ComponentHandle):Void
   {
-    claimCapability(hashID(capability), component);
+    claim(hashID(capability), component);
   }
 
-  public function releaseCapabilityID(capability:String,
-                                      component:ComponentHandle):Void
+  public function releaseByID(capability:String,
+                              component:ComponentHandle):Void
   {
-    releaseCapability(hashID(capability), component);
+    release(hashID(capability), component);
   }
 
-  public function findCapabilityID(capability:String,
-                                   necessary:Bool=true):Component
+  public function findByID(capability:String,
+                           necessary:Bool=true):Component
   {
-    return findCapability(hashID(capability), necessary);
+    return find(hashID(capability), necessary);
   }
 
-  public function findCapabilityHandleID(capability:String,
-                                         necessary:Bool=true):ComponentHandle
+  public function findHandleByID(capability:String,
+                                 necessary:Bool=true):ComponentHandle
   {
-    return findCapabilityHandle(hashID(capability), necessary);
+    return findHandle(hashID(capability), necessary);
   }
 
 

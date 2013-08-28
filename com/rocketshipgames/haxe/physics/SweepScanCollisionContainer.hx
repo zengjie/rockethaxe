@@ -1,8 +1,9 @@
 package com.rocketshipgames.haxe.physics;
 
-import com.rocketshipgames.haxe.component.Component;
-import com.rocketshipgames.haxe.component.Entity;
+import com.rocketshipgames.haxe.component.ComponentContainer;
 import com.rocketshipgames.haxe.component.ComponentHandle;
+import com.rocketshipgames.haxe.component.Component;
+
 
 class SweepScanCollisionContainer
   implements Component
@@ -44,7 +45,7 @@ class SweepScanCollisionContainer
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function addCircleBody(entity:Entity):Void
+  public function addCircleBody(entity:ComponentContainer):Void
   {
     // end addCircleBody
   }

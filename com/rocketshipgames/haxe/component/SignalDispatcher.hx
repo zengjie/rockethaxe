@@ -51,7 +51,7 @@ class SignalDispatcher
   public function attach(containerHandle:ComponentHandle):Void
   {
     container = containerHandle;
-    container.claimCapability(CID_SIGNALS);
+    container.claim(CID_SIGNALS);
   }
 
   public function detach():Void
@@ -79,7 +79,7 @@ class SignalDispatcher
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function addSignal(id:SignalID, signal:Signal):Signal
+  public function add(id:SignalID, signal:Signal):Signal
   {
     var a:List<Signal> = signals.get(id);
     if (a == null) {
@@ -92,7 +92,7 @@ class SignalDispatcher
     // end addSignal
   }
 
-  public function removeSignal(id:SignalID, signal:Signal):Void
+  public function remove(id:SignalID, signal:Signal):Void
   {
     var a:List<Signal> = signals.get(id);
     if (a != null) {
@@ -115,17 +115,17 @@ class SignalDispatcher
 
 
   //----------------------------------------------------
-  public function addSignalID(id:String, signal:Signal):Signal
+  public function addByID(id:String, signal:Signal):Signal
   {
-    return addSignal(hashID(id), signal);
+    return add(hashID(id), signal);
   }
 
-  public function removeSignalID(id:String, signal:Signal):Void
+  public function removeByID(id:String, signal:Signal):Void
   {
-    removeSignal(hashID(id), signal);
+    remove(hashID(id), signal);
   }
 
-  public function signalID(id:String, msg:Dynamic):Void
+  public function signalByID(id:String, msg:Dynamic):Void
   {
     signal(hashID(id), msg);
   }

@@ -17,7 +17,7 @@ class TestComponentContainer
 
     var ref:ComponentHandle = null;
     for (i in 0...5) {
-      var handle = container.addComponent(new Thing(i));
+      var handle = container.add(new Thing(i));
 
       if (i % 3 == 0) {
         ref = handle;
@@ -33,7 +33,7 @@ class TestComponentContainer
     container.update(2);
 
     trace("Add another");
-    container.addComponent(new Thing(5));
+    container.add(new Thing(5));
 
     container.update(3);
 
@@ -48,11 +48,10 @@ class TestComponentContainer
     var providers = new ComponentContainer();
 
     var prov:Provider = new Provider();
-    var provHandle = providers.addComponent(prov);
+    var provHandle = providers.add(prov);
 
     trace("Looking for magic provider");
-    var c:Component = providers.findCapability
-      (ComponentContainer.hashID("magic"));
+    var c:Component = providers.find(ComponentContainer.hashID("magic"));
     if (c != null) {
       trace("Magic available");
       cast(c, Provider).magic("story");
@@ -63,7 +62,7 @@ class TestComponentContainer
     provHandle.remove();
 
     trace("Looking for magic provider again");
-    c = providers.findCapabilityID("magic");
+    c = providers.findByID("magic");
     if (c != null) {
       trace("Magic still available");
     } else {
@@ -136,8 +135,8 @@ class Provider
   public function attach(containerHandle:ComponentHandle):Void
   {
     trace("Attach Provider");
-    containerHandle.claimCapability(ComponentContainer.hashID("magic"));
-    containerHandle.claimCapabilityID("science");
+    containerHandle.claim(ComponentContainer.hashID("magic"));
+    containerHandle.claimByID("science");
   }
 
   public function detach():Void

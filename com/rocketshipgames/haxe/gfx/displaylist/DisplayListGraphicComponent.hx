@@ -34,7 +34,7 @@ class DisplayListGraphicComponent
   public function attach(containerHandle:ComponentHandle):Void
   {
     kinematics =
-      cast(containerHandle.findCapability(Kinematics2DComponent.CID_KINEMATICS2D),
+      cast(containerHandle.find(Kinematics2DComponent.CID_KINEMATICS2D),
            Kinematics2DComponent);
 
     activate();

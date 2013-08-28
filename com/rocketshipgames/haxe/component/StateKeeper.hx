@@ -27,7 +27,7 @@ class StateKeeper
   public function attach(containerHandle:ComponentHandle):Void
   {
     container = containerHandle;
-    container.claimCapability(CID_STATES);
+    container.claim(CID_STATES);
   }
 
   public function detach():Void
@@ -55,14 +55,14 @@ class StateKeeper
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function addState(id:String, state:State):State
+  public function add(id:String, state:State):State
   {
     states.set(id, state);
     return state;
     // end addState
   }
 
-  public function removeState(id:String):Void
+  public function remove(id:String):Void
   {
     var x:State = states.get(id);
     if (x != null) {
@@ -72,13 +72,13 @@ class StateKeeper
     // end removeState
   }
 
-  public function getState(id:String):State
+  public function get(id:String):State
   {
     return states.get(id);
     // end getState
   }
 
-  public function getStateValue(id:String):Dynamic
+  public function getValue(id:String):Dynamic
   {
     var x:State = states.get(id);
     return ((x == null) ? null : x.getValue(id));

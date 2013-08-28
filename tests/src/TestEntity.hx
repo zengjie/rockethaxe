@@ -1,8 +1,8 @@
 package ;
 
-import com.rocketshipgames.haxe.component.Entity;
-import com.rocketshipgames.haxe.component.Component;
+import com.rocketshipgames.haxe.component.ComponentContainer;
 import com.rocketshipgames.haxe.component.ComponentHandle;
+import com.rocketshipgames.haxe.component.Component;
 
 import com.rocketshipgames.haxe.component.SignalDispatcher;
 import com.rocketshipgames.haxe.component.StateKeeper;
@@ -18,29 +18,24 @@ class TestEntity
 
     trace("Test Entity");
 
-    var world = new Entity();
+    var world = new ComponentContainer();
+
 
     trace("Testing signal dispatcher");
-    world.addComponent(new SignalSink());
-    world.addComponent(new SignalSource());
+    world.add(new SignalSink());
+    world.add(new SignalSource());
 
 
     trace("Testing state keeper");
-    var keeper = cast(world.findCapability(StateKeeper.CID_STATES),
-                      StateKeeper);
-    keeper.addState("feeling", new TestState());
-
-    trace("Feeling " + keeper.getStateValue("feeling"));
+    var keeper = world.states;
+    keeper.add("feeling", new TestState());
+    trace("Feeling " + keeper.getValue("feeling"));
 
 
     trace("Testing scheduler");
-    var scheduler = cast(world.findCapability(Scheduler.CID_EVENTS),
-                         Scheduler);
-
+    var scheduler = world.events;
     scheduler.schedule(100, function():Void { trace("EVENT FIRED!"); });
-
     world.update(100);  // Evolve the world forward
-
 
     // end main
   }
@@ -58,15 +53,14 @@ class SignalSink
 
   public function attach(containerHandle:ComponentHandle):Void
   {
-    var dispatcher = cast(containerHandle.findCapability
-                          (SignalDispatcher.CID_SIGNALS),
-                          SignalDispatcher);
-    dispatcher.addSignal(SignalDispatcher.hashID("lightning"),
-                         function(s:SignalID, opts:Dynamic):Bool
-                         {
-                           trace("Lightning strikes!  Signal received.");
-                           return false;
-                         });
+
+    var dispatcher = containerHandle.signals;
+    dispatcher.add(SignalDispatcher.hashID("lightning"),
+                   function(s:SignalID, opts:Dynamic):Bool
+                   {
+                     trace("Lightning strikes!  Signal received.");
+                     return false;
+                   });
     // end attach
   }
 
@@ -92,10 +86,8 @@ class SignalSource
 
   public function attach(containerHandle:ComponentHandle):Void
   {
-    var dispatcher = cast(containerHandle.findCapability
-                          (SignalDispatcher.CID_SIGNALS),
-                          SignalDispatcher);
-    dispatcher.signalID("lightning", {});
+    var dispatcher = containerHandle.signals;
+    dispatcher.signalByID("lightning", {});
     // end attach
   }
 

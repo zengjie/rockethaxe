@@ -6,7 +6,7 @@ import flash.display.DisplayObject;
 import com.rocketshipgames.haxe.ds.DoubleLinkedList;
 import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 
-import com.rocketshipgames.haxe.component.Entity;
+import com.rocketshipgames.haxe.component.ComponentContainer;
 
 import com.rocketshipgames.haxe.gfx.Viewport;
 
@@ -39,10 +39,11 @@ class DisplayListGraphicsContainer
 
 
   //--------------------------------------------------------------------
-  public function addDisplayListGraphic(entity:Entity, graphic:DisplayObject):Void
+  public function addDisplayListGraphic(entity:ComponentContainer,
+                                        graphic:DisplayObject):Void
   {
     var gc = new DisplayListGraphicComponent(root, graphic);
-    entity.addComponent(gc);
+    entity.add(gc);
     graphicsList.add(gc);
   }
 

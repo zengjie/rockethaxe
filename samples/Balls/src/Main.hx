@@ -35,7 +35,7 @@ class Main
 
     //-- Create the container to collectively collide all the bouncers
     collisionGroup = new SweepScanCollisionContainer();
-    game.world.mechanics.addComponent(collisionGroup);
+    game.world.mechanics.add(collisionGroup);
 
     //-- Create the container for the bouncers' graphics.  It takes a
     //-- flash.display.Sprite (which an ArcadeScreen ultimately is) as
@@ -62,7 +62,7 @@ class Main
     var ball = new Bouncer(collisionGroup, graphics);
 
     //-- Add the new Bouncer to the game and make it live!
-    game.world.entities.addComponent(ball);
+    game.world.entities.add(ball);
     
     //-- Schedule another Bouncer to be created in a second
     game.world.scheduler.schedule(1000, generateBouncer);

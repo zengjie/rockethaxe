@@ -37,7 +37,7 @@ class Scheduler
   public function attach(containerHandle:ComponentHandle):Void
   {
     container = containerHandle;
-    container.claimCapability(CID_EVENTS);
+    container.claim(CID_EVENTS);
   }
 
   public function detach():Void

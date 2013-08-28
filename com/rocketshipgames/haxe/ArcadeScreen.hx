@@ -5,8 +5,6 @@ import flash.events.Event;
 
 import com.rocketshipgames.haxe.debug.Debug;
 
-import com.rocketshipgames.haxe.component.Entity;
-
 import com.rocketshipgames.haxe.world.World;
 
 import com.rocketshipgames.haxe.gfx.GraphicsContainer;
