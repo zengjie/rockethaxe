@@ -39,11 +39,11 @@ class DisplayListGraphicsContainer
 
 
   //--------------------------------------------------------------------
-  public function addDisplayListGraphic(entity:ComponentContainer,
-                                        graphic:DisplayObject):Void
+  public function add(entity:ComponentContainer):Void
   {
-    var gc = new DisplayListGraphicComponent(root, graphic);
-    entity.add(gc);
+    var gc = cast(entity.find(DisplayListGraphicComponent.CID_DISPLAYOBJECT),
+                  DisplayListGraphicComponent);
+    gc.setRoot(root);
     graphicsList.add(gc);
   }
 
