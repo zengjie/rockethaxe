@@ -9,7 +9,7 @@ class Kinematics2DComponent
   implements Position2D
 {
 
-  public static var CID_KINEMATICS2D:
+  public static var CID:
     com.rocketshipgames.haxe.component.CapabilityID =
     com.rocketshipgames.haxe.component.ComponentContainer.hashID("kinematics-2d");
 
@@ -31,24 +31,21 @@ class Kinematics2DComponent
   public var yvelMin:Float;
   public var yvelMax:Float;
 
-  public var mass:Float;
+  //----------------------------------------------------
+  private var active:Bool;
 
 
   //--------------------------------------------------------------------
   public function new(?opts:Dynamic):Void
   {
-
     x = xvel = xacc = xdrag = xvelMin = xvelMax = 0.0;
     y = yvel = yacc = ydrag = yvelMin = yvelMax = 0.0;
 
-    mass = 1.0;
-
-    init(opts);
-
+    activate(opts);
     // end Kinematics2DComponent
   }
 
-  public function init(?opts:Dynamic):Void
+  public function activate(?opts:Dynamic):Void
   {
 
     if (opts == null)
@@ -72,14 +69,22 @@ class Kinematics2DComponent
       yvel = (Std.is(d, String)) ? Std.parseFloat(d) : d;
     }
 
+    active = true;
     // end init
   }
 
 
-  //--------------------------------------------------------------------
-  public function attach(containerHandle:ComponentHandle):Void
+  public function deactivate():Void
   {
-    containerHandle.claim(CID_KINEMATICS2D);
+  }
+
+
+  //--------------------------------------------------------------------
+  public function attach(container:ComponentHandle):Void
+  {
+    container.claim(PhysicsCapabilities.CID_POSITION2D);
+    container.claim(CID);
+    // end attach
   }
 
   public function detach():Void
@@ -88,18 +93,10 @@ class Kinematics2DComponent
 
 
   //------------------------------------------------------------------
-  public function activate(?opts:Dynamic):Void
-  {
-  }
-
-  public function deactivate():Void
-  {
-  }
-
-
-  //------------------------------------------------------------------
   public function update(millis:Int):Void
   {
+    if (!active)
+      return;
 
     var elapsed:Float = millis/1000.0;
 

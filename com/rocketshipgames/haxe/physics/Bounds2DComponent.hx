@@ -1,17 +1,9 @@
 package com.rocketshipgames.haxe.physics;
 
-import com.rocketshipgames.haxe.debug.Debug;
-
 import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
 import com.rocketshipgames.haxe.component.SignalDispatcher;
 
-
-enum BoundsBehavior {
-  BOUNDS_NONE;
-  BOUNDS_DETECT;
-  BOUNDS_STOP;
-}
 
 enum Bounds2DSignalData {
   BOUNDS_LEFT;
@@ -25,18 +17,16 @@ class Bounds2DComponent
   implements Component
 {
 
-  public static var CID_BOUNDS2D:
+  public static var CID:
     com.rocketshipgames.haxe.component.CapabilityID =
     com.rocketshipgames.haxe.component.ComponentContainer.hashID("bounds-2d");
 
   public static var SIG_BOUNDS2D:
     com.rocketshipgames.haxe.component.SignalID =
-    com.rocketshipgames.haxe.component.SignalDispatcher.hashID("bounds");
+    com.rocketshipgames.haxe.component.SignalDispatcher.hashID("bounds-2d");
 
 
   //------------------------------------------------------------
-  public var boundsCheckType:BoundsBehavior;
-
   public var left:Float;
   public var top:Float;
 
@@ -53,48 +43,50 @@ class Bounds2DComponent
   private var container:ComponentHandle;
 
   private var kinematics:Kinematics2DComponent;
-  private var dispatcher:SignalDispatcher;
+  private var extent:Extent2D;
 
+  private var dispatcher:SignalDispatcher;
   private var signal:Bool;
 
+  private var active:Bool;
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
   public function new(?opts:Dynamic):Void
   {
-
-    boundsCheckType = BOUNDS_NONE;
     left = top = right = bottom = 0.0;
     offBoundsLeft = offBoundsRight = offBoundsTop = offBoundsBottom = doNothing;
 
     signal = false;
 
+    active = true;
     // end new
   }
 
 
   public function enableSignal(enable:Bool=true):Void
   {
-
     signal = enable;
 
-    if (signal && dispatcher == null && container != null) {
+    if (signal && dispatcher == null && container != null)
       dispatcher = container.signals;
-    }
 
     // end enableSignal
   }
 
   //--------------------------------------------------------------------
-  public function attach(containerHandle:ComponentHandle):Void
+  public function attach(container:ComponentHandle):Void
   {
-    container = containerHandle;
+    this.container = container;
 
-    container.claim(CID_BOUNDS2D);
+    container.claim(CID);
+
+    extent =
+      cast(container.find(PhysicsCapabilities.CID_EXTENT2D),
+           Extent2D);
 
     kinematics =
-      cast(container.find(Kinematics2DComponent.CID_KINEMATICS2D),
-           Kinematics2DComponent);
+      cast(container.find(Kinematics2DComponent.CID), Kinematics2DComponent);
 
     if (signal)
       enableSignal();
@@ -110,38 +102,26 @@ class Bounds2DComponent
   //------------------------------------------------------------------
   public function activate(?opts:Dynamic):Void
   {
+    active = true;
   }
 
   public function deactivate():Void
   {
+    active = false;
   }
 
 
   //------------------------------------------------------------------
-  public function setBounds(?type:BoundsBehavior=null,
-			    ?left:Float = 0,
-			    ?top:Float = 0,
-			    ?right:Float = 0,
-			    ?bottom:Float = 0):Void
+  public function setBounds(?left:Float = 0,
+                            ?top:Float = 0,
+                            ?right:Float = 0,
+                            ?bottom:Float = 0):Void
   {
-    if (type == null) type = BOUNDS_NONE;
-
-    /*
-    if (right == 0 && world != null) right = world.worldWidth;
-    if (bottom == 0 && world != null) bottom = world.worldHeight;
-    */
-
     this.left = Math.min(left, right);
     this.right = Math.max(left, right);
 
     this.top = Math.min(top, bottom);
     this.bottom = Math.max(top, bottom);
-
-    boundsCheckType = type;
-
-    // trace("Bounds set to " + this.left + "," + this.top + "  " +
-    //      this.right + "," + this.bottom);
-
     // end setBounds
   }
 
@@ -149,24 +129,18 @@ class Bounds2DComponent
   //------------------------------------------------------------------
   public function update(millis:Int):Void
   {
-
-    if (boundsCheckType == BOUNDS_NONE)
+    if (!active)
       return;
 
-    if (kinematics.x < left) {
-      if (boundsCheckType == BOUNDS_STOP)
-        stopLeft();
 
+    if (extent.left() < left) {
       offBoundsLeft();
 
       if (signal)
         dispatcher.signal(SIG_BOUNDS2D, BOUNDS_LEFT);
 
       // end x off left
-    } else if (kinematics.x > right) {
-      if (boundsCheckType == BOUNDS_STOP)
-        stopRight();
-
+    } else if (extent.right() > right) {
       offBoundsRight();
 
       if (signal)
@@ -175,20 +149,14 @@ class Bounds2DComponent
       // end x off right
     }
 
-    if (kinematics.y < top) {
-      if (boundsCheckType == BOUNDS_STOP)
-        stopTop();
-
+    if (extent.top() < top) {
       offBoundsTop();
 
       if (signal)
         dispatcher.signal(SIG_BOUNDS2D, BOUNDS_TOP);
 
       // end y off top
-    } else if (kinematics.y > bottom) {
-      if (boundsCheckType == BOUNDS_STOP)
-        stopBottom();
-
+    } else if (extent.bottom() > bottom) {
       offBoundsBottom();
 
       if (signal)

@@ -45,9 +45,12 @@ class SweepScanCollisionContainer
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function addCircleBody(entity:ComponentContainer):Void
+  public function add(entity:ComponentContainer):Void
   {
-    // end addCircleBody
+    var body:RigidBody2DComponent =
+      cast(entity.find(RigidBody2DComponent.CID), RigidBody2DComponent);
+
+    // end add
   }
 
   // end SweepScanCollisionContainer
