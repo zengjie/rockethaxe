@@ -20,16 +20,15 @@ class DoubleLinkedList<T>
   //----------------------------------------------------
   public function new():Void
   {
-
-    handlePool = new Deadpool<DoubleLinkedListHandle<T>>
-      (function(opts:Dynamic):DoubleLinkedListHandle<T> {
-        return new DoubleLinkedListHandle<T>(opts.list, opts.item);
-      });
-
+    handlePool = new Deadpool<DoubleLinkedListHandle<T>>(newHandle);
     // end new
   }
 
-  // mushi---no dynamic function here
+  private function newHandle(opts:Dynamic):DoubleLinkedListHandle<T>
+  {
+    return new DoubleLinkedListHandle<T>(opts.list, opts.item);
+  }
+
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
