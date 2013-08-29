@@ -82,19 +82,31 @@ class ComponentContainer
   //----------------------------------------------------
   public function activate(?opts:Dynamic):Void
   {
-    active = true;
-    for (c in components) {
-      c.component.activate(opts);
+    var curr:DoubleLinkedListHandle<ComponentHandle> = components.head;
+    var next:DoubleLinkedListHandle<ComponentHandle>;
+    while (curr != null) {
+      next = curr.next;
+      curr.item.component.activate();
+      curr = next;
     }
+
+    active = true;
+
     // end activate
   }
 
   public function deactivate():Void
   {
     active = false;
-    for (c in components) {
-      c.component.deactivate();
+
+    var curr:DoubleLinkedListHandle<ComponentHandle> = components.head;
+    var next:DoubleLinkedListHandle<ComponentHandle>;
+    while (curr != null) {
+      next = curr.next;
+      curr.item.component.deactivate();
+      curr = next;
     }
+
     // end deactivate
   }
 
