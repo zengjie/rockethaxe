@@ -4,8 +4,10 @@ class Deadpool<T: (DeadpoolObject)>
 {
 
   //------------------------------------------------------------
-  private var totalList:List<T>;
-  private var freeList:List<T>;
+  private var deadpool:MementoMori<T>;
+  private var memos:MementoMori<T>;
+
+  //  private var totalList:List<T>;
   private var instantiate:Dynamic->T;
 
 
@@ -14,16 +16,11 @@ class Deadpool<T: (DeadpoolObject)>
   public function new(instantiate:Dynamic->T):Void
   {
     this.instantiate = instantiate;
-    totalList = new List();
-    freeList = new List();
+    deadpool = memos = null;
     // end new
   }
 
-  public function hasFree():Bool { return freeList.isEmpty(); }
-
-  public function lengthAll():Int { return totalList.length; }
-  public function iteratorAll():Iterator<T> { return totalList.iterator(); }
-
+  public function hasFree():Bool { return deadpool!=null; }
 
   //--------------------------------------------------------------------
   //----------------------------------------------------
@@ -31,12 +28,18 @@ class Deadpool<T: (DeadpoolObject)>
   {
     var object:T;
 
-    if (freeList.isEmpty()) {
+    if (deadpool==null) {
       object = instantiate(opts);
       object.setDeadpool(this);
-      totalList.push(object);
     } else {
-      object = freeList.pop();
+      var m = deadpool;
+
+      deadpool = m.next;
+
+      m.next = memos;
+      memos = m;
+
+      object = m.object;
       object.init(opts);
     }
 
@@ -44,13 +47,44 @@ class Deadpool<T: (DeadpoolObject)>
     // end newObject
   }
 
+
+  //----------------------------------------------------
   public function returnObject(object:T):Void
   {
     // Note that in general for very large sets it makes sense to
     // reuse the most recently used object, so it's still in cache.
-    freeList.push(object);
+    var m:MementoMori<T>;
+
+    if (memos == null)
+      m = new MementoMori();
+    else {
+      m = memos;
+      memos = memos.next;
+    }
+
+    m.object = object;
+    m.next = deadpool;
+    deadpool = m;
+
     // end returnObject
   }
 
   // end Deadpool
+}
+
+
+private class MementoMori<T>
+{
+
+  public var object:T;
+  public var next:MementoMori<T>;
+
+  public function new():Void
+  {
+    #if verbose_ds
+      trace("New MementoMori");
+    #end
+  }
+
+  // end MementoMori
 }
