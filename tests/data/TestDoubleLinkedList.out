@@ -11,15 +11,19 @@ DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
 TestDoubleLinkedList.hx:23: Iterating, removing four (every third):
 TestDoubleLinkedList.hx:26: Item 0
+Deadpool.hx:85: New MementoMori
 TestDoubleLinkedList.hx:26: Item 1
 TestDoubleLinkedList.hx:26: Item 2
 TestDoubleLinkedList.hx:26: Item 3
+Deadpool.hx:85: New MementoMori
 TestDoubleLinkedList.hx:26: Item 4
 TestDoubleLinkedList.hx:26: Item 5
 TestDoubleLinkedList.hx:26: Item 6
+Deadpool.hx:85: New MementoMori
 TestDoubleLinkedList.hx:26: Item 7
 TestDoubleLinkedList.hx:26: Item 8
 TestDoubleLinkedList.hx:26: Item 9
+Deadpool.hx:85: New MementoMori
 TestDoubleLinkedList.hx:35: Iterating again:
 TestDoubleLinkedList.hx:38: Item 1
 TestDoubleLinkedList.hx:38: Item 2
@@ -40,3 +44,13 @@ TestDoubleLinkedList.hx:49: Item 11
 TestDoubleLinkedList.hx:49: Item 12
 TestDoubleLinkedList.hx:49: Item 13
 TestDoubleLinkedList.hx:49: Item 14
+TestDoubleLinkedList.hx:53: Removing two and iterating again
+TestDoubleLinkedList.hx:58: Item 4
+TestDoubleLinkedList.hx:58: Item 5
+TestDoubleLinkedList.hx:58: Item 7
+TestDoubleLinkedList.hx:58: Item 8
+TestDoubleLinkedList.hx:58: Item 10
+TestDoubleLinkedList.hx:58: Item 11
+TestDoubleLinkedList.hx:58: Item 12
+TestDoubleLinkedList.hx:58: Item 13
+TestDoubleLinkedList.hx:58: Item 14

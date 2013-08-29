@@ -59,6 +59,7 @@ class TestComponentContainer
       trace("No magic available");
     }
 
+    trace("Detaching provider");
     provHandle.remove();
 
     trace("Looking for magic provider again");

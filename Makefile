@@ -15,6 +15,8 @@ $(BIN_DIR)TestDoubleLinkedList/TestDoubleLinkedList-debug: \
                 com/rocketshipgames/haxe/ds/DoubleLinkedList.hx \
                 com/rocketshipgames/haxe/ds/DoubleLinkedListHandle.hx \
                 com/rocketshipgames/haxe/ds/Heap.hx \
+                com/rocketshipgames/haxe/ds/Deadpool.hx \
+                com/rocketshipgames/haxe/ds/DeadpoolObject.hx \
                 tests/src/TestDoubleLinkedList.hx
 	haxe -cp com -cp tests/src/ -cpp $(BIN_DIR)TestDoubleLinkedList/ -debug -main TestDoubleLinkedList -D debug -D verbose -D verbose_ds
 #	haxe -cp com -cp tests -swf export/TestDoubleLinkedList.swf -debug -main TestDoubleLinkedList
@@ -27,6 +29,8 @@ $(BIN_DIR)TestHeap/TestHeap-debug: \
 $(BIN_DIR)TestComponentContainer/TestComponentContainer-debug: \
                 com/rocketshipgames/haxe/ds/DoubleLinkedList.hx \
                 com/rocketshipgames/haxe/ds/DoubleLinkedListHandle.hx \
+                com/rocketshipgames/haxe/ds/Deadpool.hx \
+                com/rocketshipgames/haxe/ds/DeadpoolObject.hx \
                 com/rocketshipgames/haxe/component/Component.hx \
                 com/rocketshipgames/haxe/component/ComponentContainer.hx \
                 com/rocketshipgames/haxe/component/ComponentHandle.hx \
@@ -36,6 +40,9 @@ $(BIN_DIR)TestComponentContainer/TestComponentContainer-debug: \
 $(BIN_DIR)TestEntity/TestEntity-debug: \
                 com/rocketshipgames/haxe/ds/DoubleLinkedList.hx \
                 com/rocketshipgames/haxe/ds/DoubleLinkedListHandle.hx \
+                com/rocketshipgames/haxe/ds/Deadpool.hx \
+                com/rocketshipgames/haxe/ds/DeadpoolObject.hx \
+                com/rocketshipgames/haxe/ds/Heap.hx \
                 com/rocketshipgames/haxe/component/Component.hx \
                 com/rocketshipgames/haxe/component/ComponentContainer.hx \
                 com/rocketshipgames/haxe/component/ComponentHandle.hx \

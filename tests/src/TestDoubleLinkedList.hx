@@ -49,6 +49,16 @@ class TestDoubleLinkedList
       trace("Item " + x.id);
     }
 
+
+    trace("Removing two and iterating again");
+    list.head.remove();
+    list.head.remove();
+
+    for (x in list) {
+      trace("Item " + x.id);
+    }
+
+
     // end main
   }
 

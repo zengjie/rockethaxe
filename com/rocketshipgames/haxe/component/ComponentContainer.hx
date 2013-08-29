@@ -169,6 +169,9 @@ class ComponentContainer
   public function claim(capability:CapabilityID,
                         component:ComponentHandle):Void
   {
+    #if verbose_cmp
+      trace("Claim " + capability);
+    #end
     capabilities.set(capability, component);
     // end claim
   }
@@ -176,6 +179,10 @@ class ComponentContainer
   public function release(capability:CapabilityID,
                           component:ComponentHandle):Void
   {
+    #if verbose_cmp
+      trace("Release " + capability);
+    #end
+
     if (capabilities.get(capability) == component)
       capabilities.remove(capability);
     // end release
