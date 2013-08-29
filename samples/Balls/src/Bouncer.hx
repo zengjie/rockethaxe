@@ -12,13 +12,20 @@ class Bouncer
   extends com.rocketshipgames.haxe.component.ComponentContainer
 {
 
+  public static var count:Int;
+
+
   public function new():Void
   {
     super();
 
 
     //-- Add basic position and movement
-    add(new Kinematics2DComponent({ xvel: 50, yvel: 200}));
+    //    if (count < 1)
+    //      add(new Kinematics2DComponent({ x: 400, y: 400, xvel: 0, yvel: 0}));
+      //    else
+      add(new Kinematics2DComponent({ x: 0, y: 0, xvel: 50, yvel: 200}));
+      //    count++;
 
     //-- Add a description of this object's physical shape
     add(RigidBody2DComponent.newCircleBody(25, 1, 1));

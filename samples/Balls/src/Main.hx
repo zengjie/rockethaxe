@@ -2,7 +2,7 @@ package;
 
 import com.rocketshipgames.haxe.ArcadeScreen;
 
-import com.rocketshipgames.haxe.physics.SweepScanCollisionContainer;
+import com.rocketshipgames.haxe.physics.RigidBodyImpulseCollisionContainer;
 
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer;
 
@@ -16,7 +16,7 @@ class Main
 
   private var game:ArcadeScreen;
 
-  private var collisionGroup:SweepScanCollisionContainer;
+  private var collisionGroup:RigidBodyImpulseCollisionContainer;
 
   private var graphics:DisplayListGraphicsContainer;
 
@@ -37,7 +37,7 @@ class Main
     game = new ArcadeScreen();
 
     //-- Create the container to collectively collide all the bouncers
-    collisionGroup = new SweepScanCollisionContainer();
+    collisionGroup = new RigidBodyImpulseCollisionContainer();
     game.world.mechanics.add(collisionGroup);
 
     //-- Create the container for the bouncers' graphics.  It takes a
@@ -75,7 +75,7 @@ class Main
 
 
     //-- Schedule another Bouncer to be created in a second
-    if (bouncerCount < 4)
+    if (bouncerCount < 9)
       game.world.scheduler.schedule(500, generateBouncer);
 
     bouncerCount++;

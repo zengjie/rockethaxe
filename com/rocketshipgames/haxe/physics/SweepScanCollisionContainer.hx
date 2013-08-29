@@ -1,21 +1,15 @@
 package com.rocketshipgames.haxe.physics;
 
-import com.rocketshipgames.haxe.debug.Debug;
-
 import com.rocketshipgames.haxe.component.ComponentContainer;
 import com.rocketshipgames.haxe.component.ComponentHandle;
 import com.rocketshipgames.haxe.component.Component;
-
-import com.rocketshipgames.haxe.ds.Deadpool;
-import com.rocketshipgames.haxe.ds.DeadpoolObject;
-import com.rocketshipgames.haxe.ds.DoubleLinkedList;
-import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
-import com.rocketshipgames.haxe.ds.Heap;
 
 
 class SweepScanCollisionContainer
   implements Component
 {
+
+  private var SweepScanBroadphase<>
 
   private var group:DoubleLinkedList<RigidBody2DComponent>;
   private var heap:Heap<SweepEvent>;
@@ -148,16 +142,27 @@ class SweepScanCollisionContainer
             if (outer.type == RIGID_CIRCLE &&
                 inner.type == RIGID_CIRCLE) {
 
-              coverage = (outer.position.x-inner.position.x);
-              distance = coverage * coverage;
-              coverage = (outer.position.y-inner.position.y);
-              distance += coverage * coverage;
+              var normX = (outer.position.x - inner.position.x);
+              var normY = (outer.position.y - inner.position.y);
 
-              coverage = outer.radius + inner.radius;
-              coverage *= coverage;
+              var distSqr = (normX * normX) + (normY * normY);
+              var radius = outer.radius + inner.radius;
 
-              // If they're too far apart, negate any collision
-              if (distance > coverage) {
+              if (distSqr < radius * radius) {
+                var dist = Math.sqrt(distSqr);
+                var penetration = radius - distance;
+                normX /= dist;
+                normY /= dist;
+
+
+
+
+
+
+
+
+              } else {
+                // They did not actually hit
                 innerHit = outerHit = false;
               }
 
@@ -170,6 +175,10 @@ class SweepScanCollisionContainer
                 outer.top() > inner.bottom() ||
                 outer.bottom() < inner.top())) {
                 */
+
+            if (innerHit || outerHit) {
+
+            }
 
             if (innerHit)
               trace("Inner collision");

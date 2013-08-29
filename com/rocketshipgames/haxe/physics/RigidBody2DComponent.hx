@@ -36,13 +36,15 @@ class RigidBody2DComponent
   public var collidesWith:Int;
 
   public var mass:Float;
+  public var restitution:Float;
 
 
 
   //--------------------------------------------------------------------
   private function new():Void
   {
-    mass = 1.0;
+    mass = 0.1;
+    restitution = 1.0;
     // end new
   }
 
