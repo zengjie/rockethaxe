@@ -21,18 +21,22 @@ class RigidBody2DComponent
 
 
   //------------------------------------------------------------
+  public var container(default, null):ComponentHandle;
+
   public var type(default,null):RigidBody2DType;
 
-  public var diameter(default,null):Float;
+  public var radius(default,null):Float;
 
   public var width(default,null):Float;
   public var height(default,null):Float;
 
+  public var position(default,null):Position2D;
+
+  public var collidesAs:Int;
+  public var collidesWith:Int;
+
   public var mass:Float;
 
-
-  //----------------------------------------------------
-  private var position:Position2D;
 
 
   //--------------------------------------------------------------------
@@ -43,14 +47,19 @@ class RigidBody2DComponent
   }
 
   //----------------------------------------------------
-  public static function newCircleBody(diameter:Float):RigidBody2DComponent
+  public static function newCircleBody(radius:Float,
+                                       collidesAs:Int,
+                                       collidesWith:Int):RigidBody2DComponent
   {
     var x = new RigidBody2DComponent();
     x.type = RIGID_CIRCLE;
-    x.diameter = diameter;
+    x.radius = radius;
 
-    x.width = diameter;
-    x.height = diameter;
+    x.width = radius*2;
+    x.height = radius*2;
+
+    x.collidesAs = collidesAs;
+    x.collidesWith = collidesWith;
 
     return x;
     // end newCircleBody
@@ -61,6 +70,7 @@ class RigidBody2DComponent
   //--------------------------------------------------------------------
   public function attach(container:ComponentHandle):Void
   {
+    this.container = container;
     container.claim(PhysicsCapabilities.CID_EXTENT2D);
     container.claim(CID);
 

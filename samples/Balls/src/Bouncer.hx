@@ -18,12 +18,14 @@ class Bouncer
 
 
     //-- Add basic position and movement
-    add(new Kinematics2DComponent({ xvel: 200, yvel: 200}));
+    add(new Kinematics2DComponent({ xvel: 50, yvel: 200}));
 
     //-- Add a description of this object's physical shape
-    add(RigidBody2DComponent.newCircleBody(50));
+    add(RigidBody2DComponent.newCircleBody(25, 1, 1));
 
-    //-- Add a graphical Flash Shape representation to the Bouncer
+    //-- Add a graphical Flash Shape representation to the Bouncer.
+    //-- If there were more than one, e.g., for different panels on
+    //-- the UI, the shape can be optionally tagged.
     var shape = new flash.display.Shape();
     shape.graphics.beginFill(0xFF0000);
     shape.graphics.drawCircle(0, 0, 25);

@@ -49,20 +49,20 @@ TestComponentContainer.hx:47: Creating magic provider
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
 TestComponentContainer.hx:138: Attach Provider
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-ComponentContainer.hx:173: Claim -2147483648
+ComponentContainer.hx:185: Claim -2147483648
 DoubleLinkedListHandle.hx:24: New DoubleLinkedListHandle
-ComponentContainer.hx:173: Claim -1020141947
+ComponentContainer.hx:185: Claim -1020141947
 TestComponentContainer.hx:53: Looking for magic provider
 TestComponentContainer.hx:56: Magic available
 TestComponentContainer.hx:169: Provider magic on story
 TestComponentContainer.hx:62: Detaching provider
 Deadpool.hx:85: New MementoMori
-ComponentContainer.hx:183: Release -2147483648
+ComponentContainer.hx:195: Release -2147483648
 Deadpool.hx:85: New MementoMori
-ComponentContainer.hx:183: Release -1020141947
+ComponentContainer.hx:195: Release -1020141947
 Deadpool.hx:85: New MementoMori
 TestComponentContainer.hx:145: Detach Provider
 TestComponentContainer.hx:65: Looking for magic provider again
-ComponentContainer.hx:227: [ERROR] Capability magic (-2147483648) not found.
-ComponentContainer.hx:229: [ERROR] Available: 
+ComponentContainer.hx:239: [ERROR] Capability magic (-2147483648) not found.
+ComponentContainer.hx:241: [ERROR] Available: 
 TestComponentContainer.hx:70: No magic available
