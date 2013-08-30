@@ -21,6 +21,12 @@ class Heap<T>
   public inline function right(i:Int):Int { return (i*2)+2; }
 
 
+  /**
+   * It is undefined what happens if the relevant trait of k, i.e.
+   * whatever the comparator() function is looking at, is changed
+   * while in the heap.  That can break the heap invariant and cause
+   * untoward behavior.  Be warned!
+   */
   public function add(k:T):Void
   {
     var newindex:Int = array.length;

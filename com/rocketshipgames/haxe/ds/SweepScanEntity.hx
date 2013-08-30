@@ -1,10 +1,10 @@
 package com.rocketshipgames.haxe.ds;
 
 
-interface SweepScanEntity
+interface SweepScanEntity<D>
 {
 
-  function begin():Float;
-  function end():Float;
+  function begin():D;
+  function end():D;
   // end SweepScanEntity
 }

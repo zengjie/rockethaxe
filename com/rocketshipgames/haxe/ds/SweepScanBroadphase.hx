@@ -9,20 +9,25 @@ import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 import com.rocketshipgames.haxe.ds.Heap;
 
 
-class SweepScanBroadphase<T:SweepScanEntity>
+class SweepScanBroadphase<T:SweepScanEntity<D>, D>
 {
 
-  private var heap:Heap<SweepScanEvent<T>>;
-  private var sweepPool:Deadpool<SweepScanEvent<T>>;
+  private var heap:Heap<SweepScanEvent<T,D>>;
+  private var sweepPool:Deadpool<SweepScanEvent<T,D>>;
 
-  private var scanList:DoubleLinkedList<SweepScanEvent<T>>;
+  private var scanList:DoubleLinkedList<SweepScanEvent<T,D>>;
 
   private var resolveEvent:T->T->Void;
 
+  private var comparator:D->D->Bool;
+
+
   //--------------------------------------------------------------------
-  public function new(resolveEvent:T->T->Void):Void
+  public function new(comparator:D->D->Bool, resolveEvent:T->T->Void):Void
   {
-    heap = new Heap(earlier);
+    this.comparator = comparator;
+
+    heap = new Heap(precedes);
     sweepPool = new Deadpool(newSweepScanEvent);
     scanList = new DoubleLinkedList();
 
@@ -30,14 +35,18 @@ class SweepScanBroadphase<T:SweepScanEntity>
     // end new
   }
 
-  private function newSweepScanEvent(opts:Dynamic):SweepScanEvent<T>
+  private function newSweepScanEvent(opts:Dynamic):SweepScanEvent<T,D>
   {
-    return new SweepScanEvent<T>(opts);
+    return new SweepScanEvent<T,D>(opts);
   }
 
-  private function earlier(a:SweepScanEvent<T>, b:SweepScanEvent<T>):Bool
+  /*
+   * Note that you need the t member and a comparison over that rather than
+   * comparing directly over the datas in case the 
+   */
+  private function precedes(a:SweepScanEvent<T,D>, b:SweepScanEvent<T,D>):Bool
   {
-    return (a.t < b.t);
+    return comparator(a.t, b.t);
     // end topmost
   }
 
@@ -84,8 +93,8 @@ class SweepScanBroadphase<T:SweepScanEntity>
      *   - If it's a top, collide against scan list and add to the scan list
      *   - If it's a bottom, remove from the scan list
      */
-    var event:SweepScanEvent<T>;
-    var scanEvent:DoubleLinkedListHandle<SweepScanEvent<T>>;
+    var event:SweepScanEvent<T,D>;
+    var scanEvent:DoubleLinkedListHandle<SweepScanEvent<T,D>>;
 
     var inner:T;
 
@@ -144,15 +153,15 @@ enum SweepScanEventAction {
   END;
 }
 
-private class SweepScanEvent<T>
+private class SweepScanEvent<T,D>
   implements DeadpoolObject
 {
   public var action:SweepScanEventAction;
-  public var t:Float;
+  public var t:D;
   public var data:T;
-  public var beginEvent:SweepScanEvent<T>;
+  public var beginEvent:SweepScanEvent<T,D>;
 
-  public var scanHandle:DoubleLinkedListHandle<SweepScanEvent<T>>;
+  public var scanHandle:DoubleLinkedListHandle<SweepScanEvent<T,D>>;
 
   public var deadpool:Dynamic;
 

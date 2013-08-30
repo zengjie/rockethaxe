@@ -9,7 +9,7 @@ import com.rocketshipgames.haxe.component.Component;
 
 class RigidBodyImpulseComponent
   implements Component
-  implements com.rocketshipgames.haxe.ds.SweepScanEntity
+  implements com.rocketshipgames.haxe.ds.SweepScanEntity<Float>
 {
 
   private var container:RigidBodyImpulseCollisionContainer;

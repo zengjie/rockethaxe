@@ -17,16 +17,19 @@ class RigidBodyImpulseCollisionContainer
   @:allow(com.rocketshipgames.haxe.physics.RigidBodyImpulseComponent)
   private var group:DoubleLinkedList<RigidBodyImpulseComponent>;
 
-  private var broadphase:SweepScanBroadphase<RigidBodyImpulseComponent>;
+  private var broadphase:SweepScanBroadphase<RigidBodyImpulseComponent,Float>;
 
 
   //--------------------------------------------------------------------
   public function new():Void
   {
     group = new DoubleLinkedList();
-    broadphase = new SweepScanBroadphase(resolveCollision);
+    broadphase = new SweepScanBroadphase(earlier, resolveCollision);
     // end new
   }
+
+  private function earlier(a:Float, b:Float):Bool { return a < b; }
+
 
   //----------------------------------------------------
   public function attach(containerHandle:ComponentHandle):Void
