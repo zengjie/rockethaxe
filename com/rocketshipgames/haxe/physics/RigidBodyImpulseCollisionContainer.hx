@@ -17,14 +17,14 @@ class RigidBodyImpulseCollisionContainer
   @:allow(com.rocketshipgames.haxe.physics.RigidBodyImpulseComponent)
   private var group:DoubleLinkedList<RigidBodyImpulseComponent>;
 
-  private var broadphase:SweepScanBroadphase<RigidBodyImpulseComponent,Manifold>;
+  private var broadphase:SweepScanBroadphase<RigidBodyImpulseComponent>;
 
 
   //--------------------------------------------------------------------
   public function new():Void
   {
     group = new DoubleLinkedList();
-    broadphase = new SweepScanBroadphase(checkCollision, resolveCollision);
+    broadphase = new SweepScanBroadphase(resolveCollision);
     // end new
   }
 
@@ -48,7 +48,7 @@ class RigidBodyImpulseCollisionContainer
   }
 
 
-  //------------------------------------------------------------------
+  //----------------------------------------------------
   public function update(millis:Int):Void
   {
     broadphase.scan(group);
@@ -67,7 +67,27 @@ class RigidBodyImpulseCollisionContainer
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function checkCollision(a:RigidBodyImpulseComponent,
+  public function resolveCollision(a:RigidBodyImpulseComponent,
+                                   b:RigidBodyImpulseComponent):Void
+  {
+    var aHit = a.body.collidesWith & b.body.collidesAs;
+    var bHit = b.body.collidesWith & a.body.collidesAs;
+
+    // These objects don't collide
+    if (aHit == 0 && bHit == 0)
+      return;
+
+    var manifold = checkCollision(a, b);
+    if (manifold == null)
+      return;
+
+    applyCollision(manifold);
+
+    // end resolveCollision
+  }
+
+  //----------------------------------------------------
+  private function checkCollision(a:RigidBodyImpulseComponent,
                                  b:RigidBodyImpulseComponent):Manifold
   {
     var res:Manifold = null;
@@ -110,8 +130,9 @@ class RigidBodyImpulseCollisionContainer
     // end checkCollision
   }
 
-  public function resolveCollision(manifold:Manifold):Void
+  private function applyCollision(manifold:Manifold):Void
   {
+
     var rvx = manifold.b.kinematics.xvel - manifold.a.kinematics.xvel;
     var rvy = manifold.b.kinematics.yvel - manifold.a.kinematics.yvel;
 
@@ -151,7 +172,7 @@ class RigidBodyImpulseCollisionContainer
     manifold.b.kinematics.xvel += (1/manifold.b.body.mass) * impX;
     manifold.b.kinematics.yvel += (1/manifold.b.body.mass) * impY;
 
-    // end resolveCollision
+    // end applyCollision
   }
 
   // end RigidBodyImpulseCollisionContainer

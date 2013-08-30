@@ -14,6 +14,9 @@ class Bouncer
 
   public static var count:Int;
 
+  var radius:Float;
+  var mass:Float;
+  var rubber:Float;
 
   public function new():Void
   {
@@ -21,21 +24,31 @@ class Bouncer
 
 
     //-- Add basic position and movement
-    //    if (count < 1)
-    //      add(new Kinematics2DComponent({ x: 400, y: 400, xvel: 0, yvel: 0}));
-      //    else
-      add(new Kinematics2DComponent({ x: 0, y: 0, xvel: 50, yvel: 200}));
-      //    count++;
+    add(new Kinematics2DComponent
+        ({ x: 0, y: 0, xvel: 50, yvel: 200 }));
 
     //-- Add a description of this object's physical shape
-    add(RigidBody2DComponent.newCircleBody(25, 1, 1));
+    if (count % 2 <= 0) {
+      radius = 50;
+      mass = 20;
+      rubber = 1.0;
+    } else {
+      radius = 5;
+      mass = 1;
+      rubber = 1;
+    }
+
+    var body = RigidBody2DComponent.newCircleBody(radius, 1, 1);
+    body.mass = mass;
+    body.restitution = rubber;
+    add(body);
 
     //-- Add a graphical Flash Shape representation to the Bouncer.
     //-- If there were more than one, e.g., for different panels on
     //-- the UI, the shape can be optionally tagged.
     var shape = new flash.display.Shape();
     shape.graphics.beginFill(0xFF0000);
-    shape.graphics.drawCircle(0, 0, 25);
+    shape.graphics.drawCircle(0, 0, radius);
     shape.graphics.endFill();
     add(new DisplayListGraphicComponent(shape));
 
@@ -51,6 +64,8 @@ class Bouncer
 
                   return false;
                 });
+
+    count++;
 
     // end new
   }

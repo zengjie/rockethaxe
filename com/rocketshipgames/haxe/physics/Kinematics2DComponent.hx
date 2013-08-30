@@ -69,6 +69,38 @@ class Kinematics2DComponent
       yvel = (Std.is(d, String)) ? Std.parseFloat(d) : d;
     }
 
+    if ((d = Reflect.field(opts, "xvelMin")) != null) {
+      xvelMin = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "yvelMin")) != null) {
+      yvelMin = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "xvelMax")) != null) {
+      xvelMax = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "yvelMax")) != null) {
+      yvelMax = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "xacc")) != null) {
+      xacc = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "yacc")) != null) {
+      yacc = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "xdrag")) != null) {
+      xdrag = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "ydrag")) != null) {
+      ydrag = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
     active = true;
     // end init
   }

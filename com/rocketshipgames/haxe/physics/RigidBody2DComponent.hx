@@ -43,7 +43,7 @@ class RigidBody2DComponent
   //--------------------------------------------------------------------
   private function new():Void
   {
-    mass = 0.1;
+    mass = 1.0;
     restitution = 1.0;
     // end new
   }

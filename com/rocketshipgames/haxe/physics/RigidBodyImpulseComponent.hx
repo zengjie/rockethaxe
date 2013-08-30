@@ -64,11 +64,8 @@ class RigidBodyImpulseComponent
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
 
-  public function top():Float { return body.top(); }
-  public function bottom():Float { return body.bottom(); }
-
-  public function collidesAs():Int { return body.collidesAs; }
-  public function collidesWith():Int { return body.collidesWith; }
+  public function begin():Float { return body.top(); }
+  public function end():Float { return body.bottom(); }
 
   // end RigidBodyImpulseComponent
 }

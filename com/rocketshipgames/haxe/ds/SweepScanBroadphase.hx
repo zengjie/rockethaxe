@@ -9,7 +9,7 @@ import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 import com.rocketshipgames.haxe.ds.Heap;
 
 
-class SweepScanBroadphase<T:SweepScanEntity,R>
+class SweepScanBroadphase<T:SweepScanEntity>
 {
 
   private var heap:Heap<SweepScanEvent<T>>;
@@ -17,18 +17,16 @@ class SweepScanBroadphase<T:SweepScanEntity,R>
 
   private var scanList:DoubleLinkedList<SweepScanEvent<T>>;
 
-  private var checkCollision:T->T->R;
-  private var resolveCollision:R->Void;
+  private var resolveEvent:T->T->Void;
 
   //--------------------------------------------------------------------
-  public function new(checkCollision:T->T->R,resolveCollision:R->Void):Void
+  public function new(resolveEvent:T->T->Void):Void
   {
-    heap = new Heap(topmost);
+    heap = new Heap(earlier);
     sweepPool = new Deadpool(newSweepScanEvent);
     scanList = new DoubleLinkedList();
 
-    this.checkCollision = checkCollision;
-    this.resolveCollision = resolveCollision;
+    this.resolveEvent = resolveEvent;
     // end new
   }
 
@@ -37,9 +35,9 @@ class SweepScanBroadphase<T:SweepScanEntity,R>
     return new SweepScanEvent<T>(opts);
   }
 
-  private function topmost(a:SweepScanEvent<T>, b:SweepScanEvent<T>):Bool
+  private function earlier(a:SweepScanEvent<T>, b:SweepScanEvent<T>):Bool
   {
-    return (a.y < b.y);
+    return (a.t < b.t);
     // end topmost
   }
 
@@ -64,17 +62,17 @@ class SweepScanBroadphase<T:SweepScanEntity,R>
       next = curr.next;
       outer = curr.item;
 
-      var top = sweepPool.newObject({    type: TOP,
-                                            y: outer.top(),
-                                         body: outer,
-                                     topEvent: null});
+      var begin = sweepPool.newObject({    action: BEGIN,
+                                                t: outer.begin(),
+                                             data: outer,
+                                       beginEvent: null});
 
-      var bottom = sweepPool.newObject({ type: BOTTOM,
-                                            y: outer.bottom(),
-                                         body: outer,
-                                     topEvent: top});
-      heap.add(top);
-      heap.add(bottom);
+      var end = sweepPool.newObject({    action: END,
+                                              t: outer.end(),
+                                           data: outer,
+                                     beginEvent: begin});
+      heap.add(begin);
+      heap.add(end);
 
       curr = next;
       // end looping voer bodies
@@ -91,16 +89,11 @@ class SweepScanBroadphase<T:SweepScanEntity,R>
 
     var inner:T;
 
-    var innerHit:Bool;
-    var outerHit:Bool;
-
-    var res:R;
-
     while ((event = heap.pop()) != null) {
-      outer = event.body;
+      outer = event.data;
 
-      switch (event.type) {
-      case TOP:
+      switch (event.action) {
+      case BEGIN:
 
         /**
          *  Encountered top of object
@@ -111,17 +104,7 @@ class SweepScanBroadphase<T:SweepScanEntity,R>
         // 1) Scan list of live entries
         scanEvent = scanList.head;
         while (scanEvent != null) {
-          inner = scanEvent.item.body;
-
-          // 1a) Check if this collision types can actually collide
-          innerHit = ((outer.collidesAs() & inner.collidesWith()) != 0);
-          outerHit = ((inner.collidesAs() & outer.collidesWith()) != 0);
-
-          // 1b) Check if objects collide (narrowphase) and resolve if so
-          if ((innerHit || outerHit) &&
-              (res = checkCollision(outer, inner)) != null) {
-            resolveCollision(res);
-          }
+          resolveEvent(outer, scanEvent.item.data);
 
           scanEvent = scanEvent.next;
           // end looping over scan list
@@ -131,12 +114,12 @@ class SweepScanBroadphase<T:SweepScanEntity,R>
         event.scanHandle = scanList.add(event);
 
 
-      case BOTTOM:
+      case END:
         // Bottom of an object.  Remove associated top from scan list
-        event.topEvent.scanHandle.remove();
+        event.beginEvent.scanHandle.remove();
 
         // Return both the top and bottom SweepScanEvents to the deadpool
-        event.topEvent.repool();
+        event.beginEvent.repool();
         event.repool();
       }
 
@@ -156,18 +139,18 @@ class SweepScanBroadphase<T:SweepScanEntity,R>
 }
 
 
-enum SweepScanEventType {
-  TOP;
-  BOTTOM;
+enum SweepScanEventAction {
+  BEGIN;
+  END;
 }
 
 private class SweepScanEvent<T>
   implements DeadpoolObject
 {
-  public var type:SweepScanEventType;
-  public var y:Float;
-  public var body:T;
-  public var topEvent:SweepScanEvent<T>;
+  public var action:SweepScanEventAction;
+  public var t:Float;
+  public var data:T;
+  public var beginEvent:SweepScanEvent<T>;
 
   public var scanHandle:DoubleLinkedListHandle<SweepScanEvent<T>>;
 
@@ -187,10 +170,10 @@ private class SweepScanEvent<T>
 
   public function init(?opts:Dynamic):Void
   {
-    this.type = opts.type;
-    this.y = opts.y;
-    this.body = opts.body;
-    this.topEvent = opts.topEvent;
+    this.action = opts.action;
+    this.t = opts.t;
+    this.data = opts.data;
+    this.beginEvent = opts.beginEvent;
     // end init
   }
 
