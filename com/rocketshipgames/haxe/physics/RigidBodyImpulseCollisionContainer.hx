@@ -24,7 +24,7 @@ class RigidBodyImpulseCollisionContainer
   public function new():Void
   {
     group = new DoubleLinkedList();
-    broadphase = new SweepScanBroadphase(earlier, resolveCollision);
+    broadphase = new SweepScanBroadphase(resolveCollision, earlier);
     // end new
   }
 

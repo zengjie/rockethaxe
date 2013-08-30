@@ -23,15 +23,15 @@ class SweepScanBroadphase<T:SweepScanEntity<D>, D>
 
 
   //--------------------------------------------------------------------
-  public function new(comparator:D->D->Bool, resolveEvent:T->T->Void):Void
+  public function new(resolveEvent:T->T->Void, comparator:D->D->Bool):Void
   {
+    this.resolveEvent = resolveEvent;
     this.comparator = comparator;
 
     heap = new Heap(precedes);
     sweepPool = new Deadpool(newSweepScanEvent);
     scanList = new DoubleLinkedList();
 
-    this.resolveEvent = resolveEvent;
     // end new
   }
 
