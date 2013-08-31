@@ -1,21 +1,16 @@
 package com.rocketshipgames.haxe.physics;
 
-import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
 
 
 class Kinematics2DComponent
-  implements Component
-  implements Position2D
+  extends Position2DComponent
 {
 
   public static var CID:
     com.rocketshipgames.haxe.component.CapabilityID =
     com.rocketshipgames.haxe.component.ComponentContainer.hashID("kinematics-2d");
 
-
-  public var x:Float;
-  public var y:Float;
 
   public var xvel:Float;
   public var xacc:Float;
@@ -31,36 +26,42 @@ class Kinematics2DComponent
   public var yvelMin:Float;
   public var yvelMax:Float;
 
+
   //----------------------------------------------------
   private var active:Bool;
 
 
   //--------------------------------------------------------------------
-  public function new(?opts:Dynamic):Void
+  private function new():Void
   {
-    x = xvel = xacc = xdrag = xvelMin = 0.0;
-    y = yvel = yacc = ydrag = yvelMin = 0.0;
+    super();
+
+    xvel = xacc = xdrag = xvelMin = 0.0;
+    yvel = yacc = ydrag = yvelMin = 0.0;
     xvelMax = yvelMax = Math.POSITIVE_INFINITY;
 
-    activate(opts);
     // end Kinematics2DComponent
   }
 
-  public function activate(?opts:Dynamic):Void
+  // Instantiation through a create() function rather than direct
+  // super classing in order for subclass instantiations to not
+  // trigger activate() being called twice, i.e., in the parent
+  // constructor and again daisy chaining from subclass activate().
+  public static function create(?opts:Dynamic):Kinematics2DComponent
   {
+    var x = new Kinematics2DComponent();
+    x.activate(opts);
+    return x;
+  }
+
+  public override function activate(?opts:Dynamic):Void
+  {
+    super.activate(opts);
 
     if (opts == null)
       return;
 
     var d:Dynamic;
-
-    if ((d = Reflect.field(opts, "x")) != null) {
-      x = (Std.is(d, String)) ? Std.parseFloat(d) : d;
-    }
-
-    if ((d = Reflect.field(opts, "y")) != null) {
-      y = (Std.is(d, String)) ? Std.parseFloat(d) : d;
-    }
 
     if ((d = Reflect.field(opts, "xvel")) != null) {
       xvel = (Std.is(d, String)) ? Std.parseFloat(d) : d;
@@ -107,26 +108,27 @@ class Kinematics2DComponent
   }
 
 
-  public function deactivate():Void
+  public override function deactivate():Void
   {
+    super.deactivate();
   }
 
 
   //--------------------------------------------------------------------
-  public function attach(container:ComponentHandle):Void
+  public override function attach(container:ComponentHandle):Void
   {
-    container.claim(PhysicsCapabilities.CID_POSITION2D);
+    super.attach(container);
     container.claim(CID);
     // end attach
   }
 
-  public function detach():Void
-  {
+  public override function detach():Void {
+    super.detach();
   }
 
 
   //------------------------------------------------------------------
-  public function update(millis:Int):Void
+  public override function update(millis:Int):Void
   {
     if (!active)
       return;

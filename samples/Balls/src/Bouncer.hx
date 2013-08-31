@@ -24,7 +24,7 @@ class Bouncer
 
 
     //-- Add basic position and movement
-    add(new Kinematics2DComponent
+    add(Kinematics2DComponent.create
         ({ x: 0, y: 0, xvel: 200, yvel: 0, yacc: 2000, xdrag: 200 }));
 
     //-- Add a description of this object's physical shape

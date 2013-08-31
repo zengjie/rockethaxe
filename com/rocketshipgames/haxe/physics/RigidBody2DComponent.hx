@@ -77,8 +77,7 @@ class RigidBody2DComponent
     container.claim(CID);
 
     position =
-      cast(container.find(PhysicsCapabilities.CID_POSITION2D),
-           Position2D);
+      cast(container.find(PhysicsCapabilities.CID_POSITION2D), Position2D);
 
     // end attach
   }
