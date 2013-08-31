@@ -38,8 +38,9 @@ class Kinematics2DComponent
   //--------------------------------------------------------------------
   public function new(?opts:Dynamic):Void
   {
-    x = xvel = xacc = xdrag = xvelMin = xvelMax = 0.0;
-    y = yvel = yacc = ydrag = yvelMin = yvelMax = 0.0;
+    x = xvel = xacc = xdrag = xvelMin = 0.0;
+    y = yvel = yacc = ydrag = yvelMin = 0.0;
+    xvelMax = yvelMax = Math.POSITIVE_INFINITY;
 
     activate(opts);
     // end Kinematics2DComponent

@@ -250,23 +250,31 @@ class Bounds2DComponent
   //------------------------------------------------------------
   public function bounceLeft():Void
   {
-    if (kinematics.xvel < 0)
+    if (kinematics.xvel < 0) {
       kinematics.xvel *= -1;
+      kinematics.x += (left - extent.left());
+    }
   }
   public function bounceRight():Void
   {
-    if (kinematics.xvel > 0)
+    if (kinematics.xvel > 0) {
       kinematics.xvel *= -1;
+      kinematics.x += (right - extent.right());
+    }
   }
   public function bounceTop():Void
   {
-    if (kinematics.yvel < 0)
+    if (kinematics.yvel < 0) {
       kinematics.yvel *= -1;
+      kinematics.y += (top - extent.top());
+    }
   }
   public function bounceBottom():Void
   {
-    if (kinematics.yvel > 0)
+    if (kinematics.yvel > 0) {
       kinematics.yvel *= -1;
+      kinematics.y += (bottom - extent.bottom());
+    }
   }
 
   // end Bounds2DComponent
