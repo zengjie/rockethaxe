@@ -192,8 +192,8 @@ class RigidBodyImpulseCollisionContainer
     jt /= (1/manifold.a.body.mass) + (1/manifold.b.body.mass);
 
 
-    var staticFric = 0.5;
-    var dynamicFric = 0.3;
+    var staticFric = 0.3;
+    var dynamicFric = 0.1;
 
     var sf = Math.sqrt(staticFric * staticFric);
     var df = Math.sqrt(dynamicFric * dynamicFric);
