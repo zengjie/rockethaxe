@@ -25,17 +25,19 @@ class Bouncer
 
     //-- Add basic position and movement
     add(Kinematics2DComponent.create
-        ({ x: 0, y: 0, xvel: 200, yvel: 0, yacc: 2000, xdrag: 200 }));
+        ({ x: 200, y: 0, xvel: (Math.random()*400)-200, yvel: 0,
+            xvelMin: 2, yvelMin: 2,
+            yacc: 2000, xdrag: 50}));
 
     //-- Add a description of this object's physical shape
     if (count % 2 <= 0) {
       radius = 50;
-      mass = 20;
-      rubber = 0.75;
+      mass = 10;
+      rubber = 0.8;
     } else {
       radius = 5;
       mass = 1;
-      rubber = 0.75;
+      rubber = 0.8;
     }
 
     var body = RigidBody2DComponent.newCircleBody(radius, 1, 1);

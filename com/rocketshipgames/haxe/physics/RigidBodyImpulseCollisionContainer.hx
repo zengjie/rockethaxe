@@ -175,6 +175,92 @@ class RigidBodyImpulseCollisionContainer
     manifold.b.kinematics.xvel += (1/manifold.b.body.mass) * impX;
     manifold.b.kinematics.yvel += (1/manifold.b.body.mass) * impY;
 
+
+    // Friction
+
+    rvx = manifold.b.kinematics.xvel - manifold.a.kinematics.xvel;
+    rvy = manifold.b.kinematics.yvel - manifold.a.kinematics.yvel;
+
+    var tx = rvx - (rvx*manifold.normX)+(rvy*manifold.normY)*manifold.normX;
+    var ty = rvy - (rvx*manifold.normX)+(rvy*manifold.normY)*manifold.normY;
+    var td = Math.sqrt((tx*tx)+(ty*ty));
+    if (td != 0) {
+    tx /= td;
+    ty /= td;
+
+    var jt = -((rvx*tx)+(rvy*ty));
+    jt /= (1/manifold.a.body.mass) + (1/manifold.b.body.mass);
+
+
+    var staticFric = 0.5;
+    var dynamicFric = 0.3;
+
+    var sf = Math.sqrt(staticFric * staticFric);
+    var df = Math.sqrt(dynamicFric * dynamicFric);
+ 
+    var ix:Float;
+    var iy:Float;
+
+    if (Math.abs(jt) < j * sf) {
+      ix = jt * tx;
+      iy = jt * ty;
+    } else {
+      ix = tx * -j * df;
+      iy = ty * -j * df;
+    }
+
+    manifold.a.kinematics.xvel -= (1/manifold.a.body.mass) * ix;
+    manifold.a.kinematics.yvel -= (1/manifold.a.body.mass) * iy;
+
+    manifold.b.kinematics.xvel += (1/manifold.b.body.mass) * ix;
+    manifold.b.kinematics.yvel += (1/manifold.b.body.mass) * iy;
+    }
+
+
+    /*
+    var motion = (manifold.a.kinematics.xvel*manifold.a.kinematics.xvel)+
+      (manifold.a.kinematics.yvel*manifold.a.kinematics.yvel);
+    trace("Motion A " + motion +
+          "  vel " + manifold.a.kinematics.xvel + "," + manifold.a.kinematics.yvel);
+      //      manifold.a.kinematics.xvel = manifold.a.kinematics.yvel = 0;
+
+    motion = (manifold.b.kinematics.xvel*manifold.b.kinematics.xvel)+
+      (manifold.b.kinematics.yvel*manifold.b.kinematics.yvel);
+    trace("Motion A " + motion +
+          "  vel " + manifold.b.kinematics.xvel + "," + manifold.b.kinematics.yvel);
+      //      manifold.b.kinematics.xvel = manifold.b.kinematics.yvel = 0;
+      */
+
+
+    // Position correction
+    var percent:Float = 0.6;
+    var threshold:Float = 2;
+
+    if (manifold.penetration > threshold) {
+      var correctionX = ((manifold.penetration - threshold) /
+                         ((1/manifold.a.body.mass) + (1/manifold.b.body.mass)))
+        * manifold.normX * percent;
+
+      var correctionY = ((manifold.penetration - threshold) /
+                         ((1/manifold.a.body.mass) + (1/manifold.b.body.mass)))
+        * manifold.normY * percent;
+
+      /*
+      trace("Penetration " + manifold.penetration +
+            "  Correction " + correctionX + "," + correctionY +
+            "  Norm " + manifold.normX + "," + manifold.normY);
+      */
+
+      manifold.a.kinematics.x -= (1/manifold.a.body.mass) * correctionX;
+      manifold.a.kinematics.y -= (1/manifold.a.body.mass) * correctionY;
+
+      manifold.b.kinematics.x += (1/manifold.b.body.mass) * correctionX;
+      manifold.b.kinematics.y += (1/manifold.b.body.mass) * correctionY;
+    }
+
+
+
+
     // end applyCollision
   }
 

@@ -75,7 +75,7 @@ class Main
 
 
     //-- Schedule another Bouncer to be created in a second
-    if (bouncerCount < 9)
+    if (bouncerCount < 12)
       game.world.scheduler.schedule(500, generateBouncer);
 
     bouncerCount++;
