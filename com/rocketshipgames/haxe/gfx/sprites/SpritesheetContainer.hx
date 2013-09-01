@@ -21,7 +21,7 @@ class SpritesheetContainer
 
   private var renderers:Array<SpritesheetRenderer>;
 
-  private var tileCount:Int;
+  private var frameCount:Int;
 
 
   //--------------------------------------------------------------------
@@ -39,7 +39,7 @@ class SpritesheetContainer
 
     renderers = new Array();
 
-    tileCount = 0;
+    frameCount = 0;
 
     // end new
   }
@@ -55,37 +55,37 @@ class SpritesheetContainer
   }
 
   //------------------------------------------------------------
-  public function addTile(x:Float, y:Float,
-                          width:Float, height:Float,
-                          cx:Float, cy:Float):Int
+  public function addFrame(x:Float, y:Float,
+                           width:Float, height:Float,
+                           cx:Float, cy:Float):Int
   {
     addTileRect(new Rectangle(x, y, width, height),
                 new Point(cx, cy));
-    tileCount++;
-    return tileCount-1;
+    frameCount++;
+    return frameCount-1;
     // end addSprite
   }
 
   //------------------------------------------------------------
-  public function getNumTiles():Int
+  public function getNumFrames():Int
   {
-    return tileCount;
+    return frameCount;
   }
 
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------
-  public function drawTile(x:Float, y:Float, tile:Int):Void
+  public function drawFrame(x:Float, y:Float, frame:Int):Void
   {
 
     if (renderIndex >= blitData.length) {
       blitData.push(x);
       blitData.push(y);
-      blitData.push(tile);
+      blitData.push(frame);
     } else {
       blitData[renderIndex] = x;
       blitData[renderIndex+1] = y;
-      blitData[renderIndex+2] = tile;
+      blitData[renderIndex+2] = frame;
     }
 
     renderIndex += 3;

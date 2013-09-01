@@ -6,6 +6,11 @@ import com.rocketshipgames.haxe.ArcadeScreen;
 
 import com.rocketshipgames.haxe.gfx.sprites.SpritesheetContainer;
 
+import com.rocketshipgames.haxe.world.tilemap.TileCatalog;
+import com.rocketshipgames.haxe.world.tilemap.TileChunk;
+
+import com.rocketshipgames.haxe.gfx.sprites.TileMapRenderer;
+
 
 class Main
   extends com.rocketshipgames.haxe.Game
@@ -28,9 +33,19 @@ class Main
     //-- mechanics, etc), renders graphics, pauses on unfocus, etc.
     game = new ArcadeScreen();
 
+
     graphics = new SpritesheetContainer
-      (Assets.getBitmapData("assets/water-tiles.png"));
+      (Assets.getBitmapData("assets/test-tiles.png"));
     game.addGraphicsContainer(graphics);
+
+    var catalog = TileCatalog.load(Assets.getText("assets/tile-defs.xml"),
+                                   graphics);
+
+    var chunk = new TileChunk(catalog);
+    var tiledraw = new TileMapRenderer();
+    tiledraw.map = chunk;
+    //    tiledraw.add(chunk);
+    graphics.addRenderer(tiledraw);
 
     //-- Add the game to the display.  In a real game this would be
     //-- done using ScreenManager to transition between menus, etc.

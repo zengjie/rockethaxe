@@ -1,0 +1,18 @@
+<tiles label="Demo Tiles" width="32" height="32">
+
+  <!--
+      There are separate blocks for frames and tiles so that they may
+      be logically reorganized.  I.e., so the actual bitmap doesn't
+      have to be manually rearranged to follow auto-tiling
+      conventions, the tile -> frame mapping defined here does it.
+  -->
+
+  <frames>
+    <grid label="land" x="0" y="0" columns="8" rows="8"  />
+  </frames>
+
+  <tiles>
+    <tile label="land" frame="0"/>
+    <tile label="water" frame="1" />
+  </tiles>
+</tiles>
