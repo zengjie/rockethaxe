@@ -1,5 +1,12 @@
 <tiles label="Demo Tiles" width="32" height="32">
 
+  <collisionTags>
+    <land />
+    <water />
+    <deadly />
+    <pit code="8" />
+  </collisionTags>
+
   <!--
       There are separate blocks for frames and tiles so that they may
       be logically reorganized.  I.e., so the actual bitmap doesn't
@@ -12,7 +19,10 @@
   </frames>
 
   <tiles>
-    <tile label="land" frame="0"/>
-    <tile label="water" frame="1" />
+    <tile label="land"      frame="land" collision="land" />
+    <tile label="water"     frame="1"    collision="water" />
+    <tile label="deepwater" frame="3"    collision="water,deadly" />
+    <tile label="fire"      frame="2"    collision="4" />
+    <tile label="pit"       frame="5"    collision="pit" />
   </tiles>
 </tiles>

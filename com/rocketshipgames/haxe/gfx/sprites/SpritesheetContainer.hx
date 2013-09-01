@@ -67,7 +67,7 @@ class SpritesheetContainer
   }
 
   //------------------------------------------------------------
-  public function getNumFrames():Int
+  public function getFrameCount():Int
   {
     return frameCount;
   }
