@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project>
+
+  <meta title="RocketHaxe Tiles Sample"
+        package="com.rocketshipgames.haxe.samples"
+        company="Rocketship Games"
+        version="1" />
+
+  <app main="Main" path="export" file="Tiles" />
+
+  <source path="src" />
+
+  <window background="#336699" />
+
+
+  <window width="480" height="480" unless="android" />
+  <window width="0" height="0" orientation="landscape" if="android" />
+
+  <window fps="60" resizable="false" />
+
+  <!-- Do not include trailing '/' in path! -->
+  <assets path="assets" include="*" />
+
+  <haxelib name="rockethaxe" version="2.0" />
+</project>

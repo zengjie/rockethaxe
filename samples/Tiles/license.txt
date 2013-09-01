@@ -1,0 +1,5 @@
+
+The tiles in assets/water-tiles.png were created by yd and released
+into the public domain.  They're available from OpenGameArt:
+
+       http://opengameart.org/content/top-down-simple-tile-sets
