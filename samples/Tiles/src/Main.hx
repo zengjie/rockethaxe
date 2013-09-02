@@ -2,7 +2,11 @@ package;
 
 import openfl.Assets;
 
+import flash.events.MouseEvent;
+
 import com.rocketshipgames.haxe.ArcadeScreen;
+
+import com.rocketshipgames.haxe.device.Mouse;
 
 import com.rocketshipgames.haxe.gfx.sprites.SpritesheetContainer;
 
@@ -20,6 +24,9 @@ class Main
 
   private var graphics:SpritesheetContainer;
 
+  private var dragging:Bool;
+  private var mx:Float;
+  private var my:Float;
 
   //--------------------------------------------------------------------
   public function new():Void
@@ -33,10 +40,29 @@ class Main
     //-- mechanics, etc), renders graphics, pauses on unfocus, etc.
     game = new ArcadeScreen();
 
+    Mouse.enable();
+    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN,
+                          function(e:MouseEvent):Void { dragging = true;
+                            mx = e.localX; my = e.localY; });
+    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP,
+                          function(e:MouseEvent):Void { dragging = false; });
+    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE,
+                          function(e:MouseEvent):Void {
+                            if (dragging) {
+                              game.viewport.x -= e.localX-mx;
+                              game.viewport.y -= e.localY-my;
+                              mx = e.localX;
+                              my = e.localY;
+                            }
+                          });
+
 
     graphics = new SpritesheetContainer
       (Assets.getBitmapData("assets/test-tiles.png"));
     game.addGraphicsContainer(graphics);
+
+    graphics.addFrame(0, 0, 64, 32, 0, 0);
+    graphics.addFrame(0, 0, 64, 32, 0, 0);
 
     var catalog = TileCatalog.load(Assets.getText("assets/tile-defs.xml"),
                                    graphics);

@@ -32,6 +32,7 @@ class TileCatalog
 
   private var tileIndex:Int;
 
+  private var baseFrameIndex:Int;
 
   //--------------------------------------------------------------------
   public function new(spritesheet:SpritesheetContainer):Void
@@ -104,6 +105,12 @@ class TileCatalog
 
 
     //-- Populate frames
+
+    // Need to base any raw numbers off the first tile extracted by
+    // this catalog, NOT the zero-th tile for the spritesheet---other
+    // sprites may have been loaded beforehand.
+    baseFrameIndex = spritesheet.getFrameCount();
+
     for (frames in root.nodes.frames) {
       for (cmd in frames.elements) {
 
@@ -205,8 +212,8 @@ class TileCatalog
       return;
     }
 
-    var frame:Int = tileIndex;
-    if (cmd.has.frame) frame = Std.parseInt(cmd.att.frame);
+    var frame:Int = spritesheet.getFrameCount();
+    if (cmd.has.frame) frame = baseFrameIndex + Std.parseInt(cmd.att.frame);
 
     frameLabels.set(cmd.att.label, frame);
 
@@ -230,7 +237,7 @@ class TileCatalog
       var c = cmd.att.frame.charCodeAt(0);
       if (c >= "0".charCodeAt(0) &&
           c <= "9".charCodeAt(0)) {
-        frame = Std.parseInt(cmd.att.frame);
+        frame = baseFrameIndex + Std.parseInt(cmd.att.frame);
       } else {
         frame = frameLabels.get(cmd.att.frame);
       }
