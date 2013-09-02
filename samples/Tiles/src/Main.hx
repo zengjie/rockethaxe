@@ -49,6 +49,10 @@ class Main
     flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE,
                           function(e:MouseEvent):Void {
                             if (dragging) {
+                              // These are substractions because we
+                              // move the viewport in the opposite
+                              // direction, as if dragging the map as
+                              // opposed to moving the view.
                               game.viewport.x -= e.localX-mx;
                               game.viewport.y -= e.localY-my;
                               mx = e.localX;
@@ -56,9 +60,37 @@ class Main
                             }
                           });
 
+    var codes = [
+                 { code: 16, label: "surrounded" },
+                 { code: 1, label: "top" },
+                 { code: 2, label: "left" },
+                 { code: 4, label: "right" },
+                 { code: 8, label: "bottom" }
+                 ];
+
+    var TOP:Int = 1;
+    var LEFT:Int = 8;
+    var RIGHT:Int = 2;
+    var BOTTOM:Int = 4;
+    var MIDDLE:Int = 16;
+
+    for (i in 0...32) {
+      var s = "<tile label=\"";
+      var prev = false;
+      for (c in codes) {
+        if ((i & c.code) != 0) {
+          s += ((prev)?"-":"") + c.label;
+          prev = true;
+        }
+      }
+
+      s += "\" frame=\"\" />";
+      trace(s);
+    }
+
 
     graphics = new SpritesheetContainer
-      (Assets.getBitmapData("assets/test-tiles.png"));
+      (Assets.getBitmapData("assets/RPGTiles.png"));
     game.addGraphicsContainer(graphics);
 
     graphics.addFrame(0, 0, 64, 32, 0, 0);
@@ -67,14 +99,65 @@ class Main
     var catalog = TileCatalog.load(Assets.getText("assets/tile-defs.xml"),
                                    graphics);
 
-    var csv = 
-'1, 1, 1, 1, 1
- 1, land, 0, 0, 1
- 1, 0, 0, land, 1
- water, 0, 0, 0, 1
- 1, 1, 1, 1, water';
 
-    var chunk = TileChunk.loadCSV(csv, catalog);
+var csv =
+'0, 0, 0, 0, 0, 0
+ 0, 2, 2, 2, 2, 0
+ 0, 2, 0, 0, 2, 0
+ 0, 0, 0, 0, 0, 0
+ 0, 0, 0, 0, 0, 0
+ 0, 2, 2, 2, 2, 0
+ 0, 0, 0, 0, 0, 0
+ 0, 0, 0, 0, 0, 0
+ 1, 1, 1, 1, 1, 1
+';
+
+    /*
+    var csv = 
+'0, 0, 0, 0, 0, 0
+ 0, 2, 0, 0, 1, 0
+ 0, 0, 0, 0, 0, 0';
+    */
+
+    /*
+    var csv = 
+'0, 0, 0, 0, 0, 0
+ 0, 2, 2, 2, 2, 0
+ 0, 2, 2, 2, 2, 0
+ 0, 2, 2, 2, 2, 0
+ 0, 0, 0, 0, 0, 0';
+    */
+
+    /*
+    var csv = 
+'0, 0, 0, 0, 0, 0
+ 0, 1, 1, 1, 1, 0
+ 0, 1, 1, 1, 1, 0
+ 0, 1, 1, 1, 1, 0
+ 0, 0, 0, 0, 0, 0';
+   */
+
+    /*
+    var csv = 
+'1, 1, 1, 1, 1, 1
+ 1, 0, 0, 0, 0, 1
+ 1, 0, 0, 0, 0, 1
+ 1, 0, 0, 0, 0, 1
+ 1, 1, 1, 1, 1, 1';
+    */
+
+    /*
+    var csv = 
+'15, 15, 15, 15, 15, 15, 15
+ 15, 7, 3, 3, 3, 11, 15
+ 15, 5, 0, 0, 0, 10, 15
+ 15, 5, 0, 0, 0, 10, 15
+ 15, 5, 0, 0, 0, 10, 15
+ 15, 13, 12, 12, 12, 14, 15
+ 15, 15, 15, 15, 15, 15, 15';
+    */
+
+    var chunk = TileChunk.loadCSV(catalog, csv);
 
     var tiledraw = new TileMapRenderer();
     tiledraw.map = chunk;

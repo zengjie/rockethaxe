@@ -126,6 +126,7 @@ class TileCatalog
 
 
     //-- Populate tiles
+    tileIndex = baseFrameIndex;
     for (tiles in root.nodes.tiles) {
       for (cmd in tiles.elements) {
         if (cmd.name == "tile") {

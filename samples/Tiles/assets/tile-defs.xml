@@ -13,16 +13,77 @@
   </collisionTags>
 
   <frames>
-    <grid label="land" x="0" y="0" columns="8" rows="8"  />
+    <grid label="land" x="0" y="0" columns="16" rows="2"  />
     <keyframe label="fire" frame="1" />
   </frames>
 
   <tiles>
-    <tile label="land"      frame="land" collision="land" />
-    <tile label="water"     frame="1"    collision="water" />
-    <tile label="deepwater" frame="3"    collision="water,deadly" />
-    <tile label="fire"      frame="fire" collision="4" />
-    <tile label="pit"       frame="5"    collision="pit" />
+    <!-- Reverse the tilemap so 1 is land in the auto-tiler -->
+
+    <!-- Sand/Water -->
+    <tile/>
+    <tile/>
+    <tile/>
+    <tile/>
+
+    <tile/>
+    <tile/>
+    <tile/>
+    <tile/>
+
+    <tile/>
+    <tile/>
+    <tile/>
+    <tile/>
+
+    <tile/>
+    <tile/>
+    <tile/>
+    <tile/>
+
+
+<!--
+    <tile frame="15"/>
+    <tile frame="14"/>
+    <tile frame="13"/>
+    <tile frame="12"/>
+
+    <tile frame="11"/>
+    <tile frame="10"/>
+    <tile frame="9"/>
+    <tile frame="8"/>
+
+    <tile frame="7"/>
+    <tile frame="6"/>
+    <tile frame="5"/>
+    <tile frame="4"/>
+
+    <tile frame="3"/>
+    <tile frame="2"/>
+    <tile frame="1"/>
+    <tile frame="0"/>
+-->
+
+    <!-- Grass/Sand -->
+    <tile frame="0"/>
+    <tile frame="30"/>
+    <tile frame="29"/>
+    <tile frame="28"/>
+
+    <tile frame="27"/>
+    <tile frame="26"/>
+    <tile frame="25"/>
+    <tile frame="24"/>
+
+    <tile frame="23"/>
+    <tile frame="22"/>
+    <tile frame="21"/>
+    <tile frame="20"/>
+
+    <tile frame="19"/>
+    <tile frame="18"/>
+    <tile frame="17"/>
+    <tile frame="16"/>
   </tiles>
 
 </catalog>

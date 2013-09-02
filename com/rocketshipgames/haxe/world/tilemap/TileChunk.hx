@@ -31,7 +31,7 @@ class TileChunk {
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public static function loadCSV(csv:String, catalog:TileCatalog):TileChunk
+  public static function loadCSV(catalog:TileCatalog, csv:String):TileChunk
   {
     var chunk = new TileChunk(catalog);
     chunk.parseCSV(csv);
@@ -42,13 +42,18 @@ class TileChunk {
   //--------------------------------------------------------------------
   public function parseCSV(csv:String):Void
   {
+    csv = StringTools.trim(csv);
 
     var col:Int, r:Int = 0;
+
+    var map = new Array<Array<Int>>();
 
     for (line in csv.split("\n")) {
       line = StringTools.trim(line);
 
       trace("Line " + line);
+
+      map[r] = new Array<Int>();
 
       col = 0;
       for (cell in line.split(",")) {
@@ -60,12 +65,19 @@ class TileChunk {
         var c = cell.charCodeAt(0);
         if (c >= "0".charCodeAt(0) &&
             c <= "9".charCodeAt(0)) {
-          tile = catalog.get(Std.parseInt(cell));
+          map[r][col] = Std.parseInt(cell);
+          //          tile = catalog.get(Std.parseInt(cell));
         } else {
-          tile = catalog.getByLabel(cell);
+          //          tile = catalog.getByLabel(cell);
         }
 
-        tiles.push(tile);
+        /*
+        if (tile == null) {
+          Debug.error("Tile referenced by '" + cell + "' line " + r + 
+                      " column " + col + " was null.");
+        } else
+          tiles.push(tile);
+        */
 
         col++;
         // end looping columns
@@ -87,6 +99,62 @@ class TileChunk {
     #if verbose_tiles
       Debug.debug("TileChunk read " + columns + "x" + rows + " tiles");
     #end
+
+    var tile:Tile;
+    var bit:Int;
+
+    var bits = new Array<Array<Int>>();
+
+    for (row in 0...rows) {
+      bits[row] = new Array<Int>();
+      for (col in 0...columns) {
+        bits[row][col] = 0;
+      }
+    }
+
+    for (row in 0...rows) {
+      for (col in 0...columns) {
+        if (map[row][col] != 0) {
+          var index = 0;
+          if (map[row][col] > 1)
+            index = 16 << (map[row][col]-2);
+
+          if (row > 0) {
+            if (col > 0) bits[row-1][col-1] |= 8|index;
+            bits[row-1][col] |= 4|8|index;
+            if (col < columns-1) bits[row-1][col+1] |= 4|index;
+          }
+
+          if (col > 0) bits[row][col-1] |= 2|8|index;
+          bits[row][col] |= 15|index;
+          if (col < columns-1) bits[row][col+1] |= 1|4|index;
+
+          if (row < rows-1) {
+            if (col > 0) bits[row+1][col-1] |= 2|index;
+            bits[row+1][col] |= 1|2|index;
+            if (col < columns-1) bits[row+1][col+1] |= 1|index;
+          }
+
+        }
+
+        // end looping columns
+      }
+    }
+
+    for (row in 0...rows) {
+      for (col in 0...columns) {
+
+
+        tile = catalog.get(bits[row][col]);
+
+        if (tile == null) {
+          Debug.error("Tile referenced by '" + map[row][col] + "' line " + r + 
+                      " column " + col + " was null.");
+        } else
+          tiles.push(tile);
+
+      }
+    }
 
     // end parseCSV
   }
