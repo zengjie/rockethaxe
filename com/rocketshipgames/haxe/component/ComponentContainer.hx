@@ -168,6 +168,19 @@ class ComponentContainer
     // end add
   }
 
+  public function insert(component:Component):ComponentHandle
+  {
+    var containerHandle = new ComponentHandle(this, component);
+
+    var listHandle = components.insert(containerHandle);
+    containerHandle.listHandle = listHandle;
+
+    component.attach(containerHandle);
+
+    return containerHandle;
+    // end add
+  }
+
   public function remove(handle:ComponentHandle):Void
   {
     components.remove(handle.listHandle);

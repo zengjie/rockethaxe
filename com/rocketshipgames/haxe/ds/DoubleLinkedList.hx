@@ -58,6 +58,26 @@ class DoubleLinkedList<T>
     // end add
   }
 
+  //----------------------------------------------------
+  public function insert(item:T):DoubleLinkedListHandle<T>
+  {
+    var handle = handlePool.newObject({list: this, item: item});
+
+    if (tail == null)
+      tail = handle;
+
+    handle.next = head;
+    head = handle;
+
+    handle.prev = null;
+
+    count++;
+
+    return handle;
+    // end add
+  }
+
+  //----------------------------------------------------
   public function remove(handle:DoubleLinkedListHandle<T>):Void
   {
 
