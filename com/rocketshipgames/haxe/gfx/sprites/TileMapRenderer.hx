@@ -34,12 +34,12 @@ class TileMapRenderer
     var x:Int, y:Int;
 
     y = 0;
-    while (y < map.height) {
+    while (y < map.rows) {
 
       x = 0;
-      while (x < map.width) {
+      while (x < map.columns) {
         container.drawFrame(x*map.catalog.width, y*map.catalog.height,
-                            map.tiles[(y*map.width)+x].frame);
+                            map.tiles[(y*map.columns)+x].frame);
         x++;
       }
 

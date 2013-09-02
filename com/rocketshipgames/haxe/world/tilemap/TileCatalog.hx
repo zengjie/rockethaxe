@@ -67,6 +67,11 @@ class TileCatalog
     return tiles[tile];
   }
 
+  public function getByLabel(tile:String):Tile
+  {
+    return tileLabels.get(tile);
+  }
+
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
   public function parse(descriptor:String):Void
@@ -239,7 +244,7 @@ class TileCatalog
             c <= "9".charCodeAt(0)) {
           collidesAs |= Std.parseInt(t);
         } else {
-          collidesAs |= collisionTags.get(t);
+          collidesAs |= collisionTags.get(StringTools.trim(t));
         }
       }
     }

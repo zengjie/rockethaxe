@@ -9,7 +9,7 @@
     <land />
     <water />
     <deadly />
-    <pit code="8" />
+    <pit code="32" />
   </collisionTags>
 
   <frames>

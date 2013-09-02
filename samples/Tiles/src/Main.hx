@@ -41,7 +41,15 @@ class Main
     var catalog = TileCatalog.load(Assets.getText("assets/tile-defs.xml"),
                                    graphics);
 
-    var chunk = new TileChunk(catalog);
+    var csv = 
+'1, 1, 1, 1, 1
+ 1, land, 0, 0, 1
+ 1, 0, 0, land, 1
+ water, 0, 0, 0, 1
+ 1, 1, 1, 1, water';
+
+    var chunk = TileChunk.loadCSV(csv, catalog);
+
     var tiledraw = new TileMapRenderer();
     tiledraw.map = chunk;
     //    tiledraw.add(chunk);
