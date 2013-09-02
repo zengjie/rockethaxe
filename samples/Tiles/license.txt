@@ -1,5 +1,11 @@
 
-The tiles in assets/water-tiles.png were created by yd and released
-into the public domain.  They're available from OpenGameArt:
+The tiles in assets/RPGTiles.png were created by Robotality and
+released under a Creative Commons Attribution+Share Alike license:
 
-       http://opengameart.org/content/top-down-simple-tile-sets
+  http://creativecommons.org/licenses/by-sa/3.0/
+
+They were published on OpenGameArt:
+  http://opengameart.org/content/prototyping-2d-pixelart-tilesets
+
+Check out more of Robotality's stuff on their website at:
+  http://robotality.com/
