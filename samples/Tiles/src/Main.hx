@@ -40,26 +40,6 @@ class Main
     //-- mechanics, etc), renders graphics, pauses on unfocus, etc.
     game = new ArcadeScreen();
 
-    Mouse.enable();
-    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN,
-                          function(e:MouseEvent):Void { dragging = true;
-                            mx = e.localX; my = e.localY; });
-    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP,
-                          function(e:MouseEvent):Void { dragging = false; });
-    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE,
-                          function(e:MouseEvent):Void {
-                            if (dragging) {
-                              // These are substractions because we
-                              // move the viewport in the opposite
-                              // direction, as if dragging the map as
-                              // opposed to moving the view.
-                              game.viewport.x -= e.localX-mx;
-                              game.viewport.y -= e.localY-my;
-                              mx = e.localX;
-                              my = e.localY;
-                            }
-                          });
-
     var codes = [
                  { code: 16, label: "surrounded" },
                  { code: 1, label: "top" },
@@ -101,15 +81,30 @@ class Main
 
 
 var csv =
-'0, 0, 0, 0, 0, 0
- 0, 2, 2, 2, 2, 0
- 0, 2, 0, 0, 2, 0
- 0, 0, 0, 0, 0, 0
- 0, 0, 0, 0, 0, 0
- 0, 2, 2, 2, 2, 0
- 0, 0, 0, 0, 0, 0
- 0, 0, 0, 0, 0, 0
- 1, 1, 1, 1, 1, 1
+'1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 ';
 
     /*
@@ -163,6 +158,44 @@ var csv =
     tiledraw.map = chunk;
     //    tiledraw.add(chunk);
     graphics.addRenderer(tiledraw);
+
+    game.viewport.x = ((chunk.right()-chunk.left()) - game.viewport.width)/2;
+    game.viewport.y = ((chunk.bottom()-chunk.top()) - game.viewport.height)/2;
+
+    Mouse.enable();
+    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN,
+                          function(e:MouseEvent):Void { dragging = true;
+                            mx = e.localX; my = e.localY; });
+    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP,
+                          function(e:MouseEvent):Void { dragging = false; });
+    flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE,
+                          function(e:MouseEvent):Void {
+                            if (dragging) {
+                              // These are substractions because we
+                              // move the viewport in the opposite
+                              // direction, as if dragging the map as
+                              // opposed to moving the view.
+                              game.viewport.x -= e.localX-mx;
+
+                              if (game.viewport.x < chunk.left())
+                                game.viewport.x = chunk.left();
+
+                              if (game.viewport.x > chunk.right()-game.viewport.width)
+                                game.viewport.x = chunk.right() - game.viewport.width;
+
+                              game.viewport.y -= e.localY-my;
+
+                              if (game.viewport.y < chunk.top())
+                                game.viewport.y = chunk.top();
+
+                              if (game.viewport.y > chunk.bottom()-game.viewport.height)
+                                game.viewport.y = chunk.bottom() - game.viewport.height;
+
+
+                              mx = e.localX;
+                              my = e.localY;
+                            }
+                          });
 
     //-- Add the game to the display.  In a real game this would be
     //-- done using ScreenManager to transition between menus, etc.

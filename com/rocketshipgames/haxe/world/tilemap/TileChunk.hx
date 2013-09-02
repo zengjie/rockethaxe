@@ -3,7 +3,9 @@ package com.rocketshipgames.haxe.world.tilemap;
 import com.rocketshipgames.haxe.debug.Debug;
 
 
-class TileChunk {
+class TileChunk
+  implements com.rocketshipgames.haxe.physics.Extent2D
+{
 
   public var catalog(default,null):TileCatalog;
 
@@ -29,6 +31,15 @@ class TileChunk {
     // end new
   }
 
+
+  //--------------------------------------------------------------------
+  //--------------------------------------------------------------------
+  public function left():Float   { return x; }
+  public function right():Float  { return x + (columns * catalog.width); }
+  public function top():Float    {return y; }
+  public function bottom():Float { return y + (rows * catalog.height); }
+
+
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
   public static function loadCSV(catalog:TileCatalog, csv:String):TileChunk
@@ -51,15 +62,11 @@ class TileChunk {
     for (line in csv.split("\n")) {
       line = StringTools.trim(line);
 
-      trace("Line " + line);
-
       map[r] = new Array<Int>();
 
       col = 0;
       for (cell in line.split(",")) {
         cell = StringTools.trim(cell);
-
-        trace("  Col " + col + " " + cell);
 
         var tile:Tile;
         var c = cell.charCodeAt(0);

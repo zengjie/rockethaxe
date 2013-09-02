@@ -21,12 +21,7 @@
     <!-- Reverse the tilemap so 1 is land in the auto-tiler -->
 
     <!-- Sand/Water -->
-    <tile/>
-    <tile/>
-    <tile/>
-    <tile/>
-
-    <tile/>
+    <tile label="sand" />
     <tile/>
     <tile/>
     <tile/>
@@ -40,6 +35,11 @@
     <tile/>
     <tile/>
     <tile/>
+
+    <tile/>
+    <tile/>
+    <tile/>
+    <tile label="water" />
 
 
 <!--
@@ -65,7 +65,7 @@
 -->
 
     <!-- Grass/Sand -->
-    <tile frame="0"/>
+    <tile frame="31" label="unused" />
     <tile frame="30"/>
     <tile frame="29"/>
     <tile frame="28"/>
@@ -83,7 +83,7 @@
     <tile frame="19"/>
     <tile frame="18"/>
     <tile frame="17"/>
-    <tile frame="16"/>
+    <tile frame="16" label="grass" />
   </tiles>
 
 </catalog>
