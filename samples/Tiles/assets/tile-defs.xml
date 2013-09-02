@@ -1,4 +1,9 @@
-<tiles label="Demo Tiles" width="32" height="32">
+<catalog title="Demo Tiles" width="32" height="32">
+
+  <!--
+      The TileCatalog XML format is described here:
+      https://code.google.com/p/rockethaxe/wiki/TileCatalog
+  -->
 
   <collisionTags>
     <land />
@@ -7,22 +12,17 @@
     <pit code="8" />
   </collisionTags>
 
-  <!--
-      There are separate blocks for frames and tiles so that they may
-      be logically reorganized.  I.e., so the actual bitmap doesn't
-      have to be manually rearranged to follow auto-tiling
-      conventions, the tile -> frame mapping defined here does it.
-  -->
-
   <frames>
     <grid label="land" x="0" y="0" columns="8" rows="8"  />
+    <keyframe label="fire" frame="1" />
   </frames>
 
   <tiles>
     <tile label="land"      frame="land" collision="land" />
     <tile label="water"     frame="1"    collision="water" />
     <tile label="deepwater" frame="3"    collision="water,deadly" />
-    <tile label="fire"      frame="2"    collision="4" />
+    <tile label="fire"      frame="fire" collision="4" />
     <tile label="pit"       frame="5"    collision="pit" />
   </tiles>
-</tiles>
+
+</catalog>

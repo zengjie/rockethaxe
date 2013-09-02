@@ -5,13 +5,19 @@ import com.rocketshipgames.haxe.debug.Debug;
 import com.rocketshipgames.haxe.gfx.sprites.SpritesheetContainer;
 
 
+/**
+ * The XML format parsed by the TileCatalog is described here:
+ *   https://code.google.com/p/rockethaxe/wiki/TileCatalog
+ */
+
+
 class TileCatalog
 {
 
   public var spritesheet(default,null):SpritesheetContainer;
   public var frameCount(default,null):Int;
 
-  public var label(default,null):String;
+  public var title(default,null):String;
   public var width(default,null):Int;
   public var height(default,null):Int;
 
@@ -32,7 +38,7 @@ class TileCatalog
   {
 
     this.spritesheet = spritesheet;
-    this.label = "unnamed";
+    this.title = "unnamed";
 
     tiles = new Array();
 
@@ -69,7 +75,7 @@ class TileCatalog
     var root = new haxe.xml.Fast(Xml.parse(descriptor).firstElement());
 
     //-- Get the basic properties, namely width and height
-    if (root.has.label) label = root.att.label;
+    if (root.has.title) title = root.att.title;
 
     if (root.has.width)
       width = Std.parseInt(root.att.width);
@@ -82,7 +88,7 @@ class TileCatalog
       Debug.error("Tilesheet has no tile height.");
 
     #if verbose_tiles
-      Debug.debug("Tileset " + label + " w,h " + width + "," + height);
+      Debug.debug("Tileset " + title + " w,h " + width + "," + height);
     #end
 
 
@@ -98,6 +104,8 @@ class TileCatalog
 
         if (cmd.name == "grid")
           parseGrid(cmd);
+        else if (cmd.name == "keyframe")
+          parseKeyframe(cmd);
 
         // end looping frame commands
       }
@@ -184,6 +192,26 @@ class TileCatalog
     #end
     // end parseGrid
   }
+
+  private function parseKeyframe(cmd:haxe.xml.Fast):Void
+  {
+    if (!cmd.has.label) {
+      Debug.error("Keyframe does not have a label.");
+      return;
+    }
+
+    var frame:Int = tileIndex;
+    if (cmd.has.frame) frame = Std.parseInt(cmd.att.frame);
+
+    frameLabels.set(cmd.att.label, frame);
+
+    #if verbose_tiles
+      Debug.debug("  Keyframe " +  cmd.att.label + " frame " + frame);
+    #end
+
+    // end parseKeyframe
+  }
+
 
   //----------------------------------------------------
   private function parseTile(cmd:haxe.xml.Fast):Void
