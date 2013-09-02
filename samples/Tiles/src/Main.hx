@@ -7,6 +7,7 @@ import flash.events.MouseEvent;
 import com.rocketshipgames.haxe.ArcadeScreen;
 
 import com.rocketshipgames.haxe.device.Mouse;
+import com.rocketshipgames.haxe.device.Keyboard;
 
 import com.rocketshipgames.haxe.gfx.sprites.SpritesheetContainer;
 
@@ -14,6 +15,12 @@ import com.rocketshipgames.haxe.world.tilemap.TileCatalog;
 import com.rocketshipgames.haxe.world.tilemap.TileChunk;
 
 import com.rocketshipgames.haxe.gfx.sprites.TileMapRenderer;
+
+import com.rocketshipgames.haxe.physics.Kinematics2DComponent;
+import com.rocketshipgames.haxe.world.behaviors.ViewportTrackerComponent;
+
+import com.rocketshipgames.haxe.component.Component;
+import com.rocketshipgames.haxe.component.ComponentHandle;
 
 
 class Main
@@ -197,6 +204,34 @@ var csv =
                             }
                           });
 
+
+
+    var sprites = new com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer(game);
+    game.addGraphicsContainer(sprites);
+
+
+    var walker = new com.rocketshipgames.haxe.component.ComponentContainer();
+
+    walker.add(Kinematics2DComponent.create
+               ({  x: (chunk.right()-chunk.left())/2,
+                   y: (chunk.bottom()-chunk.top())/2,
+                   xvel: 0, yvel: 0,
+                   xvelMin: 2, yvelMin: 2,
+                   xvelMax: 250, yvelMax: 250,
+                   ydrag: 5000, xdrag: 5000}));
+
+    walker.insert(new WalkerKeyboard(game));
+
+    var shape = new flash.display.Shape();
+    shape.graphics.beginFill(0xFF0000);
+    shape.graphics.drawRect(0, 0, 25, 25);
+    shape.graphics.endFill();
+    walker.add(new com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent(shape));
+    walker.add(ViewportTrackerComponent.create(game.viewport));
+
+    sprites.add(walker);
+    game.world.entities.add(walker);
+
     //-- Add the game to the display.  In a real game this would be
     //-- done using ScreenManager to transition between menus, etc.
     flash.Lib.current.addChild(game);
@@ -205,4 +240,56 @@ var csv =
   }
 
   // end Main
+}
+
+
+private class WalkerKeyboard
+  implements com.rocketshipgames.haxe.component.Component
+{
+
+  private var kinematics:Kinematics2DComponent;
+
+  private var game:ArcadeScreen;
+
+
+  public function new(game:ArcadeScreen):Void
+  {
+    this.game = game;
+  }
+
+  public function attach(container:ComponentHandle):Void
+  {
+    kinematics = cast(container.find(Kinematics2DComponent.CID),
+                      Kinematics2DComponent);
+  }
+
+  public function detach():Void
+  {
+  }
+
+  public function activate(?opts:Dynamic):Void
+  {
+  }
+  public function deactivate():Void
+  {
+  }
+
+  public function update(elapsed:Int):Void
+  {
+    kinematics.xacc = kinematics.yacc = 0.0;
+
+    if (Keyboard.isKeyDown(Keyboard.RIGHT))
+      kinematics.xacc = 1000;
+    else if (Keyboard.isKeyDown(Keyboard.LEFT))
+      kinematics.xacc = -1000;
+
+    if (Keyboard.isKeyDown(Keyboard.UP))
+      kinematics.yacc = -1000;
+    else if (Keyboard.isKeyDown(Keyboard.DOWN))
+      kinematics.yacc = 1000;
+
+    // end update
+  }
+
+  // end WalkerKeyboard
 }

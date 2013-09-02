@@ -2,6 +2,7 @@ package com.rocketshipgames.haxe;
 
 import flash.display.Bitmap;
 import flash.events.Event;
+import flash.events.KeyboardEvent;
 
 import com.rocketshipgames.haxe.debug.Debug;
 
@@ -11,6 +12,8 @@ import com.rocketshipgames.haxe.gfx.GraphicsContainer;
 import com.rocketshipgames.haxe.gfx.Viewport;
 
 import com.rocketshipgames.haxe.device.Display;
+
+import com.rocketshipgames.haxe.device.Keyboard;
 
 
 class ArcadeScreen
@@ -75,10 +78,8 @@ class ArcadeScreen
     stage.addEventListener(Event.ACTIVATE, onActivate);
     stage.addEventListener(Event.DEACTIVATE, onDeactivate);
 
-    /*
     stage.addEventListener(KeyboardEvent.KEY_DOWN, Keyboard.onKeyDown);
     stage.addEventListener(KeyboardEvent.KEY_UP, Keyboard.onKeyUp);
-    */
 
     // end new
   }
@@ -93,10 +94,8 @@ class ArcadeScreen
     stage.removeEventListener(Event.ACTIVATE, onActivate);
     stage.removeEventListener(Event.DEACTIVATE, onDeactivate);
 
-    /*
     stage.removeEventListener(KeyboardEvent.KEY_DOWN, Keyboard.onKeyDown);
     stage.removeEventListener(KeyboardEvent.KEY_UP, Keyboard.onKeyUp);
-    */
 
     // end stop
   }
