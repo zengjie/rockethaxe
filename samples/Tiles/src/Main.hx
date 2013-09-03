@@ -220,11 +220,11 @@ var csv =
                    xvelMax: 250, yvelMax: 250,
                    ydrag: 5000, xdrag: 5000}));
 
-    walker.insert(new WalkerKeyboard(game));
+    walker.insert(new WalkerKeyboard());
 
     var shape = new flash.display.Shape();
     shape.graphics.beginFill(0xFF0000);
-    shape.graphics.drawRect(0, 0, 25, 25);
+    shape.graphics.drawRect(-12.5, -12.5, 25, 25);
     shape.graphics.endFill();
     walker.add(new com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent(shape));
     walker.add(ViewportTrackerComponent.create(game.viewport));
@@ -249,12 +249,9 @@ private class WalkerKeyboard
 
   private var kinematics:Kinematics2DComponent;
 
-  private var game:ArcadeScreen;
 
-
-  public function new(game:ArcadeScreen):Void
+  public function new():Void
   {
-    this.game = game;
   }
 
   public function attach(container:ComponentHandle):Void

@@ -16,7 +16,6 @@ class Bouncer
 
   var radius:Float;
   var mass:Float;
-  var rubber:Float;
 
   public function new():Void
   {
@@ -33,16 +32,13 @@ class Bouncer
     if (count % 2 <= 0) {
       radius = 50;
       mass = 10;
-      rubber = 0.8;
     } else {
       radius = 5;
       mass = 1;
-      rubber = 0.8;
     }
 
     var body = RigidBody2DComponent.newCircleBody(radius, 1, 1);
     body.mass = mass;
-    body.restitution = rubber;
     add(body);
 
     //-- Add a graphical Flash Shape representation to the Bouncer.
