@@ -75,6 +75,8 @@ class ComponentContainer
   public function detach():Void
   {
     container = null;
+    deactivate();
+    // end detach
   }
 
 

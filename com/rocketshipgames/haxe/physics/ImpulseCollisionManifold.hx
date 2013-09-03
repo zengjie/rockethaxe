@@ -43,11 +43,15 @@ class ImpulseCollisionManifold
     var impX = j * normX;
     var impY = j * normY;
 
-    a.kinematics.xvel -= (1/a.body.mass) * impX;
-    a.kinematics.yvel -= (1/a.body.mass) * impY;
+    if (!a.body.fixed) {
+      a.kinematics.xvel -= (1/a.body.mass) * impX;
+      a.kinematics.yvel -= (1/a.body.mass) * impY;
+    }
 
-    b.kinematics.xvel += (1/b.body.mass) * impX;
-    b.kinematics.yvel += (1/b.body.mass) * impY;
+    if (!b.body.fixed) {
+      b.kinematics.xvel += (1/b.body.mass) * impX;
+      b.kinematics.yvel += (1/b.body.mass) * impY;
+    }
 
 
     // Friction
@@ -84,11 +88,16 @@ class ImpulseCollisionManifold
         iy = ty * -j * df;
       }
 
-      a.kinematics.xvel -= (1/a.body.mass) * ix;
-      a.kinematics.yvel -= (1/a.body.mass) * iy;
+      if (!a.body.fixed) {
+        a.kinematics.xvel -= (1/a.body.mass) * ix;
+        a.kinematics.yvel -= (1/a.body.mass) * iy;
+      }
 
-      b.kinematics.xvel += (1/b.body.mass) * ix;
-      b.kinematics.yvel += (1/b.body.mass) * iy;
+      if (!b.body.fixed) {
+        b.kinematics.xvel += (1/b.body.mass) * ix;
+        b.kinematics.yvel += (1/b.body.mass) * iy;
+      }
+
     }
 
 
@@ -126,11 +135,16 @@ class ImpulseCollisionManifold
             "  Norm " + normX + "," + normY);
       */
 
-      a.kinematics.x -= (1/a.body.mass) * correctionX;
-      a.kinematics.y -= (1/a.body.mass) * correctionY;
+      if (!a.body.fixed) {
+        a.kinematics.x -= (1/a.body.mass) * correctionX;
+        a.kinematics.y -= (1/a.body.mass) * correctionY;
+      }
 
-      b.kinematics.x += (1/b.body.mass) * correctionX;
-      b.kinematics.y += (1/b.body.mass) * correctionY;
+      if (!b.body.fixed) {
+        b.kinematics.x += (1/b.body.mass) * correctionX;
+        b.kinematics.y += (1/b.body.mass) * correctionY;
+      }
+
     }
 
     // end apply

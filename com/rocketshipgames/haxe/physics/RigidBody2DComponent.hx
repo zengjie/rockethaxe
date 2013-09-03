@@ -48,6 +48,7 @@ class RigidBody2DComponent
   public var collidesAs:Int;
   public var collidesWith:Int;
 
+  public var fixed:Bool;
 
   //--------------------------------------------------------------------
   private function new():Void
@@ -58,6 +59,8 @@ class RigidBody2DComponent
 
     staticFriction = 0.3;
     dynamicFriction = 0.1;
+
+    fixed = false;
 
     // end new
   }
@@ -156,6 +159,10 @@ class RigidBody2DComponent
 
     if ((d = Reflect.field(opts, "collidesWith")) != null) {
       collidesWith = (Std.is(d, String)) ? Std.parseInt(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "fixed")) != null) {
+      fixed = (Std.is(d, String)) ? ((d=="true")?true:false) : d;
     }
 
     // end activate
