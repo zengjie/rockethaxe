@@ -21,9 +21,6 @@ class Main
   private var graphics:DisplayListGraphicsContainer;
 
 
-  private var bouncerCount:Int;
-
-
   //--------------------------------------------------------------------
   public function new():Void
   {
@@ -75,11 +72,10 @@ class Main
 
 
     //-- Schedule another Bouncer to be created in a second
-    if (bouncerCount < 12)
+    if (Bouncer.count < 18)
       game.world.scheduler.schedule(500, generateBouncer);
 
-    bouncerCount++;
-    trace(bouncerCount + " bouncers");
+    trace(Bouncer.count + " bouncers");
 
     // end generateBouncer
   }

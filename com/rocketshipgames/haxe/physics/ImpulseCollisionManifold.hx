@@ -108,8 +108,8 @@ class ImpulseCollisionManifold
 
 
     // Position correction
-    var percent:Float = 0.6;
-    var threshold:Float = 2;
+    var percent:Float = 0.8;
+    var threshold:Float = 1;
 
     if (penetration > threshold) {
       var correctionX = ((penetration - threshold) /

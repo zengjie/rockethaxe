@@ -65,7 +65,8 @@ class RigidBody2DComponent
   //----------------------------------------------------
   public static function newCircleBody(radius:Float,
                                        collidesAs:Int,
-                                       collidesWith:Int):RigidBody2DComponent
+                                       collidesWith:Int,
+                                       ?opts:Dynamic):RigidBody2DComponent
   {
     var x = new RigidBody2DComponent();
     x.type = RIGID_CIRCLE;
@@ -78,6 +79,8 @@ class RigidBody2DComponent
     x.collidesAs = collidesAs;
     x.collidesWith = collidesWith;
 
+    x.activate(opts);
+
     return x;
     // end newCircleBody
   }
@@ -85,16 +88,21 @@ class RigidBody2DComponent
   //----------------------------------------------------
   public static function newBoxBody(width:Float, height:Float,
                                     collidesAs:Int,
-                                    collidesWith:Int):RigidBody2DComponent
+                                    collidesWith:Int,
+                                    ?opts:Dynamic):RigidBody2DComponent
   {
     var x = new RigidBody2DComponent();
     x.type = RIGID_BOX;
+
+    x.radius = -1;
 
     x.width = width;
     x.height = height;
 
     x.collidesAs = collidesAs;
     x.collidesWith = collidesWith;
+
+    x.activate(opts);
 
     return x;
     // end newBoxBody
@@ -119,7 +127,39 @@ class RigidBody2DComponent
 
 
   //----------------------------------------------------
-  public function activate(?opts:Dynamic):Void {}
+  public function activate(?opts:Dynamic):Void
+  {
+    if (opts == null)
+      return;
+
+    var d:Dynamic;
+
+    if ((d = Reflect.field(opts, "mass")) != null) {
+      mass = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "restitution")) != null) {
+      restitution = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "staticFriction")) != null) {
+      staticFriction = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "dynamicFriction")) != null) {
+      dynamicFriction = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "collidesAs")) != null) {
+      collidesAs = (Std.is(d, String)) ? Std.parseInt(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "collidesWith")) != null) {
+      collidesWith = (Std.is(d, String)) ? Std.parseInt(d) : d;
+    }
+
+    // end activate
+  }
 
   public function deactivate():Void {}
 
@@ -141,6 +181,7 @@ class RigidBody2DComponent
         return checkCircleVsCircle(b, manifold);
 
       case RIGID_BOX:
+        return checkCircleVsBox(b, manifold);
 
       //default:
       //Debug.error("Circle rigid body cannot be compared to type " + b.type);
@@ -149,8 +190,10 @@ class RigidBody2DComponent
     case RIGID_BOX:
       switch (b.type) {
       case RIGID_CIRCLE:
+        return checkBoxVsCircle(b, manifold);
 
       case RIGID_BOX:
+        return checkBoxVsBox(b, manifold);
 
       //default:
       //Debug.error("Circle rigid body cannot be compared to type " + b.type);
@@ -176,7 +219,7 @@ class RigidBody2DComponent
     var distSqr = (normX * normX) + (normY * normY);
     var abradius = b.radius + radius;
 
-    if (distSqr >= abradius * abradius)
+    if (distSqr > abradius * abradius)
       return false;
 
     var dist = Math.sqrt(distSqr);
@@ -184,7 +227,7 @@ class RigidBody2DComponent
     if (dist == 0) {
       manifold.penetration = radius;
       manifold.normX = 0;
-      manifold.normY = 1;
+      manifold.normY = -1;
     } else {
       manifold.penetration = abradius - dist;  // Guaranteed to be positive
       manifold.normX = normX / dist;
@@ -196,6 +239,157 @@ class RigidBody2DComponent
     // end checkCircleVsCircle
   }
 
+  //----------------------------------------------------
+  private function checkCircleVsBox(b:RigidBody2DComponent,
+                                    manifold:ImpulseCollisionManifold):Bool
+  {
+
+    var closestX = clamp(position.x, b.left(), b.right());
+    var closestY = clamp(position.y, b.top(), b.bottom());
+
+    var inside = false;
+    if (closestX == position.x && closestY == position.y) {
+      inside = true;
+
+      if (Math.abs(b.position.x - position.x) >
+          Math.abs(b.position.y - position.y)) {
+
+        if (position.x - b.left() > b.right()-position.x)
+          closestX = b.right();
+        else
+          closestX = b.left();
+
+      } else {
+
+        if (position.y - b.top() > b.bottom()-position.y)
+          closestY = b.bottom();
+        else
+          closestY = b.top();
+
+      }
+
+      // end inside
+    }
+
+
+    var dx = position.x - closestX;
+    var dy = position.y - closestY;
+
+    var distSqr = (dx * dx) + (dy * dy);
+
+    if (!inside && distSqr > radius*radius)
+      return false;
+
+    var d = Math.sqrt(distSqr);
+
+    if (d != 0) {
+      manifold.penetration = radius-d;
+      manifold.normX = -dx/d;
+      manifold.normY = -dy/d;
+
+      if (inside) {
+        manifold.normX *= -1;
+        manifold.normY *=-1;
+        manifold.penetration = d;
+      }
+
+    } else {
+      manifold.penetration = radius;
+      manifold.normX = 0;
+      manifold.normY = -1;
+    }
+
+    /*
+    trace("Hit circle " + position.x + "," + position.y + 
+          " box " + b.position.x + "," + b.position.y +
+          "  closest " + closestX + "," + closestY +
+          "  norm " + manifold.normX + "," + manifold.normY +
+          "  d " + d +
+          "  pen " + manifold.penetration);
+    */
+
+    return true;
+
+    // end checkCircleVsBox
+  }
+
+  //----------------------------------------------------
+  private function checkBoxVsCircle(b:RigidBody2DComponent,
+                                    manifold:ImpulseCollisionManifold):Bool
+  {
+    if (!b.checkCircleVsBox(this, manifold))
+      return false;
+
+    manifold.normX *= -1;
+    manifold.normY *= -1;
+
+    return true;
+    // end checkBoxVsCircle
+  }
+
+  //----------------------------------------------------
+  private function checkBoxVsBox(b:RigidBody2DComponent,
+                                 manifold:ImpulseCollisionManifold):Bool
+  {
+
+    var normX = b.position.x - position.x;
+    var normY = b.position.y - position.y;
+
+    var overlapX = (width/2) + (b.width/2) - Math.abs(normX);
+    if (overlapX < 0)
+      return false;
+
+    var overlapY = (height/2) + (b.height/2) - Math.abs(normY);
+    if (overlapY < 0)
+      return false;
+
+    if (overlapX < overlapY) {
+
+      if (normX < 0)
+        manifold.normX = -1;
+      else
+        manifold.normX = 1;
+
+      manifold.normY = 0;
+      manifold.penetration = overlapX;
+
+    } else {
+
+      if (normY <= 0)
+        manifold.normY = -1;
+      else
+        manifold.normY = 1;
+
+      manifold.normX = 0;
+      manifold.penetration = overlapY;
+
+    }
+
+    /*
+    trace(" a " + position.x + "," + position.y +
+          " b " + b.position.x + "," + b.position.y +
+          " norm " + normX + "," + normY +
+          " overlap " + overlapX + "," + overlapY +
+          " norm " + manifold.normX + "," + manifold.normY +
+          " pen " + manifold.penetration);
+    */
+
+    return true;
+
+    // end checkBoxVsBox
+  }
+
+  private function clamp(x:Float, min:Float, max:Float):Float
+  {
+    if (x > max)
+      return max;
+
+    if (x < min)
+      return min;
+
+    return x;
+    // end clamp
+  }
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
