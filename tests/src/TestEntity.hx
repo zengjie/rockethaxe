@@ -8,7 +8,8 @@ import com.rocketshipgames.haxe.component.SignalDispatcher;
 import com.rocketshipgames.haxe.component.StateKeeper;
 import com.rocketshipgames.haxe.component.State;
 import com.rocketshipgames.haxe.component.Scheduler;
-
+import com.rocketshipgames.haxe.component.SignalID;
+import com.rocketshipgames.haxe.component.StateID;
 
 class TestEntity
 {
@@ -28,8 +29,8 @@ class TestEntity
 
     trace("Testing state keeper");
     var keeper = world.states;
-    keeper.add("feeling", new TestState());
-    trace("Feeling " + keeper.getValue("feeling"));
+    keeper.addByID("feeling", new TestState());
+    trace("Feeling " + keeper.getValue(StateKeeper.hashID("feeling")));
 
 
     trace("Testing scheduler");
@@ -111,12 +112,12 @@ class TestState
   {
   }
 
-  public function getValue(id:String):Dynamic
+  public function getValue(id:StateID):Dynamic
   {
     return "happy";
   }
 
-  public function remove(id:String):Void
+  public function remove(id:StateID):Void
   {
   }
 
