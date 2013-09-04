@@ -2,12 +2,11 @@ package;
 
 import com.rocketshipgames.haxe.ArcadeScreen;
 
-import com.rocketshipgames.haxe.physics.RigidBodyImpulseCollisionContainer;
+import com.rocketshipgames.haxe.physics.impulse.ImpulseCollisionContainer;
 
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer;
 
-import com.rocketshipgames.haxe.physics.Kinematics2DComponent;
-import com.rocketshipgames.haxe.physics.RigidBody2DComponent;
+import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent;
 
 import com.rocketshipgames.haxe.device.Display;
@@ -19,7 +18,7 @@ class Main
 
   private var game:ArcadeScreen;
 
-  private var collisionGroup:RigidBodyImpulseCollisionContainer;
+  private var collisionGroup:ImpulseCollisionContainer;
 
   private var graphics:DisplayListGraphicsContainer;
 
@@ -37,7 +36,7 @@ class Main
     game = new ArcadeScreen();
 
     //-- Create the container to collectively collide all the bouncers
-    collisionGroup = new RigidBodyImpulseCollisionContainer();
+    collisionGroup = new ImpulseCollisionContainer();
     game.world.mechanics.add(collisionGroup);
 
     //-- Create the container for the bouncers' graphics.  It takes a
@@ -121,15 +120,15 @@ class Main
     var bar = new com.rocketshipgames.haxe.component.ComponentContainer();
 
     //-- Add basic position and movement
-    bar.add(Kinematics2DComponent.create
-        ({ x: Display.width/2, y: 552,
-            xvel: 0, yvel: 0,
-            xvelMin: 2, yvelMin: 2}));
-
-
-    bar.add(RigidBody2DComponent.newBoxBody(320, 24, 1, 1,
-                                            { mass: 1000,
-                                             fixed: true}));
+    bar.add(RigidBody2DComponent.newBoxBody(320, 24,
+                                            {
+                                              x: Display.width/2, y: 552,
+                                                xvel: 0, yvel: 0,
+                                                xvelMin: 2, yvelMin: 2,
+                                                mass: 1000,
+                                                fixed: true,
+                                                collidesAs: 1, collidesWith: 1,
+                                                }));
 
     var shape = new flash.display.Shape();
     shape.graphics.lineStyle(1);

@@ -13,10 +13,13 @@ class PhysicsCapabilities
 {
 
   public static var CID_POSITION2D:CapabilityID =
-    ComponentContainer.hashID("position-2d");
+    ComponentContainer.hashID("cid_position2d");
+
+  public static var CID_KINEMATICS2D:CapabilityID =
+    ComponentContainer.hashID("cid_kinematics2d");
 
   public static var CID_EXTENT2D:CapabilityID =
-    ComponentContainer.hashID("extent-2d");
+    ComponentContainer.hashID("cid_extent2d");
 
   // end PhysicsCapabilities
 }

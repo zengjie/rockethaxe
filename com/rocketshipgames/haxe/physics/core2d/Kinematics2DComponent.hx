@@ -1,16 +1,15 @@
-package com.rocketshipgames.haxe.physics;
+package com.rocketshipgames.haxe.physics.core2d;
 
 import com.rocketshipgames.haxe.component.ComponentHandle;
+
+import com.rocketshipgames.haxe.physics.PhysicsCapabilities;
+import com.rocketshipgames.haxe.physics.Kinematics2D;
 
 
 class Kinematics2DComponent
   extends Position2DComponent
+  implements Kinematics2D
 {
-
-  public static var CID:
-    com.rocketshipgames.haxe.component.CapabilityID =
-    com.rocketshipgames.haxe.component.ComponentContainer.hashID("kinematics-2d");
-
 
   public var xvel:Float;
   public var xacc:Float;
@@ -56,6 +55,7 @@ class Kinematics2DComponent
 
   public override function activate(?opts:Dynamic):Void
   {
+
     super.activate(opts);
 
     if (opts == null)
@@ -104,13 +104,8 @@ class Kinematics2DComponent
     }
 
     active = true;
+
     // end init
-  }
-
-
-  public override function deactivate():Void
-  {
-    super.deactivate();
   }
 
 
@@ -118,18 +113,15 @@ class Kinematics2DComponent
   public override function attach(container:ComponentHandle):Void
   {
     super.attach(container);
-    container.claim(CID);
+    container.claim(PhysicsCapabilities.CID_KINEMATICS2D);
     // end attach
-  }
-
-  public override function detach():Void {
-    super.detach();
   }
 
 
   //------------------------------------------------------------------
   public override function update(millis:Int):Void
   {
+
     if (!active)
       return;
 
@@ -184,7 +176,6 @@ class Kinematics2DComponent
 
     // end update
   }
-
 
   // end class Kinematics2DComponent
 }

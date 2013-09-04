@@ -1,8 +1,11 @@
-package com.rocketshipgames.haxe.physics;
+package com.rocketshipgames.haxe.physics.core2d;
 
 import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
 import com.rocketshipgames.haxe.component.SignalDispatcher;
+
+import com.rocketshipgames.haxe.physics.Extent2D;
+import com.rocketshipgames.haxe.physics.Kinematics2D;
 
 
 enum Bounds2DSignalData {
@@ -19,11 +22,11 @@ class Bounds2DComponent
 
   public static var CID:
     com.rocketshipgames.haxe.component.CapabilityID =
-    com.rocketshipgames.haxe.component.ComponentContainer.hashID("bounds-2d");
+    com.rocketshipgames.haxe.component.ComponentContainer.hashID("cid_bounds2d");
 
   public static var SIG_BOUNDS2D:
     com.rocketshipgames.haxe.component.SignalID =
-    com.rocketshipgames.haxe.component.SignalDispatcher.hashID("bounds-2d");
+    com.rocketshipgames.haxe.component.SignalDispatcher.hashID("sig_bounds2d");
 
 
   //------------------------------------------------------------
@@ -42,7 +45,7 @@ class Bounds2DComponent
   //------------------------------------------------------------
   private var container:ComponentHandle;
 
-  private var kinematics:Kinematics2DComponent;
+  private var kinematics:Kinematics2D;
   private var extent:Extent2D;
 
   private var dispatcher:SignalDispatcher;
@@ -82,11 +85,10 @@ class Bounds2DComponent
     container.claim(CID);
 
     extent =
-      cast(container.find(PhysicsCapabilities.CID_EXTENT2D),
-           Extent2D);
+      cast(container.find(PhysicsCapabilities.CID_EXTENT2D), Extent2D);
 
     kinematics =
-      cast(container.find(Kinematics2DComponent.CID), Kinematics2DComponent);
+      cast(container.find(PhysicsCapabilities.CID_KINEMATICS2D), Kinematics2D);
 
     if (signal)
       enableSignal();

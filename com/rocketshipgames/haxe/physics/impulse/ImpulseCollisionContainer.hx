@@ -1,4 +1,4 @@
-package com.rocketshipgames.haxe.physics;
+package com.rocketshipgames.haxe.physics.impulse;
 
 import com.rocketshipgames.haxe.ds.DoubleLinkedList;
 
@@ -10,16 +10,16 @@ import com.rocketshipgames.haxe.ds.SweepScanBroadphase;
 import com.rocketshipgames.haxe.ds.SweepScanEntity;
 
 
-class RigidBodyImpulseCollisionContainer
+class ImpulseCollisionContainer
   implements Component
 {
 
-  @:allow(com.rocketshipgames.haxe.physics.RigidBodyImpulseComponent)
-  private var group:DoubleLinkedList<RigidBodyImpulseComponent>;
+  @:allow(com.rocketshipgames.haxe.physics.impulse.ImpulseComponent)
+  private var group:DoubleLinkedList<ImpulseComponent>;
 
-  private var broadphase:SweepScanBroadphase<RigidBodyImpulseComponent,Float>;
+  private var broadphase:SweepScanBroadphase<ImpulseComponent,Float>;
 
-  private var manifold:ImpulseCollisionManifold;
+  private var manifold:ImpulseManifold;
 
 
   //--------------------------------------------------------------------
@@ -28,7 +28,7 @@ class RigidBodyImpulseCollisionContainer
     group = new DoubleLinkedList();
     broadphase = new SweepScanBroadphase(resolveCollision, earlier);
 
-    manifold = new ImpulseCollisionManifold();
+    manifold = new ImpulseManifold();
     // end new
   }
 
@@ -67,15 +67,15 @@ class RigidBodyImpulseCollisionContainer
   //--------------------------------------------------------------------
   public function add(entity:ComponentContainer):Void
   {
-    entity.add(new RigidBodyImpulseComponent(this));
+    entity.add(new ImpulseComponent(this));
     // end add
   }
 
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function resolveCollision(a:RigidBodyImpulseComponent,
-                                   b:RigidBodyImpulseComponent):Void
+  public function resolveCollision(a:ImpulseComponent,
+                                   b:ImpulseComponent):Void
   {
     var aHit = a.body.collidesWith & b.body.collidesAs;
     var bHit = b.body.collidesWith & a.body.collidesAs;
@@ -87,13 +87,13 @@ class RigidBodyImpulseCollisionContainer
     if (!a.body.checkCollision(b.body, manifold))
       return;
 
-    manifold.a = a;
-    manifold.b = b;
+    manifold.a = a.body;
+    manifold.b = b.body;
 
     manifold.apply();
 
     // end resolveCollision
   }
 
-  // end RigidBodyImpulseCollisionContainer
+  // end ImpulseCollisionContainer
 }

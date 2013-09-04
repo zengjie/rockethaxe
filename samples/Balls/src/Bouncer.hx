@@ -2,12 +2,10 @@ package;
 
 import com.rocketshipgames.haxe.device.Display;
 
-import com.rocketshipgames.haxe.physics.Kinematics2DComponent;
-import com.rocketshipgames.haxe.physics.RigidBody2DComponent;
-
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent;
 
-import com.rocketshipgames.haxe.physics.Bounds2DComponent;
+import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
+import com.rocketshipgames.haxe.physics.core2d.Bounds2DComponent;
 
 
 class Bouncer
@@ -45,20 +43,22 @@ class Bouncer
         color = 0xFF0000;
     }
 
-    //-- Add basic position and movement
-    add(Kinematics2DComponent.create
-        ({ x: Display.width/2, y: -radius,
-            xvel: (Math.random()*400)-200, yvel: 0,
-            //xvel: 200, yvel: 0,
-            xvelMin: 2, yvelMin: 2,
-            yacc: 2000, xdrag: 20}));
+    var opts = 
+      { x: Display.width/2, y: -radius,
+        xvel: (Math.random()*400)-200, yvel: 0,
+        //xvel: 200, yvel: 0,
+        xvelMin: 2, yvelMin: 2,
+        yacc: 2000, xdrag: 20,
+        mass: mass,
+        collidesAs: SOLID, collidesWith: SOLID
+      };
 
 
     //-- Add descriptions of this object's physical and graphical shape
     if (count % 2 == 0) {
 
       //-- Every other shape is a circle
-      add(RigidBody2DComponent.newCircleBody(radius, SOLID, SOLID, {mass: mass}));
+      add(RigidBody2DComponent.newCircleBody(radius, opts));
 
       //-- Add a graphical Flash Shape representation to the Bouncer.
       //-- If there were more than one, e.g., for different panels on
@@ -73,7 +73,7 @@ class Bouncer
     } else {
 
       //-- And every other shape a box
-      add(RigidBody2DComponent.newBoxBody(radius*2, radius*2, 1, 1, {mass: mass}));
+      add(RigidBody2DComponent.newBoxBody(radius*2, radius*2, opts));
 
       var shape = new flash.display.Shape();
       shape.graphics.lineStyle(1);

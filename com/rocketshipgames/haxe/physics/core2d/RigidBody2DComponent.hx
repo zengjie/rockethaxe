@@ -1,8 +1,12 @@
-package com.rocketshipgames.haxe.physics;
+package com.rocketshipgames.haxe.physics.core2d;
 
 import com.rocketshipgames.haxe.debug.Debug;
 
+import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
+
+import com.rocketshipgames.haxe.physics.Extent2D;
+import com.rocketshipgames.haxe.physics.CollisionManifold2D;
 
 
 enum RigidBody2DType {
@@ -12,32 +16,23 @@ enum RigidBody2DType {
 
 
 class RigidBody2DComponent
+  extends Kinematics2DComponent
   implements Extent2D
-  implements com.rocketshipgames.haxe.component.Component
-             
 {
 
   public static var CID:
     com.rocketshipgames.haxe.component.CapabilityID =
-    com.rocketshipgames.haxe.component.ComponentContainer.hashID("rigid-body-2d");
+    com.rocketshipgames.haxe.component.ComponentContainer.hashID("cid_rigidbody2d");
 
 
   //------------------------------------------------------------
-  public var container(default, null):ComponentHandle;
-
   public var type(default,null):RigidBody2DType;
-
-  public var radius(default,null):Float;
 
   public var width(default,null):Float;
   public var height(default,null):Float;
 
-  public var position(default,null):Position2D;
-
-  /*
   public var offsetX:Float;
   public var offsetY:Float;
-  */
 
   public var mass:Float;
   public var restitution:Float;
@@ -51,8 +46,18 @@ class RigidBody2DComponent
   public var fixed:Bool;
 
   //--------------------------------------------------------------------
+  private var container:ComponentHandle;
+
+  private var radius:Float;
+
+
+  //--------------------------------------------------------------------
   private function new():Void
   {
+    super();
+
+    radius = width = height = 0.0;
+    offsetX = offsetY = 0.0;
 
     mass = 1.0;
     restitution = 0.8;
@@ -67,20 +72,14 @@ class RigidBody2DComponent
 
   //----------------------------------------------------
   public static function newCircleBody(radius:Float,
-                                       collidesAs:Int,
-                                       collidesWith:Int,
                                        ?opts:Dynamic):RigidBody2DComponent
   {
     var x = new RigidBody2DComponent();
     x.type = RIGID_CIRCLE;
 
     x.radius = radius;
-
     x.width = radius*2;
     x.height = radius*2;
-
-    x.collidesAs = collidesAs;
-    x.collidesWith = collidesWith;
 
     x.activate(opts);
 
@@ -90,20 +89,13 @@ class RigidBody2DComponent
 
   //----------------------------------------------------
   public static function newBoxBody(width:Float, height:Float,
-                                    collidesAs:Int,
-                                    collidesWith:Int,
                                     ?opts:Dynamic):RigidBody2DComponent
   {
     var x = new RigidBody2DComponent();
     x.type = RIGID_BOX;
 
-    x.radius = -1;
-
     x.width = width;
     x.height = height;
-
-    x.collidesAs = collidesAs;
-    x.collidesWith = collidesWith;
 
     x.activate(opts);
 
@@ -114,28 +106,36 @@ class RigidBody2DComponent
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function attach(container:ComponentHandle):Void
+  public override function attach(container:ComponentHandle):Void
   {
+    super.attach(container);
+
     this.container = container;
     container.claim(PhysicsCapabilities.CID_EXTENT2D);
     container.claim(CID);
 
-    position =
-      cast(container.find(PhysicsCapabilities.CID_POSITION2D), Position2D);
-
     // end attach
   }
 
-  public function detach():Void {}
-
 
   //----------------------------------------------------
-  public function activate(?opts:Dynamic):Void
+  public override function activate(?opts:Dynamic):Void
   {
+
+    super.activate(opts);
+
     if (opts == null)
       return;
 
     var d:Dynamic;
+
+    if ((d = Reflect.field(opts, "offsetX")) != null) {
+      offsetX = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
+
+    if ((d = Reflect.field(opts, "offsetY")) != null) {
+      offsetY = (Std.is(d, String)) ? Std.parseFloat(d) : d;
+    }
 
     if ((d = Reflect.field(opts, "mass")) != null) {
       mass = (Std.is(d, String)) ? Std.parseFloat(d) : d;
@@ -168,17 +168,11 @@ class RigidBody2DComponent
     // end activate
   }
 
-  public function deactivate():Void {}
-
-
-  //----------------------------------------------------
-  public function update(millis:Int):Void {}
-
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
   public function checkCollision(b:RigidBody2DComponent,
-                                 manifold:ImpulseCollisionManifold):Bool
+                                 manifold:CollisionManifold2D):Bool
   {
 
     switch (type) {
@@ -217,11 +211,11 @@ class RigidBody2DComponent
 
   //----------------------------------------------------
   private function checkCircleVsCircle(b:RigidBody2DComponent,
-                                       manifold:ImpulseCollisionManifold):Bool
+                                       manifold:CollisionManifold2D):Bool
   {
 
-    var normX = (b.position.x - position.x);
-    var normY = (b.position.y - position.y);
+    var normX = (b.x - x);
+    var normY = (b.y - y);
 
     var distSqr = (normX * normX) + (normY * normY);
     var abradius = b.radius + radius;
@@ -248,27 +242,27 @@ class RigidBody2DComponent
 
   //----------------------------------------------------
   private function checkCircleVsBox(b:RigidBody2DComponent,
-                                    manifold:ImpulseCollisionManifold):Bool
+                                    manifold:CollisionManifold2D):Bool
   {
 
-    var closestX = clamp(position.x, b.left(), b.right());
-    var closestY = clamp(position.y, b.top(), b.bottom());
+    var closestX = clamp(x, b.left(), b.right());
+    var closestY = clamp(y, b.top(), b.bottom());
 
     var inside = false;
-    if (closestX == position.x && closestY == position.y) {
+    if (closestX == x && closestY == y) {
       inside = true;
 
-      if (Math.abs(b.position.x - position.x) >
-          Math.abs(b.position.y - position.y)) {
+      if (Math.abs(b.x - x) >
+          Math.abs(b.y - y)) {
 
-        if (position.x - b.left() > b.right()-position.x)
+        if (x - b.left() > b.right()-x)
           closestX = b.right();
         else
           closestX = b.left();
 
       } else {
 
-        if (position.y - b.top() > b.bottom()-position.y)
+        if (y - b.top() > b.bottom()-y)
           closestY = b.bottom();
         else
           closestY = b.top();
@@ -279,8 +273,8 @@ class RigidBody2DComponent
     }
 
 
-    var dx = position.x - closestX;
-    var dy = position.y - closestY;
+    var dx = x - closestX;
+    var dy = y - closestY;
 
     var distSqr = (dx * dx) + (dy * dy);
 
@@ -307,8 +301,8 @@ class RigidBody2DComponent
     }
 
     /*
-    trace("Hit circle " + position.x + "," + position.y + 
-          " box " + b.position.x + "," + b.position.y +
+    trace("Hit circle " + x + "," + y + 
+          " box " + b.x + "," + b.y +
           "  closest " + closestX + "," + closestY +
           "  norm " + manifold.normX + "," + manifold.normY +
           "  d " + d +
@@ -322,7 +316,7 @@ class RigidBody2DComponent
 
   //----------------------------------------------------
   private function checkBoxVsCircle(b:RigidBody2DComponent,
-                                    manifold:ImpulseCollisionManifold):Bool
+                                    manifold:CollisionManifold2D):Bool
   {
     if (!b.checkCircleVsBox(this, manifold))
       return false;
@@ -336,11 +330,11 @@ class RigidBody2DComponent
 
   //----------------------------------------------------
   private function checkBoxVsBox(b:RigidBody2DComponent,
-                                 manifold:ImpulseCollisionManifold):Bool
+                                 manifold:CollisionManifold2D):Bool
   {
 
-    var normX = b.position.x - position.x;
-    var normY = b.position.y - position.y;
+    var normX = b.x - x;
+    var normY = b.y - y;
 
     var overlapX = (width/2) + (b.width/2) - Math.abs(normX);
     if (overlapX < 0)
@@ -373,8 +367,8 @@ class RigidBody2DComponent
     }
 
     /*
-    trace(" a " + position.x + "," + position.y +
-          " b " + b.position.x + "," + b.position.y +
+    trace(" a " + x + "," + y +
+          " b " + b.x + "," + b.y +
           " norm " + normX + "," + normY +
           " overlap " + overlapX + "," + overlapY +
           " norm " + manifold.normX + "," + manifold.normY +
@@ -386,15 +380,15 @@ class RigidBody2DComponent
     // end checkBoxVsBox
   }
 
-  private function clamp(x:Float, min:Float, max:Float):Float
+  private function clamp(v:Float, min:Float, max:Float):Float
   {
-    if (x > max)
+    if (v > max)
       return max;
 
-    if (x < min)
+    if (v < min)
       return min;
 
-    return x;
+    return v;
     // end clamp
   }
 
@@ -402,22 +396,22 @@ class RigidBody2DComponent
   //--------------------------------------------------------------------
   public function left():Float
   {
-    return position.x - width/2;
+    return x - width/2;
   }
 
   public function right():Float
   {
-    return position.x + width/2;
+    return x + width/2;
   }
 
   public function top():Float
   {
-    return position.y - height/2;
+    return y - height/2;
   }
 
   public function bottom():Float
   {
-    return position.y + height/2;
+    return y + height/2;
   }
 
   // end RigidBody2DComponent

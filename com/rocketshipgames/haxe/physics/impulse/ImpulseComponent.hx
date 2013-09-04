@@ -1,4 +1,4 @@
-package com.rocketshipgames.haxe.physics;
+package com.rocketshipgames.haxe.physics.impulse;
 
 import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 
@@ -6,22 +6,25 @@ import com.rocketshipgames.haxe.component.ComponentContainer;
 import com.rocketshipgames.haxe.component.ComponentHandle;
 import com.rocketshipgames.haxe.component.Component;
 
+import com.rocketshipgames.haxe.ds.SweepScanEntity;
 
-class RigidBodyImpulseComponent
+import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
+
+
+class ImpulseComponent
   implements Component
-  implements com.rocketshipgames.haxe.ds.SweepScanEntity<Float>
+  implements SweepScanEntity<Float>
 {
 
-  private var container:RigidBodyImpulseCollisionContainer;
+  private var container:ImpulseCollisionContainer;
   private var entity:ComponentHandle;
 
-  public var kinematics(default,null):Kinematics2DComponent;
+  private var handle:DoubleLinkedListHandle<ImpulseComponent>;
+
   public var body(default,null):RigidBody2DComponent;
 
-  private var handle:DoubleLinkedListHandle<RigidBodyImpulseComponent>;
 
-
-  public function new(container:RigidBodyImpulseCollisionContainer):Void
+  public function new(container:ImpulseCollisionContainer):Void
   {
     this.container = container;
   }
@@ -31,9 +34,6 @@ class RigidBodyImpulseComponent
   public function attach(entity:ComponentHandle):Void
   {
     this.entity = entity;
-
-    kinematics =
-      cast(entity.find(Kinematics2DComponent.CID), Kinematics2DComponent);
 
     body = cast(entity.find(RigidBody2DComponent.CID), RigidBody2DComponent);
 
@@ -67,5 +67,5 @@ class RigidBodyImpulseComponent
   public function begin():Float { return body.top(); }
   public function end():Float { return body.bottom(); }
 
-  // end RigidBodyImpulseComponent
+  // end ImpulseComponent
 }

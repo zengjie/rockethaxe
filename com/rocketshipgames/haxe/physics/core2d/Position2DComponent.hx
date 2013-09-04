@@ -1,7 +1,10 @@
-package com.rocketshipgames.haxe.physics;
+package com.rocketshipgames.haxe.physics.core2d;
 
 import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
+
+import com.rocketshipgames.haxe.physics.PhysicsCapabilities;
+import com.rocketshipgames.haxe.physics.Position2D;
 
 
 class Position2DComponent

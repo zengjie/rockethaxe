@@ -2,10 +2,10 @@ package;
 
 import com.rocketshipgames.haxe.device.Display;
 
-import com.rocketshipgames.haxe.physics.Kinematics2DComponent;
-import com.rocketshipgames.haxe.physics.RigidBody2DComponent;
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent;
-import com.rocketshipgames.haxe.physics.Bounds2DComponent;
+
+import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
+import com.rocketshipgames.haxe.physics.core2d.Bounds2DComponent;
 
 
 class Bouncer
@@ -24,17 +24,21 @@ class Bouncer
     super();
 
     //-- Add basic position and movement
-    add(Kinematics2DComponent.create
-        ({ x: x, y: y,
-            xvel: 0, yvel: 0,
-            xvelMin: 2, yvelMin: 2,
-            yacc: (gravity)?2000:0, xdrag: 20}));
+
+    var opts = {
+      x: x, y: y,
+      xvel: 0, yvel: 0,
+      xvelMin: 2, yvelMin: 2,
+      yacc: (gravity)?2000:0, xdrag: 20,
+      collidesAs: SOLID, collidesWith: SOLID,
+      mass: mass
+    };
 
 
     //-- Add descriptions of this object's physical and graphical shape
     if (type == CIRCLE) {
 
-      add(RigidBody2DComponent.newCircleBody(radius, SOLID, SOLID, {mass: mass}));
+      add(RigidBody2DComponent.newCircleBody(radius, opts));
 
       var shape = new flash.display.Shape();
       shape.graphics.lineStyle(1);
@@ -45,7 +49,7 @@ class Bouncer
 
     } else {
 
-      add(RigidBody2DComponent.newBoxBody(radius*2, radius*2, 1, 1, {mass: mass}));
+      add(RigidBody2DComponent.newBoxBody(radius*2, radius*2, opts));
 
       var shape = new flash.display.Shape();
       shape.graphics.lineStyle(1);
