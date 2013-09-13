@@ -6,10 +6,13 @@ import com.rocketshipgames.haxe.physics.impulse.ImpulseCollisionContainer;
 
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer;
 
+import com.rocketshipgames.haxe.physics.core2d.Bounds2DComponent;
 import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent;
 
 import com.rocketshipgames.haxe.device.Display;
+
+import Bouncer;
 
 
 class Main
@@ -74,44 +77,40 @@ class Main
 
     for (r in 0...rows) {
       for (c in 0...columns) {
-        generateBouncer(Bouncer.BOX, 25, 5,
-                        (c+1)*(Display.width/(columns+1)),
-                        (r+1)*(Display.height/(rows+1)));
+        addBouncer(Bouncer.createBox(50, 50,
+                                     { x: (c+1)*(Display.width/(columns+1)),
+                                       y: (r+1)*(Display.height/(rows+1)),
+                                         mass: 5, gravity: true }));
       }
     }
 
     game.world.scheduler.schedule(1000,
                         function() {
-                          generateBouncer(Bouncer.CIRCLE, 50, 10,
-                                          Display.width/2, -50);
-                        });
+                                    addBouncer(Bouncer.createCircle(50,
+                                                                    {x: Display.width/2, y: -50, mass: 50, gravity: true})); });
+
     game.world.scheduler.schedule(2000,
                         function() {
-                          generateBouncer(Bouncer.CIRCLE, 50, 10,
-                                          Display.width/2, -50);
-                        });
-
-  /*
-    generateBouncer(Bouncer.CIRCLE, 50, 10, 
-    generateBouncer(Bouncer.CIRCLE, 50, 10, Display.width/4, 75);
-    generateBouncer(Bouncer.CIRCLE, 50, 10, 3*Display.width/4, 75);
-  */
+                                    addBouncer(Bouncer.createCircle(50,
+                                                                    {x: Display.width/2, y: -50, mass: 50, gravity: true})); });
 
     generateBar();
 
     // end GenerateStacks
   }
 
+
   //----------------------------------------------------
-  private function generateBouncer(type:Int, radius:Float, mass:Float,
-                                   x:Float, y:Float):Void
+  private function addBouncer(bouncer:Bouncer):Void
   {
-    var ball = new Bouncer(type, radius, mass, x, y);
-    collisionGroup.add(ball);
-    graphics.add(ball);
-    game.world.entities.add(ball);
-    // end generateBouncer
+    bouncer.placeBounds(REMOVE);
+
+    collisionGroup.add(bouncer);
+    graphics.add(bouncer);
+    game.world.entities.add(bouncer);
+    // end addBouncer
   }
+
 
   //----------------------------------------------------
   private function generateBar():Void

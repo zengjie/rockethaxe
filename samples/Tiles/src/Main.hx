@@ -16,7 +16,8 @@ import com.rocketshipgames.haxe.world.tilemap.TileChunk;
 
 import com.rocketshipgames.haxe.gfx.sprites.TileMapRenderer;
 
-import com.rocketshipgames.haxe.physics.Kinematics2DComponent;
+import com.rocketshipgames.haxe.physics.core2d.Kinematics2DComponent;
+import com.rocketshipgames.haxe.physics.PhysicsCapabilities;
 import com.rocketshipgames.haxe.world.behaviors.ViewportTrackerComponent;
 
 import com.rocketshipgames.haxe.component.Component;
@@ -256,7 +257,7 @@ private class WalkerKeyboard
 
   public function attach(container:ComponentHandle):Void
   {
-    kinematics = cast(container.find(Kinematics2DComponent.CID),
+    kinematics = cast(container.find(PhysicsCapabilities.CID_KINEMATICS2D),
                       Kinematics2DComponent);
   }
 

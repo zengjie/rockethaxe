@@ -10,6 +10,7 @@
   <app main="Main" path="export" file="Stacks" />
 
   <source path="src" />
+  <source path="../common/src" />
 
   <window background="#336699" />
 

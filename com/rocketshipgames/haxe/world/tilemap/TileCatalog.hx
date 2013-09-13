@@ -2,6 +2,7 @@ package com.rocketshipgames.haxe.world.tilemap;
 
 import com.rocketshipgames.haxe.debug.Debug;
 
+import com.rocketshipgames.haxe.gfx.sprites.FrameCatalog;
 import com.rocketshipgames.haxe.gfx.sprites.SpritesheetContainer;
 
 
@@ -12,12 +13,9 @@ import com.rocketshipgames.haxe.gfx.sprites.SpritesheetContainer;
 
 
 class TileCatalog
+  extends FrameCatalog
 {
 
-  public var spritesheet(default,null):SpritesheetContainer;
-  public var frameCount(default,null):Int;
-
-  public var title(default,null):String;
   public var width(default,null):Int;
   public var height(default,null):Int;
 
@@ -25,26 +23,21 @@ class TileCatalog
   private var tiles:Array<Tile>;
 
   private var tileLabels:Map<String, Tile>;
-  private var frameLabels:Map<String, Int>;
 
   private var collisionTags:Map<String, Int>;
   private var collisionBitmask:Int;
 
   private var tileIndex:Int;
 
-  private var baseFrameIndex:Int;
 
   //--------------------------------------------------------------------
   public function new(spritesheet:SpritesheetContainer):Void
   {
-
-    this.spritesheet = spritesheet;
-    this.title = "unnamed";
+    super(spritesheet);
 
     tiles = new Array();
 
     tileLabels = new Map();
-    frameLabels = new Map();
 
     collisionTags = new Map();
     collisionBitmask = 0;
@@ -103,27 +96,10 @@ class TileCatalog
       parseCollisionTags(tags);
     }
 
-
     //-- Populate frames
-
-    // Need to base any raw numbers off the first tile extracted by
-    // this catalog, NOT the zero-th tile for the spritesheet---other
-    // sprites may have been loaded beforehand.
-    baseFrameIndex = spritesheet.getFrameCount();
-
     for (frames in root.nodes.frames) {
-      for (cmd in frames.elements) {
-
-        if (cmd.name == "grid")
-          parseGrid(cmd);
-        else if (cmd.name == "keyframe")
-          parseKeyframe(cmd);
-
-        // end looping frame commands
-      }
-      // end iterating frames groups
+      extractFrames(frames, width, height);
     }
-
 
     //-- Populate tiles
     tileIndex = baseFrameIndex;
@@ -163,66 +139,6 @@ class TileCatalog
       // end looping tags
     }
     // end parseCollisionGroups
-  }
-
-
-  //----------------------------------------------------
-  private function parseGrid(cmd:haxe.xml.Fast):Void
-  {
-
-    if (cmd.has.label)
-      frameLabels.set(cmd.att.label, spritesheet.getFrameCount());
-
-    var columns:Int = 1;
-    var rows:Int = 1;
-    if (cmd.has.columns) columns = Std.parseInt(cmd.att.columns);
-    if (cmd.has.rows) rows = Std.parseInt(cmd.att.rows);
-
-    var basex:Int = 0;
-    if (cmd.has.x) basex = Std.parseInt(cmd.att.x);
-
-    var basey:Int = 0;
-    if (cmd.has.y) basey = Std.parseInt(cmd.att.y);
-
-    var x:Int = basex;
-    var y:Int = basey;
-    for (r in 0...rows) {
-      x = basex;
-
-      for (c in 0...columns) {
-        spritesheet.addFrame(x, y, width, height, 0, 0);
-        x += width;
-        // end columns
-      }
-
-      y += height;
-      // end rows
-    }
-
-    #if verbose_tiles
-      Debug.debug("  Added " + columns + "x" + rows +
-                  " grid from " + basex + "," + basey);
-    #end
-    // end parseGrid
-  }
-
-  private function parseKeyframe(cmd:haxe.xml.Fast):Void
-  {
-    if (!cmd.has.label) {
-      Debug.error("Keyframe does not have a label.");
-      return;
-    }
-
-    var frame:Int = spritesheet.getFrameCount();
-    if (cmd.has.frame) frame = baseFrameIndex + Std.parseInt(cmd.att.frame);
-
-    frameLabels.set(cmd.att.label, frame);
-
-    #if verbose_tiles
-      Debug.debug("  Keyframe " +  cmd.att.label + " frame " + frame);
-    #end
-
-    // end parseKeyframe
   }
 
 
