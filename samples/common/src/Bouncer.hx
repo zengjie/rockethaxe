@@ -95,9 +95,12 @@ class Bouncer
     switch (action) {
     case BOUNCE:
       bounds.response = bounds.bounce;
+      bounds.containLeft = bounds.containRight =
+        bounds.containTop = bounds.containBottom = true;
 
     case REMOVE:
       bounds.response = offScreen;
+
     }
 
     add(bounds);

@@ -35,6 +35,11 @@ class Bounds2DComponent
 
   public var response:Int->Void;
 
+  public var containLeft:Bool;
+  public var containRight:Bool;
+  public var containTop:Bool;
+  public var containBottom:Bool;
+
   //------------------------------------------------------------
   private var container:ComponentHandle;
 
@@ -139,19 +144,19 @@ class Bounds2DComponent
      * cycling on the left and right.
      */
 
-    if (extent.left() < left) {
+    if (((containLeft)?extent.left():extent.right()) < left) {
       hit = hit | BOUNDS_LEFT;
 
-    } else if (extent.right() > right) {
+    } else if (((containRight)?extent.right():extent.left()) > right) {
       hit = hit | BOUNDS_RIGHT;
 
     }
 
 
-    if (extent.top() < top) {
+    if (((containTop)?extent.top():extent.bottom()) < top) {
       hit = hit | BOUNDS_TOP;
 
-    } else if (extent.bottom() > bottom) {
+    } else if (((containBottom)?extent.bottom():extent.top()) > bottom) {
       hit = hit | BOUNDS_BOTTOM;
 
     }

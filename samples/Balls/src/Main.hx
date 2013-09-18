@@ -104,6 +104,9 @@ class Main
      */
     bounds.response = bounds.bounce;
 
+    bounds.containLeft = bounds.containRight =
+      bounds.containTop = bounds.containBottom = true;
+
     /*
      * By default Bounds2DComponent doesn't issue a signal, but we can
      * turn it on so other components are notified.
