@@ -155,38 +155,38 @@ class TextBitmap {
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
-      if ((d = Reflect.field(opts, "borderLeftWidth")) != null) {
+      if ((d = Reflect.field(opts, "borderWidthLeft")) != null) {
         borderLeftWidth = borderRightWidth = borderTopWidth = borderBottomWidth =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
-      if ((d = Reflect.field(opts, "borderLeftColor")) != null) {
+      if ((d = Reflect.field(opts, "borderColorLeft")) != null) {
         borderLeftColor = borderRightColor = borderTopColor = borderBottomColor =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
-      if ((d = Reflect.field(opts, "borderRightWidth")) != null) {
+      if ((d = Reflect.field(opts, "borderWidthRight")) != null) {
         borderRightWidth =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
-      if ((d = Reflect.field(opts, "borderRightColor")) != null) {
+      if ((d = Reflect.field(opts, "borderColorRight")) != null) {
         borderRightColor =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
-      if ((d = Reflect.field(opts, "borderTopWidth")) != null) {
+      if ((d = Reflect.field(opts, "borderWidthTop")) != null) {
         borderTopWidth =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
-      if ((d = Reflect.field(opts, "borderTopColor")) != null) {
+      if ((d = Reflect.field(opts, "borderColorTop")) != null) {
         borderTopColor =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
 
-      if ((d = Reflect.field(opts, "borderBottomWidth")) != null) {
+      if ((d = Reflect.field(opts, "borderWidthBottom")) != null) {
         borderBottomWidth =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
-      if ((d = Reflect.field(opts, "borderBottomColor")) != null) {
+      if ((d = Reflect.field(opts, "borderColorBottom")) != null) {
         borderBottomColor =
           (Std.is(d, String)) ? Std.parseInt(d) : d;
       }
