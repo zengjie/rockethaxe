@@ -14,6 +14,9 @@ class ImpulseCollisionContainer
   implements Component
 {
 
+  public var iterations:Int = 8;
+
+  //--------------------------------------------------------------------
   @:allow(com.rocketshipgames.haxe.physics.impulse.ImpulseComponent)
   private var group:DoubleLinkedList<ImpulseComponent>;
 
@@ -22,6 +25,7 @@ class ImpulseCollisionContainer
   private var manifold:ImpulseManifold;
 
 
+  //--------------------------------------------------------------------
   //--------------------------------------------------------------------
   public function new():Void
   {
@@ -58,7 +62,8 @@ class ImpulseCollisionContainer
   //----------------------------------------------------
   public function update(millis:Int):Void
   {
-    broadphase.scan(group);
+    for (i in 0...iterations)
+      broadphase.scan(group);
     // end update
   }
 
