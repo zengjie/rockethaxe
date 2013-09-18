@@ -38,8 +38,8 @@ class TileMapRenderer
 
       x = 0;
       while (x < map.columns) {
-        container.drawFrame((x*map.catalog.width)-viewport.x,
-                            (y*map.catalog.height)-viewport.y,
+        container.drawFrame(Math.floor((x*map.catalog.width)-viewport.x),
+                            Math.floor((y*map.catalog.height)-viewport.y),
                             map.tiles[(y*map.columns)+x].frame);
         x++;
       }
