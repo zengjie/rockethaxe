@@ -90,9 +90,8 @@ class Bouncer
     signals.add
       (Bounds2DComponent.SIG_BOUNDS2D,
        function(SignalID, opt:Dynamic):Bool {
-        var s:Bounds2DSignalData = opt;
 
-        if (s == BOUNDS_RIGHT)
+        if (opt & Bounds2DComponent.BOUNDS_RIGHT != 0)
           trace("RIGHT");
 
         return false;

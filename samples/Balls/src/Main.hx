@@ -94,19 +94,20 @@ class Main
     var bounds = new Bounds2DComponent();
     bounds.setBounds(0, 0, Display.width, Display.height);
 
-    //-- Bounds2DComponent contains a number of common bounds
-    //-- reactions, such as stopX, bounceX, cannotLeaveX, cycleX, and
-    //-- doNothing, where X is Left, Right, Top, Bottom.
-    bounds.offBoundsLeft = bounds.bounceLeft;
-    bounds.offBoundsRight = bounds.bounceRight;
-    bounds.offBoundsTop = bounds.bounceTop;
+    /*
+     * Bounds2DComponent can generate a signal, or take a hardcoded
+     * response function.  Several are already defined, including
+     * stop, bounce, cannotLeave, cycle, and doNothing.  Specific
+     * behaviors can take different actions for different collisions
+     * by providing a custom function, which may build on the included
+     * bounds subfunctions, i.e., cycleLeft and stopBottom.
+     */
+    bounds.response = bounds.bounce;
 
-    //-- But a user defined function can also be specified.
-    bounds.offBoundsBottom = function() { trace("BOTTOM");
-                                          bounds.bounceBottom(); }
-
-    //-- By default Bounds2DComponent doesn't issue a signal, but we
-    //-- can turn it on so other components are notified.
+    /*
+     * By default Bounds2DComponent doesn't issue a signal, but we can
+     * turn it on so other components are notified.
+     */
     bounds.enableSignal();
 
     ball.add(bounds);

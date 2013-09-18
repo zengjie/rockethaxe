@@ -94,14 +94,10 @@ class Bouncer
 
     switch (action) {
     case BOUNCE:
-      bounds.offBoundsLeft = bounds.bounceLeft;
-      bounds.offBoundsRight = bounds.bounceRight;
-      bounds.offBoundsTop = bounds.bounceTop;
-      bounds.offBoundsBottom = bounds.bounceBottom;
+      bounds.response = bounds.bounce;
 
     case REMOVE:
-      bounds.offBoundsLeft = bounds.offBoundsRight
-        = bounds.offBoundsBottom = offScreen;
+      bounds.response = offScreen;
     }
 
     add(bounds);
@@ -109,14 +105,21 @@ class Bouncer
   }
 
 
-  public function offScreen():Void
+  public function offScreen(hit:Int):Void
   {
-    //-- Remove this Bouncer from the world
+
+    //-- If only the top was hit, do nothing
+    if (hit == Bounds2DComponent.BOUNDS_TOP)
+      return;
+
+    //-- Otherwise, remove this Bouncer from the world
     trace("Removing bouncer.");
     if (container == null)
       trace("This bouncer has already been removed!");
 
     container.remove();
+
+    // end offScreen
   }
 
   // end Bouncer

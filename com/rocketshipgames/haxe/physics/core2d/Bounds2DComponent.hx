@@ -8,14 +8,6 @@ import com.rocketshipgames.haxe.physics.Extent2D;
 import com.rocketshipgames.haxe.physics.Kinematics2D;
 
 
-enum Bounds2DSignalData {
-  BOUNDS_LEFT;
-  BOUNDS_RIGHT;
-  BOUNDS_TOP;
-  BOUNDS_BOTTOM;
-}
-
-
 class Bounds2DComponent
   implements Component
 {
@@ -29,6 +21,11 @@ class Bounds2DComponent
     com.rocketshipgames.haxe.component.SignalDispatcher.hashID("sig_bounds2d");
 
 
+  public static var BOUNDS_LEFT:Int   = 1;
+  public static var BOUNDS_RIGHT:Int  = 2;
+  public static var BOUNDS_TOP:Int    = 4;
+  public static var BOUNDS_BOTTOM:Int = 8;
+
   //------------------------------------------------------------
   public var left:Float;
   public var top:Float;
@@ -36,11 +33,7 @@ class Bounds2DComponent
   public var right:Float;
   public var bottom:Float;
 
-  public var offBoundsLeft:Void->Void;
-  public var offBoundsRight:Void->Void;
-  public var offBoundsTop:Void->Void;
-  public var offBoundsBottom:Void->Void;
-
+  public var response:Int->Void;
 
   //------------------------------------------------------------
   private var container:ComponentHandle;
@@ -58,10 +51,8 @@ class Bounds2DComponent
   public function new(?opts:Dynamic):Void
   {
     left = top = right = bottom = 0.0;
-    offBoundsLeft = offBoundsRight = offBoundsTop = offBoundsBottom = doNothing;
-
+    response = doNothing;
     signal = false;
-
     active = true;
     // end new
   }
@@ -134,37 +125,43 @@ class Bounds2DComponent
     if (!active)
       return;
 
+    var hit:Int = 0;
+
+    /*
+     * This is done this way, producing a code and then calling the
+     * response functions, so that the user function is only called
+     * once.  If the response function deletes the object, and
+     * therefore its components, and was then called again, it could
+     * generate a null pointer error.  This mechanism prevents that
+     * for simple, naive response functions, the tradeoff being that
+     * the user needs to deconflict the hits if they wanted varied
+     * response, i.e., ignoring the top, removing from the bottom, and
+     * cycling on the left and right.
+     */
 
     if (extent.left() < left) {
-      offBoundsLeft();
+      hit = hit | BOUNDS_LEFT;
 
-      if (signal)
-        dispatcher.signal(SIG_BOUNDS2D, BOUNDS_LEFT);
-
-      // end x off left
     } else if (extent.right() > right) {
-      offBoundsRight();
+      hit = hit | BOUNDS_RIGHT;
 
-      if (signal)
-        dispatcher.signal(SIG_BOUNDS2D, BOUNDS_RIGHT);
-
-      // end x off right
     }
 
+
     if (extent.top() < top) {
-      offBoundsTop();
+      hit = hit | BOUNDS_TOP;
 
-      if (signal)
-        dispatcher.signal(SIG_BOUNDS2D, BOUNDS_TOP);
-
-      // end y off top
     } else if (extent.bottom() > bottom) {
-      offBoundsBottom();
+      hit = hit | BOUNDS_BOTTOM;
+
+    }
+
+
+    if (hit != 0) {
+      response(hit);
 
       if (signal)
-        dispatcher.signal(SIG_BOUNDS2D, BOUNDS_BOTTOM);
-
-      // end y off bottom
+        dispatcher.signal(SIG_BOUNDS2D, hit);
     }
 
     // end update
@@ -173,10 +170,26 @@ class Bounds2DComponent
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function doNothing():Void { }
+  public function doNothing(hit:Int):Void { }
 
 
   //------------------------------------------------------------
+  public function cannotLeave(hit:Int):Void
+  {
+
+    if (hit & BOUNDS_LEFT != 0)
+      cannotLeaveLeft();
+    else if (hit & BOUNDS_RIGHT != 0)
+      cannotLeaveRight();
+
+    if (hit & BOUNDS_TOP != 0)
+      cannotLeaveTop();
+    else if (hit & BOUNDS_BOTTOM != 0)
+      cannotLeaveBottom();
+
+      // end cannotLeave
+  }
+
   public function cannotLeaveLeft():Void
   {
     if (kinematics.xvel <= 0) {
@@ -208,6 +221,22 @@ class Bounds2DComponent
 
 
   //------------------------------------------------------------
+  public function stop(hit:Int):Void
+  {
+
+    if (hit & BOUNDS_LEFT != 0)
+      stopLeft();
+    else if (hit & BOUNDS_RIGHT != 0)
+      stopRight();
+
+    if (hit & BOUNDS_TOP != 0)
+      stopTop();
+    else if (hit & BOUNDS_BOTTOM != 0)
+      stopBottom();
+
+    // end stop
+  }
+
   public function stopLeft():Void
   {
     kinematics.x = left;
@@ -231,6 +260,22 @@ class Bounds2DComponent
 
 
   //------------------------------------------------------------
+  public function cycle(hit:Int):Void
+  {
+
+    if (hit & BOUNDS_LEFT != 0)
+      cycleLeft();
+    else if (hit & BOUNDS_RIGHT != 0)
+      cycleRight();
+
+    if (hit & BOUNDS_TOP != 0)
+      cycleTop();
+    else if (hit & BOUNDS_BOTTOM != 0)
+      cycleBottom();
+
+    // end cycle
+  }
+
   public function cycleLeft():Void
   {
     kinematics.x = right;
@@ -250,6 +295,22 @@ class Bounds2DComponent
 
 
   //------------------------------------------------------------
+  public function bounce(hit:Int):Void
+  {
+
+    if (hit & BOUNDS_LEFT != 0)
+      bounceLeft();
+    else if (hit & BOUNDS_RIGHT != 0)
+      bounceRight();
+
+    if (hit & BOUNDS_TOP != 0)
+      bounceTop();
+    else if (hit & BOUNDS_BOTTOM != 0)
+      bounceBottom();
+
+    // end bounce
+  }
+
   public function bounceLeft():Void
   {
     if (kinematics.xvel < 0) {
