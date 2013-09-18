@@ -12,6 +12,8 @@ class World
 {
 
   //----------------------------------------------------
+  public var time(default,null):Int;
+
   public var entities(default, null):ComponentContainer;
 
   public var mechanics(default, null):ComponentContainer;
@@ -28,6 +30,8 @@ class World
   public function new():Void
   {
 
+    time = 0;
+
     entities = new ComponentContainer();
     mechanics = new ComponentContainer();
 
@@ -42,6 +46,8 @@ class World
   //------------------------------------------------------------
   public function update(elapsed:Int):Void
   {
+
+    time += elapsed;
 
     signals.update(elapsed);
     states.update(elapsed);

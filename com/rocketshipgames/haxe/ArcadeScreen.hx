@@ -6,35 +6,20 @@ import flash.events.KeyboardEvent;
 
 import com.rocketshipgames.haxe.debug.Debug;
 
-import com.rocketshipgames.haxe.world.World;
-
-import com.rocketshipgames.haxe.gfx.GraphicsContainer;
-import com.rocketshipgames.haxe.gfx.Viewport;
-
 import com.rocketshipgames.haxe.device.Display;
 
 import com.rocketshipgames.haxe.device.Keyboard;
 
 
 class ArcadeScreen
-  extends com.rocketshipgames.haxe.ui.Screen
+  extends GameScreen
 {
 
   //------------------------------------------------------------
-
-  public var world(default, null):World;
-
-  public var time(default,null):Int;
-  public var elapsed(default,null):Int;
-
   public var pauseOnUnfocus:Bool;
   public var pausedBitmap:Bitmap;
 
-  public var viewport(default, null):Viewport;
-
   //------------------------------------------------------------
-  private var graphicsContainers:List<GraphicsContainer>;
-
   private var paused(default,null):Bool;
   private var clientPaused:Bool;
   private var focusPaused:Bool;
@@ -44,23 +29,9 @@ class ArcadeScreen
 
 
   //------------------------------------------------------------
-  public function new(?world:World):Void
+  public function new(?world:com.rocketshipgames.haxe.world.World):Void
   {
-    super();
-
-    if (world == null)
-      world = new World();
-    this.world = world;
-
-
-    viewport = new Viewport();
-
-    graphicsContainers = new List();
-
-
-    //-- Setup the game clocks and initial state
-    time = 0;
-    elapsed = 0;
+    super(world);
 
     paused = false;
     clientPaused = false;
@@ -98,15 +69,6 @@ class ArcadeScreen
     stage.removeEventListener(KeyboardEvent.KEY_UP, Keyboard.onKeyUp);
 
     // end stop
-  }
-
-
-  //--------------------------------------------------------------------
-  //------------------------------------------------------------
-  public function addGraphicsContainer(gc:GraphicsContainer):Void
-  {
-    graphicsContainers.add(gc);
-    // end addGraphicsContainer
   }
 
 
@@ -222,15 +184,9 @@ class ArcadeScreen
 
     if (!paused) {
       var currTime:Int = flash.Lib.getTimer();
-      elapsed = currTime - prevFrameTimestamp;
-      time += elapsed;
+      world.update(currTime - prevFrameTimestamp);
       prevFrameTimestamp = currTime;
-
-      world.update(elapsed);
-
       // end not paused
-    } else {
-      elapsed = 0;
     }
 
     // User game loop stuff should still happen, only entities don't
@@ -251,16 +207,6 @@ class ArcadeScreen
     // end update
   }
 
-
-  //------------------------------------------------------------
-  private function render():Void
-  {
-    graphics.clear();
-    for (gc in graphicsContainers) {
-      gc.render(graphics, viewport);
-    }
-    // end render
-  }
 
   // end ArcadeScreen
 }
