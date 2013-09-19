@@ -32,6 +32,10 @@ class ImpulseCollisionContainer
     group = new DoubleLinkedList();
     broadphase = new SweepScanBroadphase(resolveCollision, earlier);
 
+    /*
+     * Manifold persists rather than being a local variable so we're
+     * not creating a new object every frame.
+     */
     manifold = new ImpulseManifold();
     // end new
   }
