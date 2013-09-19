@@ -252,20 +252,25 @@ class RigidBody2DComponent
     if (closestX == x && closestY == y) {
       inside = true;
 
-      if (Math.abs(b.x - x) >
-          Math.abs(b.y - y)) {
+      var dleft = x - b.left();
+      var dright = b.right() - x;
 
-        if (x - b.left() > b.right()-x)
-          closestX = b.right();
-        else
+      var dtop = y - b.top();
+      var dbottom = b.bottom() - y;
+
+      if (Math.min(dleft, dright) < Math.min(dtop, dbottom)) {
+
+        if (dleft < dright)
           closestX = b.left();
+        else
+          closestX = b.right();
 
       } else {
 
-        if (y - b.top() > b.bottom()-y)
-          closestY = b.bottom();
-        else
+        if (dtop < dbottom)
           closestY = b.top();
+        else
+          closestY = b.bottom();
 
       }
 
@@ -292,6 +297,16 @@ class RigidBody2DComponent
         manifold.normX *= -1;
         manifold.normY *=-1;
         manifold.penetration = d;
+
+        /*
+        trace("INSIDE Hit circle " + x + "," + y + 
+              " box " + b.x + "," + b.y +
+              "  closest " + closestX + "," + closestY +
+              "  norm " + manifold.normX + "," + manifold.normY +
+              "  d " + d +
+              "  pen " + manifold.penetration);
+        */
+
       }
 
     } else {
@@ -299,15 +314,6 @@ class RigidBody2DComponent
       manifold.normX = 0;
       manifold.normY = -1;
     }
-
-    /*
-    trace("Hit circle " + x + "," + y + 
-          " box " + b.x + "," + b.y +
-          "  closest " + closestX + "," + closestY +
-          "  norm " + manifold.normX + "," + manifold.normY +
-          "  d " + d +
-          "  pen " + manifold.penetration);
-    */
 
     return true;
 
