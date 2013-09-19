@@ -16,7 +16,7 @@ class ImpulseComponent
   implements SweepScanEntity<Float>
 {
 
-  private var container:ImpulseCollisionContainer;
+  private var container:ImpulseCollider;
   private var entity:ComponentHandle;
 
   private var handle:DoubleLinkedListHandle<ImpulseComponent>;
@@ -24,7 +24,7 @@ class ImpulseComponent
   public var body(default,null):RigidBody2DComponent;
 
 
-  public function new(container:ImpulseCollisionContainer):Void
+  public function new(container:ImpulseCollider):Void
   {
     this.container = container;
   }

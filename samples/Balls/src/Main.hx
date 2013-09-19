@@ -2,11 +2,14 @@ package;
 
 import com.rocketshipgames.haxe.ArcadeScreen;
 
-import com.rocketshipgames.haxe.physics.impulse.ImpulseCollisionContainer;
+import com.rocketshipgames.haxe.physics.impulse.ImpulseObjectCollider;
+import com.rocketshipgames.haxe.physics.impulse.ImpulseColliderAggregator;
 
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer;
 
 import com.rocketshipgames.haxe.physics.core2d.Bounds2DComponent;
+import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
+import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent;
 
 import com.rocketshipgames.haxe.device.Display;
 
@@ -17,14 +20,15 @@ class Main
 
   private var game:ArcadeScreen;
 
-  private var collisionGroup:ImpulseCollisionContainer;
+  private var colliders:ImpulseColliderAggregator;
 
   private var graphics:DisplayListGraphicsContainer;
 
 
   //--------------------------------------------------------------------
-  public function new():Void
+  public static function new():Void
   {
+
     trace("Balls Demo");
 
     //-- The base Game class sets up the display, mouse, audio, etc
@@ -35,14 +39,64 @@ class Main
     game = new ArcadeScreen();
 
     //-- Create the container to collectively collide all the bouncers
-    collisionGroup = new ImpulseCollisionContainer();
-    game.world.mechanics.add(collisionGroup);
+    colliders = new ImpulseColliderAggregator();
+    colliders.add(new ImpulseObjectCollider());
+    game.world.mechanics.add(colliders);
 
     //-- Create the container for the bouncers' graphics.  It takes a
     //-- flash.display.Sprite (which an ArcadeScreen ultimately is) as
     //-- the root layer in which to place the graphics.
     graphics = new DisplayListGraphicsContainer(game);
     game.addGraphicsContainer(graphics);
+
+
+    var bar = new com.rocketshipgames.haxe.component.ComponentContainer();
+    bar.add(RigidBody2DComponent
+            .newBoxBody(100, Display.height,
+                        {
+                          x: -50, y: Display.height/2,
+                            xvel: 0, yvel: 0,
+                            xvelMin: 2, yvelMin: 2,
+                            mass: 100000,
+                            fixed: true,
+                            collidesAs: 1, collidesWith: 1,
+                            }));
+    colliders.addEntity(bar);
+
+    bar = new com.rocketshipgames.haxe.component.ComponentContainer();
+    bar.add(RigidBody2DComponent
+            .newBoxBody(100, Display.height,
+                        {
+                          x: Display.width+50, y: Display.height/2,
+                            xvel: 0, yvel: 0,
+                            xvelMin: 2, yvelMin: 2,
+                            mass: 100000,
+                            fixed: true,
+                            collidesAs: 1, collidesWith: 1,
+                            }));
+    colliders.addEntity(bar);
+
+    bar = new com.rocketshipgames.haxe.component.ComponentContainer();
+    bar.add(RigidBody2DComponent
+            .newBoxBody(Display.width, 100,
+                        {
+                          x: Display.width/2, y: Display.height-50,
+                            xvel: 0, yvel: 0,
+                            xvelMin: 2, yvelMin: 2,
+                            mass: 100000,
+                            fixed: true,
+                            collidesAs: 1, collidesWith: 1,
+                            }));
+    colliders.addEntity(bar);
+
+    var shape = new flash.display.Shape();
+    shape.graphics.lineStyle(1);
+    shape.graphics.beginFill(0xFF0000);
+    shape.graphics.drawRect(-Display.width/2, -50, Display.width, 100);
+    shape.graphics.endFill();
+    bar.add(new DisplayListGraphicComponent(shape));
+    graphics.add(bar);
+
 
     //-- Add an entity to the world and schedule more
     generateBouncer();
@@ -63,11 +117,11 @@ class Main
     var ball = new Bouncer();
 
     //-- Add new behavior on the basic Bouncer, in this case bounds
-    placeBounds(ball);
+    // placeBounds(ball);
 
 
     //-- Add the new Bouncer to the game world and display and make it live!
-    collisionGroup.add(ball);
+    colliders.addEntity(ball);
     graphics.add(ball);
     game.world.entities.add(ball);
 

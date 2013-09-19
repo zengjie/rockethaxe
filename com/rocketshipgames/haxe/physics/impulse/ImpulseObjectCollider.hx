@@ -1,25 +1,14 @@
 package com.rocketshipgames.haxe.physics.impulse;
 
-import com.rocketshipgames.haxe.ds.DoubleLinkedList;
-
-import com.rocketshipgames.haxe.component.ComponentContainer;
-import com.rocketshipgames.haxe.component.ComponentHandle;
-import com.rocketshipgames.haxe.component.Component;
-
 import com.rocketshipgames.haxe.ds.SweepScanBroadphase;
 import com.rocketshipgames.haxe.ds.SweepScanEntity;
 
 
-class ImpulseCollisionContainer
-  implements Component
+class ImpulseObjectCollider
+  extends ImpulseCollider
 {
 
-  public var iterations:Int = 8;
-
   //--------------------------------------------------------------------
-  @:allow(com.rocketshipgames.haxe.physics.impulse.ImpulseComponent)
-  private var group:DoubleLinkedList<ImpulseComponent>;
-
   private var broadphase:SweepScanBroadphase<ImpulseComponent,Float>;
 
   private var manifold:ImpulseManifold;
@@ -29,7 +18,8 @@ class ImpulseCollisionContainer
   //--------------------------------------------------------------------
   public function new():Void
   {
-    group = new DoubleLinkedList();
+    super();
+
     broadphase = new SweepScanBroadphase(resolveCollision, earlier);
 
     /*
@@ -37,6 +27,7 @@ class ImpulseCollisionContainer
      * not creating a new object every frame.
      */
     manifold = new ImpulseManifold();
+
     // end new
   }
 
@@ -44,40 +35,11 @@ class ImpulseCollisionContainer
 
 
   //----------------------------------------------------
-  public function attach(container:ComponentHandle):Void
-  {
-  }
-
-  public function detach():Void
-  {
-  }
-
-
-  //----------------------------------------------------
-  public function activate(?opts:Dynamic):Void
-  {
-  }
-
-  public function deactivate():Void
-  {
-  }
-
-
-  //----------------------------------------------------
-  public function update(millis:Int):Void
+  public override function update(millis:Int):Void
   {
     for (i in 0...iterations)
       broadphase.scan(group);
     // end update
-  }
-
-
-  //--------------------------------------------------------------------
-  //--------------------------------------------------------------------
-  public function add(entity:ComponentContainer):Void
-  {
-    entity.add(new ImpulseComponent(this));
-    // end add
   }
 
 
@@ -104,5 +66,5 @@ class ImpulseCollisionContainer
     // end resolveCollision
   }
 
-  // end ImpulseCollisionContainer
+  // end ImpulseObjectCollider
 }

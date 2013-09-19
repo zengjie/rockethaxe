@@ -2,7 +2,8 @@ package;
 
 import com.rocketshipgames.haxe.ArcadeScreen;
 
-import com.rocketshipgames.haxe.physics.impulse.ImpulseCollisionContainer;
+import com.rocketshipgames.haxe.physics.impulse.ImpulseObjectCollider;
+import com.rocketshipgames.haxe.physics.impulse.ImpulseColliderAggregator;
 
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer;
 
@@ -21,7 +22,7 @@ class Main
 
   private var game:ArcadeScreen;
 
-  private var collisionGroup:ImpulseCollisionContainer;
+  private var colliders:ImpulseColliderAggregator;
 
   private var graphics:DisplayListGraphicsContainer;
 
@@ -39,8 +40,9 @@ class Main
     game = new ArcadeScreen();
 
     //-- Create the container to collectively collide all the bouncers
-    collisionGroup = new ImpulseCollisionContainer();
-    game.world.mechanics.add(collisionGroup);
+    colliders = new ImpulseColliderAggregator();
+    colliders.add(new ImpulseObjectCollider());
+    game.world.mechanics.add(colliders);
 
     //-- Create the container for the bouncers' graphics.  It takes a
     //-- flash.display.Sprite (which an ArcadeScreen ultimately is) as
@@ -78,7 +80,7 @@ class Main
     for (r in 0...rows) {
       for (c in 0...columns) {
         addBouncer(Bouncer.createBox(50, 50,
-                                     { x: (c+1)*(Display.width/(columns+1)),
+                                     { x: (c+1)*(Display.width/(columns+1))+r*2,
                                        y: (r+1)*(Display.height/(rows+1)),
                                          mass: 5, gravity: true }));
       }
@@ -105,7 +107,7 @@ class Main
   {
     bouncer.placeBounds(REMOVE);
 
-    collisionGroup.add(bouncer);
+    colliders.addEntity(bouncer);
     graphics.add(bouncer);
     game.world.entities.add(bouncer);
     // end addBouncer
@@ -136,7 +138,7 @@ class Main
     shape.graphics.endFill();
     bar.add(new DisplayListGraphicComponent(shape));
 
-    collisionGroup.add(bar);
+    colliders.addEntity(bar);
     graphics.add(bar);
     game.world.entities.add(bar);
 
