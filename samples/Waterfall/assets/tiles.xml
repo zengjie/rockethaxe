@@ -1,0 +1,22 @@
+<catalog title="Demo Tiles" width="48" height="48">
+
+  <!--
+      The TileCatalog XML format is described here:
+      https://code.google.com/p/rockethaxe/wiki/TileCatalog
+  -->
+
+  <collisionTags>
+    <air />
+    <land />
+  </collisionTags>
+
+  <frames>
+    <grid label="land" x="0" y="0" columns="1" rows="1"  />
+  </frames>
+
+  <tiles>
+    <tile label="air" frame="clear" collision="air" />
+    <tile label="land" collision="land" frame="land" />
+  </tiles>
+
+</catalog>

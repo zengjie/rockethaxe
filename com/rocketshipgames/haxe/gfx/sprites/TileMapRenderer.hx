@@ -32,15 +32,21 @@ class TileMapRenderer
     //    trace("Render tilemap");
 
     var x:Int, y:Int;
+    var frame:Int;
 
     y = 0;
     while (y < map.rows) {
 
       x = 0;
       while (x < map.columns) {
-        container.drawFrame(Math.floor((x*map.catalog.width)-viewport.x),
-                            Math.floor((y*map.catalog.height)-viewport.y),
-                            map.tiles[(y*map.columns)+x].frame);
+        frame = map.tile(x, y).frame;
+
+        if (frame >= 0) {
+          container.drawFrame(Math.floor((x*map.catalog.width)-viewport.x),
+                              Math.floor((y*map.catalog.height)-viewport.y),
+                              frame);
+        }
+
         x++;
       }
 

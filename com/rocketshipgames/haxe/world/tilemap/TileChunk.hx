@@ -39,6 +39,11 @@ class TileChunk
   public function top():Float    {return y; }
   public function bottom():Float { return y + (rows * catalog.height); }
 
+  public function tile(col:Int, row:Int):Tile
+  {
+    return tiles[(row*columns)+col];
+  }
+
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
@@ -115,10 +120,11 @@ class TileChunk
     for (row in 0...rows) {
       bits[row] = new Array<Int>();
       for (col in 0...columns) {
-        bits[row][col] = 0;
+        bits[row][col] = map[row][col];
       }
     }
 
+    /*
     for (row in 0...rows) {
       for (col in 0...columns) {
         if (map[row][col] != 0) {
@@ -147,6 +153,7 @@ class TileChunk
         // end looping columns
       }
     }
+    */
 
     for (row in 0...rows) {
       for (col in 0...columns) {

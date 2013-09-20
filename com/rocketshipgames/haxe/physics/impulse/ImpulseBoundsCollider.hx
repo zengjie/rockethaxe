@@ -11,7 +11,7 @@ class ImpulseBoundsCollider
 {
 
   //------------------------------------------------------------
-  public static var BOUNDS_BUFFER:Float = 200.0;
+  public static var BOUNDS_BUFFER:Float = 1000.0;
   public static var BOUNDS_MASS:Float = 100000;
 
   //--------------------------------------------------------------------
@@ -124,8 +124,6 @@ class ImpulseBoundsCollider
 
       if (body.left() < left && body.xvel < 0) {
         hit = hit | Bounds2DComponent.BOUNDS_LEFT;
-        trace("LEFT");
-
 
         manifold.penetration = left-body.left();
         manifold.normX = 1;
@@ -136,7 +134,6 @@ class ImpulseBoundsCollider
 
       } else if (body.right() > right && body.xvel > 0) {
         hit = hit | Bounds2DComponent.BOUNDS_RIGHT;
-        trace("RIGHT");
 
         manifold.penetration = body.right()-right;
         manifold.normX = -1;
@@ -149,7 +146,6 @@ class ImpulseBoundsCollider
 
       if (body.top() < top && body.yvel < 0) {
         hit = hit | Bounds2DComponent.BOUNDS_TOP;
-        trace("TOP");
 
         manifold.penetration = top-body.top();
         manifold.normX = 0;
@@ -160,7 +156,6 @@ class ImpulseBoundsCollider
 
       } else if (body.bottom() > bottom && body.yvel > 0) {
         hit = hit | Bounds2DComponent.BOUNDS_BOTTOM;
-        trace("BOTTOM");
 
         manifold.penetration = body.bottom() - bottom;
         manifold.normX = 0;

@@ -128,8 +128,9 @@ class TileCatalog
 
       collisionTags.set(tag.name, bitmask);
 
-      trace("Collision group " + tag.name + " = " + bitmask);
-
+      #if verbose_tiles
+        Debug.debug("Collision group " + tag.name + " = " + bitmask);
+      #end
 
       if (bitmask == 0)
         collisionBitmask = 1;
@@ -151,12 +152,16 @@ class TileCatalog
 
     var frame:Int = tileIndex;
     if (cmd.has.frame) {
-      var c = cmd.att.frame.charCodeAt(0);
-      if (c >= "0".charCodeAt(0) &&
-          c <= "9".charCodeAt(0)) {
-        frame = baseFrameIndex + Std.parseInt(cmd.att.frame);
+      if (cmd.att.frame == "clear") {
+        frame = -1;
       } else {
-        frame = frameLabels.get(cmd.att.frame);
+        var c = cmd.att.frame.charCodeAt(0);
+        if (c >= "0".charCodeAt(0) &&
+            c <= "9".charCodeAt(0)) {
+          frame = baseFrameIndex + Std.parseInt(cmd.att.frame);
+        } else {
+          frame = frameLabels.get(cmd.att.frame);
+        }
       }
     }
 
