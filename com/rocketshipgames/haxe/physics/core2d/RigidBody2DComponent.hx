@@ -26,10 +26,10 @@ class RigidBody2DComponent
 
 
   //------------------------------------------------------------
-  public var type(default,null):RigidBody2DType;
+  public var type:RigidBody2DType;
 
-  public var width(default,null):Float;
-  public var height(default,null):Float;
+  public var width:Float;
+  public var height:Float;
 
   public var offsetX:Float;
   public var offsetY:Float;

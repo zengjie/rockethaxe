@@ -2,8 +2,9 @@ package;
 
 import com.rocketshipgames.haxe.ArcadeScreen;
 
-import com.rocketshipgames.haxe.physics.impulse.ImpulseObjectCollider;
 import com.rocketshipgames.haxe.physics.impulse.ImpulseColliderAggregator;
+import com.rocketshipgames.haxe.physics.impulse.ImpulseObjectCollider;
+import com.rocketshipgames.haxe.physics.impulse.ImpulseBoundsCollider;
 
 import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer;
 
@@ -41,6 +42,7 @@ class Main
     //-- Create the container to collectively collide all the bouncers
     colliders = new ImpulseColliderAggregator();
     colliders.add(new ImpulseObjectCollider());
+    colliders.add(new ImpulseBoundsCollider());
     game.world.mechanics.add(colliders);
 
     //-- Create the container for the bouncers' graphics.  It takes a
@@ -50,6 +52,7 @@ class Main
     game.addGraphicsContainer(graphics);
 
 
+    /*
     var bar = new com.rocketshipgames.haxe.component.ComponentContainer();
     bar.add(RigidBody2DComponent
             .newBoxBody(100, Display.height,
@@ -96,7 +99,7 @@ class Main
     shape.graphics.endFill();
     bar.add(new DisplayListGraphicComponent(shape));
     graphics.add(bar);
-
+    */
 
     //-- Add an entity to the world and schedule more
     generateBouncer();
