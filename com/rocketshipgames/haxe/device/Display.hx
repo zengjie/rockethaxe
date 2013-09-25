@@ -9,6 +9,7 @@ class Display
   public static var width(default,null):Float;
   public static var height(default,null):Float;
 
+
   //--------------------------------------------------------------------
   //------------------------------------------------------------
   public static function configure(align:StageAlign, scale:StageScaleMode):Void

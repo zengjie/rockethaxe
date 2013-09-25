@@ -50,7 +50,9 @@ class Main
       (Assets.getBitmapData("assets/tiles.png"));
     game.addGraphicsContainer(graphics);
 
-    var catalog = TileCatalog.load(Assets.getText("assets/tiles.xml"), graphics);
+    var catalog = TileCatalog.load(Assets.getText("assets/tiles.xml"),
+                                   graphics,
+                                   game.viewport.pixelsPerMeter);
 
     var csv =
 '0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -83,6 +85,7 @@ class Main
     colliders.add(new ImpulseTileChunkCollider(chunk));
     colliders.add(new ImpulseBoundsCollider());
     game.world.mechanics.add(colliders);
+    colliders.iterations = 1;
 
     game.world.scheduler.schedule(1000, generateBouncer);
 
@@ -97,11 +100,9 @@ class Main
   private function generateBouncer():Void
   {
 
-    var bouncer = Bouncer.createBox(25, 25,
-                                    {x: -12.5, y: -12.5,
-                                     xvel: 50+Math.random()*950,
-                                     mass: 10,
-                                     gravity: true});
+    var bouncer = Bouncer.create({type: BOX,
+                                  xvel: 2*Math.random()*20,
+                                  gravity: true});
 
     bouncer.placeBounds(REMOVE);
 

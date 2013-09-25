@@ -220,12 +220,12 @@ class RigidBody2DComponent
     var distSqr = (normX * normX) + (normY * normY);
     var abradius = b.radius + radius;
 
-    if (distSqr > abradius * abradius)
+    if (distSqr > (abradius * abradius) - 0.01)
       return false;
 
     var dist = Math.sqrt(distSqr);
 
-    if (dist == 0) {
+    if (dist <= 0.01) {
       manifold.penetration = radius;
       manifold.normX = 0;
       manifold.normY = -1;
@@ -234,6 +234,11 @@ class RigidBody2DComponent
       manifold.normX = normX / dist;
       manifold.normY = normY / dist;
     }
+
+    /*
+    trace("Manifold " + manifold.normX + "," + manifold.normY +
+          " pen " + manifold.penetration);
+    */
 
     return true;
 
@@ -339,14 +344,14 @@ class RigidBody2DComponent
                                  manifold:CollisionManifold2D):Bool
   {
 
-    var normX = b.x - x;
-    var normY = b.y - y;
+    var normX:Float = b.x - x;
+    var normY:Float = b.y - y;
 
-    var overlapX = (width/2) + (b.width/2) - Math.abs(normX);
+    var overlapX:Float = (width/2) + (b.width/2) - ((normX>0)?normX:-normX);
     if (overlapX < 0)
       return false;
 
-    var overlapY = (height/2) + (b.height/2) - Math.abs(normY);
+    var overlapY:Float = (height/2) + (b.height/2) - ((normY>0)?normY:-normY);
     if (overlapY < 0)
       return false;
 

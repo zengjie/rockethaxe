@@ -99,8 +99,8 @@ class DisplayListGraphicComponent
   //--------------------------------------------------------------------
   public function render(viewport:Viewport):Void
   {
-    graphic.x = Math.floor(position.x - viewport.x);
-    graphic.y = Math.floor(position.y - viewport.y);
+    graphic.x = Math.floor((position.x - viewport.x)*viewport.pixelsPerMeter);
+    graphic.y = Math.floor((position.y - viewport.y)*viewport.pixelsPerMeter);
   }
 
   // end DisplayListGraphicComponent

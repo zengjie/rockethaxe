@@ -14,6 +14,8 @@ import com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent;
 
 import com.rocketshipgames.haxe.device.Display;
 
+import Bouncer; // For the enums
+
 
 class Main
   extends com.rocketshipgames.haxe.Game
@@ -25,12 +27,19 @@ class Main
 
   private var graphics:DisplayListGraphicsContainer;
 
+  private var count:Int = 0;
+  private var color:Int = 0xFFFF00;
+
 
   //--------------------------------------------------------------------
   public static function new():Void
   {
 
     trace("Balls Demo");
+
+    #if !flash
+      cpp.vm.Profiler.start("profile.txt");
+    #end
 
     //-- The base Game class sets up the display, mouse, audio, etc
     super();
@@ -51,62 +60,20 @@ class Main
     graphics = new DisplayListGraphicsContainer(game);
     game.addGraphicsContainer(graphics);
 
-
-    /*
-    var bar = new com.rocketshipgames.haxe.component.ComponentContainer();
-    bar.add(RigidBody2DComponent
-            .newBoxBody(100, Display.height,
-                        {
-                          x: -50, y: Display.height/2,
-                            xvel: 0, yvel: 0,
-                            xvelMin: 2, yvelMin: 2,
-                            mass: 100000,
-                            fixed: true,
-                            collidesAs: 1, collidesWith: 1,
-                            }));
-    colliders.addEntity(bar);
-
-    bar = new com.rocketshipgames.haxe.component.ComponentContainer();
-    bar.add(RigidBody2DComponent
-            .newBoxBody(100, Display.height,
-                        {
-                          x: Display.width+50, y: Display.height/2,
-                            xvel: 0, yvel: 0,
-                            xvelMin: 2, yvelMin: 2,
-                            mass: 100000,
-                            fixed: true,
-                            collidesAs: 1, collidesWith: 1,
-                            }));
-    colliders.addEntity(bar);
-
-    bar = new com.rocketshipgames.haxe.component.ComponentContainer();
-    bar.add(RigidBody2DComponent
-            .newBoxBody(Display.width, 100,
-                        {
-                          x: Display.width/2, y: Display.height-50,
-                            xvel: 0, yvel: 0,
-                            xvelMin: 2, yvelMin: 2,
-                            mass: 100000,
-                            fixed: true,
-                            collidesAs: 1, collidesWith: 1,
-                            }));
-    colliders.addEntity(bar);
-
-    var shape = new flash.display.Shape();
-    shape.graphics.lineStyle(1);
-    shape.graphics.beginFill(0xFF0000);
-    shape.graphics.drawRect(-Display.width/2, -50, Display.width, 100);
-    shape.graphics.endFill();
-    bar.add(new DisplayListGraphicComponent(shape));
-    graphics.add(bar);
-    */
-
     //-- Add an entity to the world and schedule more
     generateBouncer();
 
     //-- Add the game to the display.  In a real game this would be
     //-- done using ScreenManager to transition between menus, etc.
     flash.Lib.current.addChild(game);
+
+    #if !flash
+    game.world.scheduler.schedule(10000,
+                                  function() {
+                                    cpp.vm.Profiler.stop();
+                                    flash.Lib.exit();
+                                  });
+    #end
 
     // end new
   }
@@ -117,7 +84,41 @@ class Main
   {
 
     //-- Bouncer is a simple entity defined in this sample
-    var ball = new Bouncer();
+
+    var radius:Float = 0.5;
+    var mass:Float = 1;
+    if (count != 0 && (count % 4 == 2 || count % 4 == 3)) {
+      radius = 2;
+      mass = 4;
+    }
+
+    //-- Every fourth shape we alternate colors
+    if (count % 4 == 0) {
+      if (color == 0xFF0000)
+        color = 0xFFFF00;
+      else
+        color = 0xFF0000;
+    }
+
+    var type = BOX;
+    if (count % 3 == 1)
+      type = CIRCLE;
+
+    var opts =
+      { type: type,
+        x: (Display.width/2)/game.viewport.pixelsPerMeter,
+        y: -radius*game.viewport.pixelsPerMeter,
+        xvel: (Math.random()*16)-8, yvel: 0,
+        // xvel: 0, yvel: 0,
+        radius: radius,
+        width: radius*2, height: radius*2,
+        mass: mass,
+        gravity: true,
+        color: color,
+      };
+
+
+    var ball = Bouncer.create(opts);
 
     //-- Add new behavior on the basic Bouncer, in this case bounds
     // placeBounds(ball);
@@ -130,49 +131,14 @@ class Main
 
 
     //-- Schedule another Bouncer to be created in a second
-    if (Bouncer.count < 18)
+    count++;
+
+    if (count < 18)
       game.world.scheduler.schedule(500, generateBouncer);
 
-    trace(Bouncer.count + " bouncers");
+    trace(count + " bouncers");
 
     // end generateBouncer
-  }
-
-
-  private function placeBounds(ball:Bouncer):Void
-  {
-
-    /*
-     * The Bouncer could impose bounds on itself, but in this sample
-     * it's just a basic object that flies around.  The outer game
-     * imposes bounds on that movement by adding a new component.
-     */
-
-    var bounds = new Bounds2DComponent();
-    bounds.setBounds(0, 0, Display.width, Display.height);
-
-    /*
-     * Bounds2DComponent can generate a signal, or take a hardcoded
-     * response function.  Several are already defined, including
-     * stop, bounce, cannotLeave, cycle, and doNothing.  Specific
-     * behaviors can take different actions for different collisions
-     * by providing a custom function, which may build on the included
-     * bounds subfunctions, i.e., cycleLeft and stopBottom.
-     */
-    bounds.response = bounds.bounce;
-
-    bounds.containLeft = bounds.containRight =
-      bounds.containTop = bounds.containBottom = true;
-
-    /*
-     * By default Bounds2DComponent doesn't issue a signal, but we can
-     * turn it on so other components are notified.
-     */
-    bounds.enableSignal();
-
-    ball.add(bounds);
-
-    // end placeBounds
   }
 
   // end Main

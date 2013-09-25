@@ -31,26 +31,28 @@ class TileMapRenderer
   {
     //    trace("Render tilemap");
 
-    var x:Int, y:Int;
+    var r:Int, c:Int;
     var frame:Int;
 
-    y = 0;
-    while (y < map.rows) {
+    r = 0;
+    while (r < map.rows) {
 
-      x = 0;
-      while (x < map.columns) {
-        frame = map.tile(x, y).frame;
+      c = 0;
+      while (c < map.columns) {
+        frame = map.tile(c, r).frame;
 
         if (frame >= 0) {
-          container.drawFrame(Math.floor((x*map.catalog.width)-viewport.x),
-                              Math.floor((y*map.catalog.height)-viewport.y),
-                              frame);
+
+          container.drawFrame
+            (Math.floor(((map.x-viewport.x) + (c*map.catalog.width)) * viewport.pixelsPerMeter),
+             Math.floor(((map.y-viewport.y) + (r*map.catalog.height)) * viewport.pixelsPerMeter),
+             frame);
         }
 
-        x++;
+        c++;
       }
 
-      y++;
+      r++;
     }
 
     // end render

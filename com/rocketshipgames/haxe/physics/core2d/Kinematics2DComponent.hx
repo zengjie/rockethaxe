@@ -125,6 +125,11 @@ class Kinematics2DComponent
     if (!active)
       return;
 
+    //    trace("Millis " + millis);
+    if (millis > 45) {
+      trace("\n\n******************************************************** BAD  Millis " + millis + "\n\n");
+    }
+
     var elapsed:Float = millis/1000.0;
 
     //-------

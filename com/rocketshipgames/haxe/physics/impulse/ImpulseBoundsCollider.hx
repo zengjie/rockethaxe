@@ -12,7 +12,8 @@ class ImpulseBoundsCollider
 
   //------------------------------------------------------------
   public static var BOUNDS_BUFFER:Float = 1000.0;
-  public static var BOUNDS_MASS:Float = 100000;
+  public static var BOUNDS_MASS:Float = 10000;
+  public static var BOUNDS_RESTITUTION:Float = 0.8;
 
   //--------------------------------------------------------------------
   private var left:Float;
@@ -35,7 +36,7 @@ class ImpulseBoundsCollider
   {
     super();
 
-    setBounds(0, 0, Display.width, Display.height);
+    setBounds(0, 0, Display.width/24, Display.height/24);
 
     /*
      * Manifold persists rather than being a local variable so we're
@@ -68,6 +69,7 @@ class ImpulseBoundsCollider
                   {
                     x: left-(BOUNDS_BUFFER/2), y: (top+bottom)/2,
                     mass: BOUNDS_MASS,
+                    restitution: BOUNDS_RESTITUTION,
                     fixed: true
                   });
 
@@ -76,6 +78,7 @@ class ImpulseBoundsCollider
                   {
                     x: right+(BOUNDS_BUFFER/2), y: (top+bottom)/2,
                     mass: BOUNDS_MASS,
+                    restitution: BOUNDS_RESTITUTION,
                     fixed: true
                   });
 
@@ -84,6 +87,7 @@ class ImpulseBoundsCollider
                   {
                     x: (left+right)/2, y: top-(BOUNDS_BUFFER/2),
                     mass: BOUNDS_MASS,
+                    restitution: BOUNDS_RESTITUTION,
                     fixed: true
                   });
 
@@ -92,6 +96,7 @@ class ImpulseBoundsCollider
                   {
                     x: (left+right)/2, y: bottom+(BOUNDS_BUFFER/2),
                     mass: BOUNDS_MASS,
+                    restitution: BOUNDS_RESTITUTION,
                     fixed: true
                   });
 

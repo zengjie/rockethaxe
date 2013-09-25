@@ -1,11 +1,14 @@
 package com.rocketshipgames.haxe.physics.impulse;
 
+import com.rocketshipgames.haxe.ds.DeadpoolObject;
+
 import com.rocketshipgames.haxe.physics.CollisionManifold2D;
 import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
 
 
 class ImpulseManifold
   implements CollisionManifold2D
+  implements DeadpoolObject
 {
 
   public var a:RigidBody2DComponent;
@@ -16,6 +19,9 @@ class ImpulseManifold
 
   public var penetration:Float;
 
+  //----------------------------------------------------
+  private var deadpool:Dynamic;
+
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
@@ -24,8 +30,24 @@ class ImpulseManifold
     // end new
   }
 
+  public function init(?opts:Dynamic):Void
+  {
+  }
 
   //----------------------------------------------------
+  public function setDeadpool(deadpool:Dynamic):Void
+  {
+    this.deadpool = deadpool;
+  }
+
+  public function repool():Void
+  {
+    deadpool.returnObject(this);
+  }
+
+
+  //--------------------------------------------------------------------
+  //--------------------------------------------------------------------
   public function apply():Void
   {
 
@@ -121,8 +143,8 @@ class ImpulseManifold
 
 
     // Position correction
-    var percent:Float = 0.8;
-    var threshold:Float = 1;
+    var percent:Float = 0.9;
+    var threshold:Float = 0.0001;
 
     if (penetration > threshold) {
       var correctionX = ((penetration - threshold) /

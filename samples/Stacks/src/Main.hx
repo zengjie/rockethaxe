@@ -74,27 +74,25 @@ class Main
   private function generateStacks():Void
   {
 
-    var rows = 4;
+    var rows = 6;
     var columns = 4;
 
     for (r in 0...rows) {
       for (c in 0...columns) {
-        addBouncer(Bouncer.createBox(50, 50,
-                                     { x: (c+1)*(Display.width/(columns+1))+r*2,
-                                       y: (r+1)*(Display.height/(rows+1)),
+        addBouncer(Bouncer.create
+                   ({ type:BOX, width: 2, height: 2,
+                       x: (c+1)*((Display.width/game.viewport.pixelsPerMeter)/(columns+1))+((r%2)*game.viewport.pixelsPerMeter)/game.viewport.pixelsPerMeter,
+                       y: (r+0.5)*((Display.height/game.viewport.pixelsPerMeter)/(rows+1)),
                                          mass: 5, gravity: true }));
       }
     }
 
-    game.world.scheduler.schedule(1000,
-                        function() {
-                                    addBouncer(Bouncer.createCircle(50,
-                                                                    {x: Display.width/2, y: -50, mass: 50, gravity: true})); });
-
-    game.world.scheduler.schedule(2000,
-                        function() {
-                                    addBouncer(Bouncer.createCircle(50,
-                                                                    {x: Display.width/2, y: -50, mass: 50, gravity: true})); });
+    for (i in 2...4) {
+      game.world.scheduler.schedule(1000*i,
+                                    function() {
+                                      addBouncer(Bouncer.create({type: CIRCLE, radius: 2,
+                                              x: (Display.width/2)/game.viewport.pixelsPerMeter, y: -2, mass: 50, gravity: true})); });
+    }
 
     generateBar();
 
@@ -121,11 +119,11 @@ class Main
     var bar = new com.rocketshipgames.haxe.component.ComponentContainer();
 
     //-- Add basic position and movement
-    bar.add(RigidBody2DComponent.newBoxBody(320, 24,
+    bar.add(RigidBody2DComponent.newBoxBody(320/game.viewport.pixelsPerMeter, 1,
                                             {
-                                              x: Display.width/2, y: 552,
+                                              x: (Display.width/2)/game.viewport.pixelsPerMeter, y: 552/game.viewport.pixelsPerMeter,
                                                 xvel: 0, yvel: 0,
-                                                xvelMin: 2, yvelMin: 2,
+                                                xvelMin: 0.08, yvelMin: 0.08,
                                                 mass: 1000,
                                                 fixed: true,
                                                 collidesAs: 1, collidesWith: 1,
@@ -134,7 +132,7 @@ class Main
     var shape = new flash.display.Shape();
     shape.graphics.lineStyle(1);
     shape.graphics.beginFill(0xFF0000);
-    shape.graphics.drawRect(-160, -12, 320, 24);
+    shape.graphics.drawRect(-160, -12, 320, game.viewport.pixelsPerMeter);
     shape.graphics.endFill();
     bar.add(new DisplayListGraphicComponent(shape));
 

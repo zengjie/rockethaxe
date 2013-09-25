@@ -12,7 +12,7 @@ class ImpulseColliderAggregator
   implements Component
 {
 
-  public var iterations:Int = 8;
+  public var iterations:Int = 16;
 
   //--------------------------------------------------------------------
   private var colliders:DoubleLinkedList<ImpulseCollider>;

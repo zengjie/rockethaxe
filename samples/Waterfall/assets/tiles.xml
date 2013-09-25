@@ -1,4 +1,4 @@
-<catalog title="Demo Tiles" width="48" height="48">
+<catalog title="Demo Tiles" pixelWidth="48" pixelHeight="48">
 
   <!--
       The TileCatalog XML format is described here:

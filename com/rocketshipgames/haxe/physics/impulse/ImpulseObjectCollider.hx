@@ -13,7 +13,6 @@ class ImpulseObjectCollider
 
   private var manifold:ImpulseManifold;
 
-
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
   public function new():Void
@@ -22,10 +21,6 @@ class ImpulseObjectCollider
 
     broadphase = new SweepScanBroadphase(resolveCollision, earlier);
 
-    /*
-     * Manifold persists rather than being a local variable so we're
-     * not creating a new object every frame.
-     */
     manifold = new ImpulseManifold();
 
     // end new

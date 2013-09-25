@@ -16,8 +16,11 @@ class TileCatalog
   extends FrameCatalog
 {
 
-  public var width(default,null):Int;
-  public var height(default,null):Int;
+  public var width(default,null):Float;
+  public var height(default,null):Float;
+
+  public var pixelWidth(default,null):Int;
+  public var pixelHeight(default,null):Int;
 
   //----------------------------------------------------
   private var tiles:Array<Tile>;
@@ -46,10 +49,11 @@ class TileCatalog
   }
 
   public static function load(descriptor:String,
-                              spritesheet:SpritesheetContainer):TileCatalog
+                              spritesheet:SpritesheetContainer,
+                              pixelsPerMeter:Float):TileCatalog
   {
     var catalog = new TileCatalog(spritesheet);
-    catalog.parse(descriptor);
+    catalog.parse(descriptor, pixelsPerMeter);
     return catalog;
     // end TileCatalog
   }
@@ -68,7 +72,7 @@ class TileCatalog
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function parse(descriptor:String):Void
+  public function parse(descriptor:String, pixelsPerMeter:Float):Void
   {
 
     var root = new haxe.xml.Fast(Xml.parse(descriptor).firstElement());
@@ -76,18 +80,30 @@ class TileCatalog
     //-- Get the basic properties, namely width and height
     if (root.has.title) title = root.att.title;
 
-    if (root.has.width)
-      width = Std.parseInt(root.att.width);
+    if (root.has.pixelWidth)
+      pixelWidth = Std.parseInt(root.att.pixelWidth);
     else
-      Debug.error("Tilesheet has no tile width.");
+      Debug.error("Tilesheet has no tile pixel width.");
+
+    if (root.has.pixelHeight)
+      pixelHeight = Std.parseInt(root.att.pixelHeight);
+    else
+      Debug.error("Tilesheet has no tile pixel height.");
+
+    width = pixelWidth / pixelsPerMeter;
+    height = pixelHeight / pixelsPerMeter;
+
+    if (root.has.width)
+      width = Std.parseFloat(root.att.width);
 
     if (root.has.height)
-      height = Std.parseInt(root.att.height);
-    else
-      Debug.error("Tilesheet has no tile height.");
+      height = Std.parseFloat(root.att.height);
+
 
     #if verbose_tiles
-      Debug.debug("Tileset " + title + " w,h " + width + "," + height);
+      Debug.debug("Tileset " + title +
+                  " w,h " + width + "," + height +
+                  " pixel w,h " + pixelWidth + "," + pixelHeight);
     #end
 
 
@@ -98,7 +114,7 @@ class TileCatalog
 
     //-- Populate frames
     for (frames in root.nodes.frames) {
-      extractFrames(frames, width, height);
+      extractFrames(frames, pixelWidth, pixelHeight);
     }
 
     //-- Populate tiles
