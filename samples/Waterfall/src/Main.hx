@@ -85,7 +85,7 @@ class Main
     colliders.add(new ImpulseTileChunkCollider(chunk));
     colliders.add(new ImpulseBoundsCollider());
     game.world.mechanics.add(colliders);
-    colliders.iterations = 1;
+    colliders.iterations = 8;
 
     game.world.scheduler.schedule(1000, generateBouncer);
 

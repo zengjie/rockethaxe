@@ -19,6 +19,10 @@ class ImpulseManifold
 
   public var penetration:Float;
 
+  public var penetrationThreshold:Float;
+  public var correctionPercent:Float;
+
+
   //----------------------------------------------------
   private var deadpool:Dynamic;
 
@@ -27,6 +31,9 @@ class ImpulseManifold
   //--------------------------------------------------------------------
   public function new():Void
   {
+    correctionPercent = 0.9;
+    penetrationThreshold = 0.0001;
+      // 1/com.rocketshipgames.haxe.device.Display.defaultPixelsPerMeter;
     // end new
   }
 
@@ -60,41 +67,45 @@ class ImpulseManifold
     if (vel > 0)
       return;
 
-    var e = Math.min(b.restitution,
-                     a.restitution);
+    var invMassSum = (a.invMass + b.invMass);
 
-    var j = (-(1 + e) * vel) /
-      ((1/a.mass) + (1/b.mass));
+    // Bounce
+
+    var e = Math.min(a.restitution, b.restitution);
+
+    var j = (-(1 + e) * vel) / invMassSum;
 
     var impX = j * normX;
     var impY = j * normY;
 
     if (!a.fixed) {
-      a.xvel -= (1/a.mass) * impX;
-      a.yvel -= (1/a.mass) * impY;
+      a.xvel -= a.invMass * impX;
+      a.yvel -= a.invMass * impY;
     }
 
     if (!b.fixed) {
-      b.xvel += (1/b.mass) * impX;
-      b.yvel += (1/b.mass) * impY;
+      b.xvel += b.invMass * impX;
+      b.yvel += b.invMass * impY;
     }
 
-
-    // Friction
+    // Recompute as these have now changed
     rvx = b.xvel - a.xvel;
     rvy = b.yvel - a.yvel;
 
+
+    // Friction
     var tx = rvx - (rvx*normX)+(rvy*normY)*normX;
     var ty = rvy - (rvx*normX)+(rvy*normY)*normY;
-    var td = Math.sqrt((tx*tx)+(ty*ty));
 
-    if (td != 0) {
+      var td = Math.sqrt((tx*tx)+(ty*ty));
+
+      if (td != 0) {
+
       tx /= td;
       ty /= td;
 
-      var jt = -((rvx*tx)+(rvy*ty));
-      jt /= (1/a.mass) + (1/b.mass);
 
+      var jt = -((rvx*tx)+(rvy*ty)) / invMassSum;
 
       var sf = Math.sqrt
         ((a.staticFriction * a.staticFriction) +
@@ -114,18 +125,18 @@ class ImpulseManifold
         iy = ty * -j * df;
       }
 
+
       if (!a.fixed) {
-        a.xvel -= (1/a.mass) * ix;
-        a.yvel -= (1/a.mass) * iy;
+        a.xvel -= a.invMass * ix;
+        a.yvel -= a.invMass * iy;
       }
 
       if (!b.fixed) {
-        b.xvel += (1/b.mass) * ix;
-        b.yvel += (1/b.mass) * iy;
+        b.xvel += b.invMass * ix;
+        b.yvel += b.invMass * iy;
       }
 
     }
-
 
     /*
     var motion = (a.xvel*a.xvel)+
@@ -143,17 +154,11 @@ class ImpulseManifold
 
 
     // Position correction
-    var percent:Float = 0.9;
-    var threshold:Float = 0.0001;
 
-    if (penetration > threshold) {
-      var correctionX = ((penetration - threshold) /
-                         ((1/a.mass) + (1/b.mass)))
-        * normX * percent;
+    if (penetration > penetrationThreshold) {
+      var correctionX = (penetration / invMassSum) * normX * correctionPercent;
 
-      var correctionY = ((penetration - threshold) /
-                         ((1/a.mass) + (1/b.mass)))
-        * normY * percent;
+      var correctionY = (penetration / invMassSum) * normY * correctionPercent;
 
       /*
       trace("Penetration " + penetration +
@@ -162,13 +167,35 @@ class ImpulseManifold
       */
 
       if (!a.fixed) {
-        a.x -= (1/a.mass) * correctionX;
-        a.y -= (1/a.mass) * correctionY;
+        /*
+        var cx = a.invMass * correctionX;
+        var cy = a.invMass * correctionY;
+
+        if (Math.abs(cx) > penetrationThreshold)
+          a.x -= cx;
+
+        if (Math.abs(cy) > penetrationThreshold)
+          a.y -= cy;
+        */
+
+        a.x -= a.invMass * correctionX;
+        a.y -= a.invMass * correctionY;
       }
 
       if (!b.fixed) {
-        b.x += (1/b.mass) * correctionX;
-        b.y += (1/b.mass) * correctionY;
+        /*
+        var cx = b.invMass * correctionX;
+        var cy = b.invMass * correctionY;
+
+        if (Math.abs(cx) > penetrationThreshold)
+          b.x += cx;
+
+        if (Math.abs(cy) > penetrationThreshold)
+          b.y += cy;
+        */
+
+        b.x += b.invMass * correctionX;
+        b.y += b.invMass * correctionY;
       }
 
     }

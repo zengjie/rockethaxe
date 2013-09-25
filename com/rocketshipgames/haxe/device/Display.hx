@@ -9,6 +9,8 @@ class Display
   public static var width(default,null):Float;
   public static var height(default,null):Float;
 
+  public static var defaultPixelsPerMeter:Float = 24.0;
+
 
   //--------------------------------------------------------------------
   //------------------------------------------------------------

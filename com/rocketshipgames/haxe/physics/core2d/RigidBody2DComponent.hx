@@ -34,7 +34,9 @@ class RigidBody2DComponent
   public var offsetX:Float;
   public var offsetY:Float;
 
-  public var mass:Float;
+  public var mass(default,set):Float;
+  public var invMass:Float;
+
   public var restitution:Float;
 
   public var staticFriction:Float;
@@ -59,7 +61,7 @@ class RigidBody2DComponent
     radius = width = height = 0.0;
     offsetX = offsetY = 0.0;
 
-    mass = 1.0;
+    mass = invMass = 1.0;
     restitution = 0.8;
 
     staticFriction = 0.3;
@@ -69,6 +71,21 @@ class RigidBody2DComponent
 
     // end new
   }
+
+
+  //----------------------------------------------------
+  public function set_mass(m:Float):Float
+  {
+    mass = m;
+
+    if (mass == 0)
+      invMass = Math.POSITIVE_INFINITY;
+    else
+      invMass = 1/mass;
+
+    return mass;
+  }
+
 
   //----------------------------------------------------
   public static function newCircleBody(radius:Float,

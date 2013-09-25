@@ -35,8 +35,14 @@ class Kinematics2DComponent
   {
     super();
 
-    xvel = xacc = xdrag = xvelMin = 0.0;
-    yvel = yacc = ydrag = yvelMin = 0.0;
+    xvel = xacc = 0.0;
+    yvel = yacc = 0.0;
+
+    xdrag = ydrag = 0.0;
+
+    xvelMin = yvelMin =
+      4/com.rocketshipgames.haxe.device.Display.defaultPixelsPerMeter;
+
     xvelMax = yvelMax = Math.POSITIVE_INFINITY;
 
     // end Kinematics2DComponent

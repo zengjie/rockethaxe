@@ -69,6 +69,7 @@ class ImpulseComponent
   //--------------------------------------------------------------------
 
   public function begin():Float { return body.top(); }
+
   public function end():Float { return body.bottom(); }
 
   // end ImpulseComponent

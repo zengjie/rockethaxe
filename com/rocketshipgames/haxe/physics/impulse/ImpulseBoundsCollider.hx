@@ -12,7 +12,7 @@ class ImpulseBoundsCollider
 
   //------------------------------------------------------------
   public static var BOUNDS_BUFFER:Float = 1000.0;
-  public static var BOUNDS_MASS:Float = 10000;
+  public static var BOUNDS_MASS:Float = Math.POSITIVE_INFINITY;
   public static var BOUNDS_RESTITUTION:Float = 0.8;
 
   //--------------------------------------------------------------------
@@ -36,7 +36,9 @@ class ImpulseBoundsCollider
   {
     super();
 
-    setBounds(0, 0, Display.width/24, Display.height/24);
+    setBounds(0, 0,
+              Display.width/Display.defaultPixelsPerMeter,
+              Display.height/Display.defaultPixelsPerMeter);
 
     /*
      * Manifold persists rather than being a local variable so we're

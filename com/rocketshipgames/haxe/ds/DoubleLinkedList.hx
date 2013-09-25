@@ -65,6 +65,8 @@ class DoubleLinkedList<T>
 
     if (tail == null)
       tail = handle;
+    else
+      head.prev = handle;
 
     handle.next = head;
     head = handle;

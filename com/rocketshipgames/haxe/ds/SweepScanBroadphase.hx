@@ -99,7 +99,6 @@ class SweepScanBroadphase<T:SweepScanEntity<D>, D>
     var inner:T;
 
     while ((event = heap.pop()) != null) {
-      outer = event.data;
 
       switch (event.action) {
       case BEGIN:
@@ -113,7 +112,7 @@ class SweepScanBroadphase<T:SweepScanEntity<D>, D>
         // 1) Scan list of live entries
         scanEvent = scanList.head;
         while (scanEvent != null) {
-          resolveEvent(outer, scanEvent.item.data);
+          resolveEvent(event.data, scanEvent.item.data);
 
           scanEvent = scanEvent.next;
           // end looping over scan list
@@ -125,6 +124,18 @@ class SweepScanBroadphase<T:SweepScanEntity<D>, D>
 
       case END:
         // Bottom of an object.  Remove associated top from scan list
+        /*
+        if (event.beginEvent.scanHandle.list == null) {
+          Debug.error("Scan event no longer in list!");
+
+          while ((event = heap.pop()) != null) {
+            trace("  Remaining: " + event.toString());
+          }
+
+          flash.Lib.exit();
+        }
+        */
+
         event.beginEvent.scanHandle.remove();
 
         // Return both the top and bottom SweepScanEvents to the deadpool
@@ -165,12 +176,17 @@ private class SweepScanEvent<T,D>
 
   public var deadpool:Dynamic;
 
+  public static var count:Int = 0;
+  public var id:Int;
 
   public function new(opts:Dynamic):Void
   {
     #if verbose_ds
       trace("New SweepScanEvent");
     #end
+
+      id = count;
+    count++;
 
     scanHandle = null;
     init(opts);
@@ -194,6 +210,11 @@ private class SweepScanEvent<T,D>
   public function repool():Void
   {
     deadpool.returnObject(this);
+  }
+
+  public function toString():String
+  {
+    return "ID " + id + " " + ((action==BEGIN)?"BEGIN":"END") + " " + t;
   }
 
   // end SweepScanEvent

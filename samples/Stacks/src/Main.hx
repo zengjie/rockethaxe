@@ -43,6 +43,7 @@ class Main
     colliders = new ImpulseColliderAggregator();
     colliders.add(new ImpulseObjectCollider());
     game.world.mechanics.add(colliders);
+    colliders.iterations = 12;
 
     //-- Create the container for the bouncers' graphics.  It takes a
     //-- flash.display.Sprite (which an ArcadeScreen ultimately is) as
@@ -83,7 +84,7 @@ class Main
                    ({ type:BOX, width: 2, height: 2,
                        x: (c+1)*((Display.width/game.viewport.pixelsPerMeter)/(columns+1))+((r%2)*game.viewport.pixelsPerMeter)/game.viewport.pixelsPerMeter,
                        y: (r+0.5)*((Display.height/game.viewport.pixelsPerMeter)/(rows+1)),
-                                         mass: 5, gravity: true }));
+                                         mass: 1, gravity: true }));
       }
     }
 
@@ -91,7 +92,7 @@ class Main
       game.world.scheduler.schedule(1000*i,
                                     function() {
                                       addBouncer(Bouncer.create({type: CIRCLE, radius: 2,
-                                              x: (Display.width/2)/game.viewport.pixelsPerMeter, y: -2, mass: 50, gravity: true})); });
+                                              x: (Display.width/2)/game.viewport.pixelsPerMeter, y: -2, mass: 10, gravity: true})); });
     }
 
     generateBar();

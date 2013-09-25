@@ -51,8 +51,11 @@ class Main
     //-- Create the container to collectively collide all the bouncers
     colliders = new ImpulseColliderAggregator();
     colliders.add(new ImpulseObjectCollider());
-    colliders.add(new ImpulseBoundsCollider());
+    var bounds = new ImpulseBoundsCollider();
+    bounds.setBounds(0, 0, 20, 20);
+    colliders.add(bounds);
     game.world.mechanics.add(colliders);
+    colliders.iterations = 8;
 
     //-- Create the container for the bouncers' graphics.  It takes a
     //-- flash.display.Sprite (which an ArcadeScreen ultimately is) as
@@ -67,6 +70,7 @@ class Main
     //-- done using ScreenManager to transition between menus, etc.
     flash.Lib.current.addChild(game);
 
+    /*
     #if !flash
     game.world.scheduler.schedule(10000,
                                   function() {
@@ -74,6 +78,7 @@ class Main
                                     flash.Lib.exit();
                                   });
     #end
+    */
 
     // end new
   }
@@ -89,7 +94,7 @@ class Main
     var mass:Float = 1;
     if (count != 0 && (count % 4 == 2 || count % 4 == 3)) {
       radius = 2;
-      mass = 4;
+      mass = 1;
     }
 
     //-- Every fourth shape we alternate colors
@@ -106,10 +111,11 @@ class Main
 
     var opts =
       { type: type,
-        x: (Display.width/2)/game.viewport.pixelsPerMeter,
-        y: -radius*game.viewport.pixelsPerMeter,
-        xvel: (Math.random()*16)-8, yvel: 0,
-        // xvel: 0, yvel: 0,
+        //        x: (Display.width/2)/game.viewport.pixelsPerMeter,
+        x: 10,
+        y: -radius,
+        //xvel: (Math.random()*16)-8, yvel: 0,
+        xvel: 0, yvel: 0,
         radius: radius,
         width: radius*2, height: radius*2,
         mass: mass,
@@ -133,7 +139,7 @@ class Main
     //-- Schedule another Bouncer to be created in a second
     count++;
 
-    if (count < 18)
+    if (count < 8)
       game.world.scheduler.schedule(500, generateBouncer);
 
     trace(count + " bouncers");

@@ -19,7 +19,7 @@ class ArcadeScreen
   public var pauseOnUnfocus:Bool;
   public var pausedBitmap:Bitmap;
 
-  public var maxElapsed:Int = 40;
+  public var maxElapsed:Int = 50;
 
   //------------------------------------------------------------
   private var paused(default,null):Bool;
@@ -193,21 +193,20 @@ class ArcadeScreen
         Debug.debug("** Loop update " + elapsed);
       #end
 
-      /*
+
       while (elapsed > maxElapsed) {
         #if verbose_core
           Debug.debug("   Loop update " + elapsed);
         #end
 
         world.update(maxElapsed);
-        elapsed = elapsed >> 1;
+        elapsed -= maxElapsed;
       }
       world.update(elapsed);
-      */
 
-        //      world.update((elapsed < maxElapsed) ? elapsed : maxElapsed);
+      // world.update((elapsed < maxElapsed) ? elapsed : maxElapsed);
 
-      world.update(elapsed);
+      // world.update(elapsed);
       
       prevFrameTimestamp = currTime;
       // end not paused

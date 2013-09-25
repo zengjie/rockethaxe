@@ -100,6 +100,49 @@ class TestHeap
     }
     trace("Order confirmed");
 
+
+    //------------------------------------------------------------------
+    var fheap:Heap<FloatItem> = new Heap(lessFloat);
+
+    fheap.add(new FloatItem(13.023987));
+    fheap.add(new FloatItem(14.023987));
+    fheap.add(new FloatItem(15.023987));
+    fheap.add(new FloatItem(16.023987));
+
+    // Since NaN compares false to everything, inserting NaN into a
+    // float list will break everything.
+    // fheap.add(new FloatItem(Math.NaN)); 
+
+    fheap.add(new FloatItem(15.023987));
+    fheap.add(new FloatItem(16.023987));
+    fheap.add(new FloatItem(9.023987));
+    fheap.add(new FloatItem(10.023987));
+    fheap.add(new FloatItem(14.10988637));
+    fheap.add(new FloatItem(15.10988637));
+    fheap.add(new FloatItem(14.05891982));
+    fheap.add(new FloatItem(15.05891982));
+    fheap.add(new FloatItem(13.19578573));
+    fheap.add(new FloatItem(14.19578573));
+    fheap.add(new FloatItem(11.023987));
+    fheap.add(new FloatItem(12.023987));
+    fheap.add(new FloatItem(19.023987));
+    fheap.add(new FloatItem(20.023987));
+    fheap.add(new FloatItem(9.023987));
+    fheap.add(new FloatItem(10.023987));
+    fheap.add(new FloatItem(11.45631807));
+    fheap.add(new FloatItem(12.45631807));
+
+    var fprev:Float = -1;
+    var fitem:FloatItem;
+    while ((fitem = fheap.pop()) != null) {
+      if (fitem.val < fprev) {
+        trace("ERROR: Float heap not sorted");
+        Sys.exit(1);
+      }
+      fprev = fitem.val;
+    }
+    trace("Float order confirmed");
+
     // end main
   }
 
@@ -107,6 +150,11 @@ class TestHeap
   private static function less(a:Item, b:Item):Bool
   {
     return (a.id < b.id);
+  }
+
+  private static function lessFloat(a:FloatItem, b:FloatItem):Bool
+  {
+    return (a.val < b.val);
   }
 
   // end TestDoubleLinkedList
@@ -123,6 +171,23 @@ private class Item
   public function new(id:Int):Void
   {
     this.id = id;
+    // end new
+  }
+
+  // end Item
+}
+
+
+private class FloatItem
+{
+
+  public var val:Float;
+
+  //--------------------------------------------------------------------
+  //----------------------------------------------------
+  public function new(val:Float):Void
+  {
+    this.val = val;
     // end new
   }
 

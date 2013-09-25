@@ -33,7 +33,8 @@ class ImpulseTileChunkCollider
      */
     tileBody = RigidBody2DComponent.newBoxBody(chunk.catalog.width,
                                                chunk.catalog.height,
-                                               { fixed: true, mass:1000 });
+                                               { fixed: true,
+                                                 mass: Math.POSITIVE_INFINITY });
 
     manifold = new ImpulseManifold();
     manifold.a = tileBody;

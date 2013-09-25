@@ -15,7 +15,7 @@
   <window background="#336699" />
 
 <!--  <window fullscreen="true" width="640" height="480" if="linux" /> -->
-  <window width="480" height="480" unless="android" />
+  <window width="720" height="720" unless="android" />
   <window width="0" height="0" orientation="landscape" if="android" />
 
   <window fps="60" resizable="false" />

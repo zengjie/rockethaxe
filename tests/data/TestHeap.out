@@ -37,3 +37,4 @@ TestHeap.hx:63: Order confirmed
 TestHeap.hx:68: Adding and popping random
 TestHeap.hx:84: Order confirmed
 TestHeap.hx:101: Order confirmed
+TestHeap.hx:144: Float order confirmed
