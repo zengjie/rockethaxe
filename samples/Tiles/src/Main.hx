@@ -17,10 +17,9 @@ import com.rocketshipgames.haxe.world.tilemap.TileChunk;
 import com.rocketshipgames.haxe.gfx.sprites.TileMapRenderer;
 
 import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
-import com.rocketshipgames.haxe.physics.core2d.Kinematics2DComponent;
 
-import com.rocketshipgames.haxe.physics.PhysicsCapabilities;
 import com.rocketshipgames.haxe.world.behaviors.ViewportTrackerComponent;
+import com.rocketshipgames.haxe.world.behaviors.KeyboardImpulseComponent;
 
 import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
@@ -99,9 +98,6 @@ var csv =
 
     var chunk = TileChunk.loadCSV(catalog, csv, TileChunk.autotileRPG);
 
-    trace("Chunk " + chunk.left() + "," + chunk.top() + " -- " +
-          chunk.right() + "," + chunk.bottom());
-
     var tiledraw = new TileMapRenderer();
     tiledraw.map = chunk;
     graphics.addRenderer(tiledraw);
@@ -164,7 +160,11 @@ var csv =
                     restitution: 0.5,
                     }));
 
-    walker.insert(new WalkerKeyboard());
+    //-- The keyboard controls are inserted after the rigid body
+    //-- because they're dependent on the body's kinematics, but
+    //-- they're inserted rather than added because we want them
+    //-- processed each loop before the kinematics.
+    walker.insert(KeyboardImpulseComponent.create());
 
     var shape = new flash.display.Shape();
     shape.graphics.beginFill(0xFF0000);
@@ -196,50 +196,3 @@ var csv =
 }
 
 
-private class WalkerKeyboard
-  implements com.rocketshipgames.haxe.component.Component
-{
-
-  private var kinematics:Kinematics2DComponent;
-
-
-  public function new():Void
-  {
-  }
-
-  public function attach(container:ComponentHandle):Void
-  {
-    kinematics = cast(container.find(PhysicsCapabilities.CID_KINEMATICS2D),
-                      Kinematics2DComponent);
-  }
-
-  public function detach():Void
-  {
-  }
-
-  public function activate(?opts:Dynamic):Void
-  {
-  }
-  public function deactivate():Void
-  {
-  }
-
-  public function update(elapsed:Int):Void
-  {
-    kinematics.xacc = kinematics.yacc = 0.0;
-
-    if (Keyboard.isKeyDown(Keyboard.RIGHT))
-      kinematics.xacc = 84;
-    else if (Keyboard.isKeyDown(Keyboard.LEFT))
-      kinematics.xacc = -84;
-
-    if (Keyboard.isKeyDown(Keyboard.UP))
-      kinematics.yacc = -84;
-    else if (Keyboard.isKeyDown(Keyboard.DOWN))
-      kinematics.yacc = 84;
-
-    // end update
-  }
-
-  // end WalkerKeyboard
-}
