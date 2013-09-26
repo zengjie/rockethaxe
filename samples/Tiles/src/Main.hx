@@ -16,12 +16,17 @@ import com.rocketshipgames.haxe.world.tilemap.TileChunk;
 
 import com.rocketshipgames.haxe.gfx.sprites.TileMapRenderer;
 
+import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
 import com.rocketshipgames.haxe.physics.core2d.Kinematics2DComponent;
+
 import com.rocketshipgames.haxe.physics.PhysicsCapabilities;
 import com.rocketshipgames.haxe.world.behaviors.ViewportTrackerComponent;
 
 import com.rocketshipgames.haxe.component.Component;
 import com.rocketshipgames.haxe.component.ComponentHandle;
+
+import com.rocketshipgames.haxe.physics.impulse.ImpulseTileChunkCollider;
+
 
 
 class Main
@@ -141,34 +146,44 @@ var csv =
                             }
                           });
 
-/*
     var sprites = new com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer(game);
     game.addGraphicsContainer(sprites);
 
-
     var walker = new com.rocketshipgames.haxe.component.ComponentContainer();
 
-    walker.add(Kinematics2DComponent.create
-               ({  //x: (chunk.right()-chunk.left())/2,
-                   //y: (chunk.bottom()-chunk.top())/2,
-                 x: 0, y: 0,
-                   xvel: 0, yvel: 0,
-                   xvelMin: 2, yvelMin: 2,
-                   xvelMax: 250, yvelMax: 250,
-                   ydrag: 20, xdrag: 20}));
+    var size = 1;
+    walker.add(RigidBody2DComponent.newBoxBody
+               (size, size,
+                {x: (chunk.right()-chunk.left())/2,
+                    y: (chunk.bottom()-chunk.top())/2,
+                   // x: 0, y: 0,
+                    xvel: 0, yvel: 0,
+                    xvelMax: 5, yvelMax: 5,
+                    ydrag: 42, xdrag: 42,
+                    collidesWith: 1,
+                    restitution: 0.5,
+                    }));
 
     walker.insert(new WalkerKeyboard());
 
     var shape = new flash.display.Shape();
     shape.graphics.beginFill(0xFF0000);
-    shape.graphics.drawRect(-12.5, -12.5, 25, 25);
+    shape.graphics.drawRect(-size*game.viewport.pixelsPerMeter/2,
+                            -size*game.viewport.pixelsPerMeter/2,
+                            size*game.viewport.pixelsPerMeter,
+                            size*game.viewport.pixelsPerMeter);
     shape.graphics.endFill();
     walker.add(new com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent(shape));
-    walker.add(ViewportTrackerComponent.create(game.viewport));
+    // walker.add(ViewportTrackerComponent.create(game.viewport));
 
     sprites.add(walker);
+
+    //-- Create the container to collectively collide all the bouncers
+    var collider = new ImpulseTileChunkCollider(chunk);
+    collider.add(walker);
+    game.world.mechanics.add(collider);
+
     game.world.entities.add(walker);
-*/
 
     //-- Add the game to the display.  In a real game this would be
     //-- done using ScreenManager to transition between menus, etc.
@@ -214,14 +229,14 @@ private class WalkerKeyboard
     kinematics.xacc = kinematics.yacc = 0.0;
 
     if (Keyboard.isKeyDown(Keyboard.RIGHT))
-      kinematics.xacc = 42;
+      kinematics.xacc = 84;
     else if (Keyboard.isKeyDown(Keyboard.LEFT))
-      kinematics.xacc = -42;
+      kinematics.xacc = -84;
 
     if (Keyboard.isKeyDown(Keyboard.UP))
-      kinematics.yacc = -42;
+      kinematics.yacc = -84;
     else if (Keyboard.isKeyDown(Keyboard.DOWN))
-      kinematics.yacc = 42;
+      kinematics.yacc = 84;
 
     // end update
   }

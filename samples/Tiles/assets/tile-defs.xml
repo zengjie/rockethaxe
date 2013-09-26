@@ -19,44 +19,44 @@
 
     <!-- Sand/Water -->
     <tile label="sand" />
-    <tile/>
-    <tile/>
-    <tile/>
+    <tile collision="water" />
+    <tile collision="water" />
+    <tile collision="water" />
 
-    <tile/>
-    <tile/>
-    <tile/>
-    <tile/>
+    <tile collision="water" />
+    <tile collision="water" />
+    <tile collision="water" />
+    <tile collision="water" />
 
-    <tile/>
-    <tile/>
-    <tile/>
-    <tile/>
+    <tile collision="water" />
+    <tile collision="water" />
+    <tile collision="water" />
+    <tile collision="water" />
 
-    <tile/>
-    <tile/>
-    <tile/>
-    <tile label="water" />
+    <tile collision="water" />
+    <tile collision="water" />
+    <tile collision="water" />
+    <tile collision="water" label="water" />
 
     <!-- Grass/Sand -->
     <tile frame="31" label="unused" />
-    <tile frame="30"/>
-    <tile frame="29"/>
-    <tile frame="28"/>
+    <tile frame="30" />
+    <tile frame="29" />
+    <tile frame="28" />
 
-    <tile frame="27"/>
-    <tile frame="26"/>
-    <tile frame="25"/>
-    <tile frame="24"/>
+    <tile frame="27" />
+    <tile frame="26" />
+    <tile frame="25" />
+    <tile frame="24" />
 
-    <tile frame="23"/>
-    <tile frame="22"/>
-    <tile frame="21"/>
-    <tile frame="20"/>
+    <tile frame="23" />
+    <tile frame="22" />
+    <tile frame="21" />
+    <tile frame="20" />
 
-    <tile frame="19"/>
-    <tile frame="18"/>
-    <tile frame="17"/>
+    <tile frame="19" />
+    <tile frame="18" />
+    <tile frame="17" />
     <tile frame="16" label="grass" />
   </tiles>
 

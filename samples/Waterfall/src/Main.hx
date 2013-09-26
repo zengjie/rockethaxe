@@ -67,7 +67,7 @@ class Main
  1, 0, 0, 0, 0, 0, 0, 0, 1, 1';
  
 
-    var chunk = TileChunk.loadCSV(catalog, csv);
+    var chunk = TileChunk.loadCSV(catalog, csv, TileChunk.autotilePlatformer);
 
     var tiledraw = new TileMapRenderer();
     tiledraw.map = chunk;

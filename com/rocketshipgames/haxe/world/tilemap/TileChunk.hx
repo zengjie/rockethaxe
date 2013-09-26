@@ -132,7 +132,7 @@ class TileChunk
 
     //-- Convert map values into tile indices if it is not already
     if (autotiler != null)
-      autotileRPG(map, bits);
+      autotiler(map, bits);
 
 
     //-- Convert tile indices into tile pointers
@@ -190,6 +190,44 @@ class TileChunk
     }
 
     // end autotileRPG
+  }
+
+  //--------------------------------------------------------------------
+  public static function autotilePlatformer(map:Array<Array<Int>>,
+                                            tile:Array<Array<Int>>):Void
+  {
+
+    trace("Platformer autotile");
+
+    for (row in 0...map.length) {
+      for (col in 0...map[row].length) {
+        trace("Map " + row + ","+col + " " + map[row][col]);
+        if (map[row][col] != 0) {
+
+        var index = 0;
+
+        if (row > 0 && map[row-1][col] != 0)
+          index |= 1;
+
+        if (row < map.length-1 && map[row+1][col] != 0)
+          index |= 4;
+
+        if (col > 0 && map[row][col-1] != 0)
+          index |= 8;
+
+        if (col < map[row].length && map[row][col+1] != 0)
+          index |= 2;
+
+        tile[row][col] = index+1; // 0 tile is blank
+        trace("Tile " + row + ","+col + " " + index);
+
+        }
+
+        // end looping columns
+      }
+    }
+
+    // end autotilePlatformer
   }
 
   // end TileChunk

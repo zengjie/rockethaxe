@@ -11,7 +11,7 @@ class ImpulseCollider
   implements Component
 {
 
-  public var iterations:Int = 8;
+  public var iterations:Int = 2;
 
   //--------------------------------------------------------------------
   @:allow(com.rocketshipgames.haxe.physics.impulse.ImpulseComponent)
