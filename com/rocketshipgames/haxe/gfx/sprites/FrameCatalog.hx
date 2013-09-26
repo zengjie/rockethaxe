@@ -11,10 +11,16 @@ class FrameCatalog
 
   public var title(default,null):String;
 
+  public var pixelWidth(default,null):Int;
+  public var pixelHeight(default,null):Int;
+
+  public var baseFrameIndex(default,null):Int;
+
+
   //----------------------------------------------------
   private var frameLabels:Map<String, Int>;
 
-  private var baseFrameIndex:Int;
+  private var defaultCentered:Bool;
 
 
   //--------------------------------------------------------------------
@@ -31,7 +37,7 @@ class FrameCatalog
 
 
   //--------------------------------------------------------------------
-  private function extractFrames(root:haxe.xml.Fast, width:Int, height:Int):Void
+  private function extractFrames(root:haxe.xml.Fast):Void
   {
 
     // Need to base any raw numbers off the first tile extracted by
@@ -41,10 +47,7 @@ class FrameCatalog
 
     for (cmd in root.elements) {
 
-      if (cmd.name == "grid")
-        parseGrid(cmd, width, height);
-      else if (cmd.name == "keyframe")
-        parseKeyframe(cmd);
+      commandSwitch(cmd);
 
       // end looping frame commands
     }
@@ -53,7 +56,21 @@ class FrameCatalog
   }
 
   //----------------------------------------------------
-  private function parseGrid(cmd:haxe.xml.Fast, width:Int, height:Int):Void
+  private function commandSwitch(cmd:haxe.xml.Fast):Void
+  {
+
+      if (cmd.name == "grid")
+        parseGrid(cmd);
+      else if (cmd.name == "keyframe")
+        parseKeyframe(cmd);
+      else
+        Debug.error("Unknown frame catalog command " + cmd.name);
+
+    // end commandSwitch
+  }
+
+  //----------------------------------------------------
+  private function parseGrid(cmd:haxe.xml.Fast):Void
   {
 
     if (cmd.has.label)
@@ -70,18 +87,25 @@ class FrameCatalog
     var basey:Int = 0;
     if (cmd.has.y) basey = Std.parseInt(cmd.att.y);
 
+
+    var cx:Float = 0.0, cy:Float = 0.0;
+    if (defaultCentered) {
+      cx = pixelWidth/2;
+      cy = pixelHeight/2;
+    }
+
     var x:Int = basex;
     var y:Int = basey;
     for (r in 0...rows) {
       x = basex;
 
       for (c in 0...columns) {
-        spritesheet.addFrame(x, y, width, height, 0, 0);
-        x += width;
+        spritesheet.addFrame(x, y, pixelWidth, pixelHeight, cx, cy);
+        x += pixelWidth;
         // end columns
       }
 
-      y += height;
+      y += pixelHeight;
       // end rows
     }
 

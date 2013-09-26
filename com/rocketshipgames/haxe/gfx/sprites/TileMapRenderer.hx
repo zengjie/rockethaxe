@@ -13,8 +13,9 @@ class TileMapRenderer
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public function new():Void
+  public function new(?map:TileChunk):Void
   {
+    this.map = map;
     // end new
   }
 

@@ -1,7 +1,6 @@
-package com.rocketshipgames.haxe.gfx.displaylist;
+package com.rocketshipgames.haxe.gfx.sprites;
 
-import flash.display.Sprite;
-import flash.display.DisplayObject;
+import com.rocketshipgames.haxe.ds.DoubleLinkedListHandle;
 
 import com.rocketshipgames.haxe.component.ComponentContainer;
 import com.rocketshipgames.haxe.component.ComponentHandle;
@@ -14,31 +13,42 @@ import com.rocketshipgames.haxe.physics.Position2D;
 import com.rocketshipgames.haxe.gfx.Viewport;
 
 
-class DisplayListGraphicComponent
+class GameSpriteComponent
   implements Component
 {
 
   public static var CID:CapabilityID =
-    ComponentContainer.hashID("displayobject");
+    ComponentContainer.hashID("gamesprite");
 
 
   //----------------------------------------------------
-  private var root:Sprite;
-  private var graphic:DisplayObject;
+  private var renderer:GameSpriteRenderer;
+  private var spritesheet:SpritesheetContainer;
+
+  @:allow(com.rocketshipgames.haxe.gfx.sprites.GameSpriteRenderer)
+  private var layer:Int;
+
+  @:allow(com.rocketshipgames.haxe.gfx.sprites.GameSpriteRenderer)
+  private var handle:DoubleLinkedListHandle<GameSpriteComponent>;
+
+  private var sprite:GameSprite;
 
   private var position:Position2D;
 
-  private var active:Bool;
-
   private var tag:CapabilityID;
+
+  private var frame:Int;
+
+  private var active:Bool;
 
 
   //--------------------------------------------------------------------
-  public function new(graphic:DisplayObject,
-                      ?tag:CapabilityID):Void
+  public function new(sprite:GameSprite, ?tag:CapabilityID):Void
   {
-    this.graphic = graphic;
     active = true;
+
+    this.sprite = sprite;
+    frame = sprite.baseFrameIndex;
 
     if (tag != ComponentContainer.CID_NULL)
       this.tag = tag;
@@ -48,6 +58,11 @@ class DisplayListGraphicComponent
     // end new
   }
 
+  @:allow(com.rocketshipgames.haxe.gfx.sprites.GameSpriteRenderer)
+  private function setRenderer(renderer:GameSpriteRenderer):Void {
+    this.renderer = renderer;
+    spritesheet = renderer.container;
+  }
 
   //--------------------------------------------------------------------
   public function attach(container:ComponentHandle):Void
@@ -69,40 +84,39 @@ class DisplayListGraphicComponent
   //------------------------------------------------------------------
   public function activate(?opts:Dynamic):Void
   {
-    if (root != null)
-      root.addChild(graphic);
     active = true;
+    if (handle == null && renderer != null)
+      renderer.addComponent(this, layer);
   }
 
   public function deactivate():Void
   {
     active = false;
 
-    if (root != null)
-      root.removeChild(graphic);
+    if (handle != null)
+      handle.remove();
+    handle = null;
   }
 
-
-  //------------------------------------------------------------------
-  public function update(millis:Int):Void { }
-
-  //--------------------------------------------------------------------
-  //--------------------------------------------------------------------
-  @:allow(com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer)
-  private function setRoot(root:Sprite):Void
-  {
-    this.root = root;
-    if (active)
-      activate();
-    // end setRoot
-  }
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
   public function render(viewport:Viewport):Void
   {
-    graphic.x = Math.floor((position.x - viewport.x)*viewport.pixelsPerMeter);
-    graphic.y = Math.floor((position.y - viewport.y)*viewport.pixelsPerMeter);
+
+    spritesheet.drawFrame
+      (Math.floor((position.x - viewport.x)*viewport.pixelsPerMeter),
+       Math.floor((position.y - viewport.y)*viewport.pixelsPerMeter),
+       frame);
+
+    // end render
+  }
+
+
+  //------------------------------------------------------------------
+  //--------------------------------------------------------------------
+  public function update(millis:Int):Void
+  {
   }
 
   // end DisplayListGraphicComponent

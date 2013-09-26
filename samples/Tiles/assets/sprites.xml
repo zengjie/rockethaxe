@@ -1,0 +1,7 @@
+<catalog title="Demo Sprites">
+
+  <sprite label="walker" pixelWidth="32" pixelHeight="36">
+    <grid x="0" y="64" columns="12" />
+  </sprite>
+
+</catalog>

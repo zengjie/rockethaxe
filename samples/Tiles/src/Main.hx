@@ -7,25 +7,21 @@ import flash.events.MouseEvent;
 import com.rocketshipgames.haxe.ArcadeScreen;
 
 import com.rocketshipgames.haxe.device.Mouse;
-import com.rocketshipgames.haxe.device.Keyboard;
 
 import com.rocketshipgames.haxe.gfx.sprites.SpritesheetContainer;
 
 import com.rocketshipgames.haxe.world.tilemap.TileCatalog;
-import com.rocketshipgames.haxe.world.tilemap.TileChunk;
-
 import com.rocketshipgames.haxe.gfx.sprites.TileMapRenderer;
+import com.rocketshipgames.haxe.world.tilemap.TileChunk;
+import com.rocketshipgames.haxe.physics.impulse.ImpulseTileChunkCollider;
+
+import com.rocketshipgames.haxe.gfx.sprites.GameSpriteCatalog;
+import com.rocketshipgames.haxe.gfx.sprites.GameSpriteRenderer;
 
 import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
 
 import com.rocketshipgames.haxe.world.behaviors.ViewportTrackerComponent;
 import com.rocketshipgames.haxe.world.behaviors.KeyboardImpulseComponent;
-
-import com.rocketshipgames.haxe.component.Component;
-import com.rocketshipgames.haxe.component.ComponentHandle;
-
-import com.rocketshipgames.haxe.physics.impulse.ImpulseTileChunkCollider;
-
 
 
 class Main
@@ -34,7 +30,7 @@ class Main
 
   private var game:ArcadeScreen;
 
-  private var graphics:SpritesheetContainer;
+  private var spritesheet:SpritesheetContainer;
 
   private var dragging:Bool;
   private var mx:Float;
@@ -49,61 +45,44 @@ class Main
     //-- The base Game class sets up the display, mouse, audio, etc
     super();
 
+
     //-- ArcadeScreen is a Screen which drives a game World (entities,
     //-- mechanics, etc), renders graphics, pauses on unfocus, etc.
     game = new ArcadeScreen();
 
-    graphics = new SpritesheetContainer
-      (Assets.getBitmapData("assets/RPGTiles.png"));
-    game.addGraphicsContainer(graphics);
+    spritesheet = new SpritesheetContainer
+      (Assets.getBitmapData("assets/spritesheet.png"));
+    game.addGraphicsContainer(spritesheet);
 
 
-    /**
-     * These are here just to show/test that other graphics can be
-     * extracted from the spritesheet before the TileCatalog.
-     */
-    graphics.addFrame(0, 0, 64, 32, 0, 0);
-    graphics.addFrame(0, 0, 64, 32, 0, 0);
+    var tileCatalog = TileCatalog.load(Assets.getText("assets/tiles.xml"),
+                                   spritesheet);
 
-    var catalog = TileCatalog.load(Assets.getText("assets/tile-defs.xml"),
-                                   graphics);
+    var chunk = TileChunk.loadCSV(tileCatalog,
+                                  Assets.getText("assets/map.csv"),
+                                  TileChunk.autotileRPG);
+
+    var tiledraw = new TileMapRenderer(chunk);
+    spritesheet.addRenderer(tiledraw);
+
+    //-- Create the container to collectively collide all the bouncers
+    var collider = new ImpulseTileChunkCollider(chunk);
+    game.world.mechanics.add(collider);
 
 
-var csv =
-'1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
- 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
- 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1
- 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1
- 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1
- 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1
- 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1
- 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1
- 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1
- 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1
- 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1
- 1, 1, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1
- 1, 1, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1
- 1, 1, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1
- 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1
- 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 0, 0, 0, 1, 1
- 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 1, 1, 1
- 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 1, 1
- 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 2, 2, 0, 0, 0, 1, 1
- 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1
- 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1
- 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1
- 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1
- 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-';
 
-    var chunk = TileChunk.loadCSV(catalog, csv, TileChunk.autotileRPG);
+    var spriteCatalog =
+      GameSpriteCatalog.load(Assets.getText("assets/sprites.xml"),
+                             spritesheet);
+    var sprites = new GameSpriteRenderer();
+    spritesheet.addRenderer(sprites);
 
-    var tiledraw = new TileMapRenderer();
-    tiledraw.map = chunk;
-    graphics.addRenderer(tiledraw);
 
-    //    game.viewport.x = ((chunk.right()-chunk.left()) - game.viewport.width)/2;
-    //   game.viewport.y = ((chunk.bottom()-chunk.top()) - game.viewport.height)/2;
+
+    //-- Center the viewport over the map
+    game.viewport.x = ((chunk.right()-chunk.left()) - game.viewport.width)/2;
+    game.viewport.y = ((chunk.bottom()-chunk.top()) - game.viewport.height)/2;
+
 
     Mouse.enable();
     flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN,
@@ -142,14 +121,18 @@ var csv =
                             }
                           });
 
+    /*
     var sprites = new com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer(game);
     game.addGraphicsContainer(sprites);
+    */
 
     var walker = new com.rocketshipgames.haxe.component.ComponentContainer();
 
-    var size = 1;
+    var sprite = spriteCatalog.get("walker");
+
     walker.add(RigidBody2DComponent.newBoxBody
-               (size, size,
+               (0.5*sprite.pixelWidth/game.viewport.pixelsPerMeter,
+                0.5*sprite.pixelHeight/game.viewport.pixelsPerMeter,
                 {x: (chunk.right()-chunk.left())/2,
                     y: (chunk.bottom()-chunk.top())/2,
                    // x: 0, y: 0,
@@ -166,6 +149,9 @@ var csv =
     //-- processed each loop before the kinematics.
     walker.insert(KeyboardImpulseComponent.create());
 
+    walker.add(spriteCatalog.get("walker").create());
+
+    /*
     var shape = new flash.display.Shape();
     shape.graphics.beginFill(0xFF0000);
     shape.graphics.drawRect(-size*game.viewport.pixelsPerMeter/2,
@@ -176,12 +162,14 @@ var csv =
     walker.add(new com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicComponent(shape));
     // walker.add(ViewportTrackerComponent.create(game.viewport));
 
+    */
+
+    walker.add(sprite.create());
+
     sprites.add(walker);
 
-    //-- Create the container to collectively collide all the bouncers
-    var collider = new ImpulseTileChunkCollider(chunk);
     collider.add(walker);
-    game.world.mechanics.add(collider);
+
 
     game.world.entities.add(walker);
 

@@ -1,7 +1,7 @@
-------------------------------------------------------------------------
+[ Tiles ]
 
 
-The tiles in assets/RPGTiles.png were created by Robotality and
+The tiles in assets/spritesheet.png were created by Robotality and
 released under a Creative Commons Attribution+Share Alike license:
 
   http://creativecommons.org/licenses/by-sa/3.0/
@@ -13,21 +13,13 @@ Check out more of Robotality's stuff on their website at:
   http://robotality.com/
 
 
-------------------------------------------------------------------------
+[ Sprites ]
 
-
-The spritesheet in assets/townfolk1_m_x2.png was created by Antifarea
-and released under a Creative Commons Attribution license:
+The character sprite in assets/spritesheet.png was created by
+Antifarea and released under a Creative Commons Attribution license:
 
   http://creativecommons.org/licenses/by/3.0/
 
 The package includes several characters, all published on OpenGameArt:
 
 http://opengameart.org/content/antifareas-rpg-sprite-set-1-enlarged-w-transparent-background
-
-
-The sprite used here has been scaled 200% via nearest neighbour from
-the original, using mtpaint.
-
-
-------------------------------------------------------------------------

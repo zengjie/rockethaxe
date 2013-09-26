@@ -19,9 +19,6 @@ class TileCatalog
   public var width(default,null):Float;
   public var height(default,null):Float;
 
-  public var pixelWidth(default,null):Int;
-  public var pixelHeight(default,null):Int;
-
   //----------------------------------------------------
   private var tiles:Array<Tile>;
 
@@ -119,7 +116,7 @@ class TileCatalog
 
     //-- Populate frames
     for (frames in root.nodes.frames) {
-      extractFrames(frames, pixelWidth, pixelHeight);
+      extractFrames(frames);
     }
 
     //-- Populate tiles
@@ -200,7 +197,7 @@ class TileCatalog
     }
 
     #if verbose_tiles
-      Debug.debug("  Tile " +  label + " frame " + frame +
+      Debug.debug(" Tile " +  label + " frame " + frame +
                   " collidesAs " + collidesAs);
     #end
 
