@@ -31,32 +31,50 @@ class TileMapRenderer
   {
     //    trace("Render tilemap");
 
-    var r:Int, c:Int;
+    var row:Int, col:Int, minRow:Int, maxRow:Int, minCol:Int, maxCol:Int;
     var frame:Int;
 
-    // Should compute viewable min and max rather than going through whole map
+    minCol = Math.floor((viewport.x-map.left())/map.catalog.width);
+    if (minCol < 0)
+      minCol = 0;
 
-    r = 0;
-    while (r < map.rows) {
+    minRow = Math.floor((viewport.y-map.top())/map.catalog.height);
+    if (minRow < 0)
+      minRow = 0;
 
-      c = 0;
-      while (c < map.columns) {
-        frame = map.tile(c, r).frame;
+    maxCol = minCol + Math.floor(viewport.width/map.catalog.width) + 1;
+    if (maxCol > map.columns)
+      maxCol = map.columns;
 
-        if (frame >= 0) {
+    maxRow = minRow + Math.floor(viewport.height/map.catalog.height) + 1;
+    if (maxRow > map.rows)
+      maxRow = map.rows;
 
-          container.drawFrame
-            (Math.floor((map.x-viewport.x) * viewport.pixelsPerMeter) +
-               (c*map.catalog.pixelWidth),
-             Math.floor((map.y-viewport.y) * viewport.pixelsPerMeter) +
-             (r*map.catalog.pixelHeight),
-             frame);
-        }
+    var dx:Int,
+      basedx:Int = Math.floor(((map.left()-viewport.x) +
+                               (minCol*map.catalog.width)) *
+                              viewport.pixelsPerMeter);
+    var dy:Int = Math.floor(((map.top()-viewport.y) +
+                             (minRow*map.catalog.height)) *
+                            viewport.pixelsPerMeter);
 
-        c++;
+    row = minRow;
+    while (row < maxRow) {
+
+      dx = basedx;
+      col = minCol;
+      while (col < maxCol) {
+        frame = map.tile(col, row).frame;
+
+        if (frame >= 0)
+          container.drawFrame(dx, dy, frame);
+
+        dx += map.catalog.pixelWidth;
+        col++;
       }
 
-      r++;
+      dy += map.catalog.pixelHeight;
+      row++;
     }
 
     // end render
