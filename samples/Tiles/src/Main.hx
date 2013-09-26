@@ -36,6 +36,7 @@ class Main
   private var mx:Float;
   private var my:Float;
 
+
   //--------------------------------------------------------------------
   public function new():Void
   {
@@ -52,6 +53,11 @@ class Main
       (Assets.getBitmapData("assets/RPGTiles.png"));
     game.addGraphicsContainer(graphics);
 
+
+    /**
+     * These are here just to show/test that other graphics can be
+     * extracted from the spritesheet before the TileCatalog.
+     */
     graphics.addFrame(0, 0, 64, 32, 0, 0);
     graphics.addFrame(0, 0, 64, 32, 0, 0);
 
@@ -86,15 +92,17 @@ var csv =
  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 ';
 
-    var chunk = TileChunk.loadCSV(catalog, csv);
+    var chunk = TileChunk.loadCSV(catalog, csv, TileChunk.autotileRPG);
+
+    trace("Chunk " + chunk.left() + "," + chunk.top() + " -- " +
+          chunk.right() + "," + chunk.bottom());
 
     var tiledraw = new TileMapRenderer();
     tiledraw.map = chunk;
-    //    tiledraw.add(chunk);
     graphics.addRenderer(tiledraw);
 
-    game.viewport.x = ((chunk.right()-chunk.left()) - game.viewport.width)/2;
-    game.viewport.y = ((chunk.bottom()-chunk.top()) - game.viewport.height)/2;
+    //    game.viewport.x = ((chunk.right()-chunk.left()) - game.viewport.width)/2;
+    //   game.viewport.y = ((chunk.bottom()-chunk.top()) - game.viewport.height)/2;
 
     Mouse.enable();
     flash.Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN,
@@ -109,7 +117,8 @@ var csv =
                               // move the viewport in the opposite
                               // direction, as if dragging the map as
                               // opposed to moving the view.
-                              game.viewport.x -= e.localX-mx;
+                              game.viewport.x -= (e.localX-mx)/
+                                game.viewport.pixelsPerMeter;
 
                               if (game.viewport.x < chunk.left())
                                 game.viewport.x = chunk.left();
@@ -117,7 +126,8 @@ var csv =
                               if (game.viewport.x > chunk.right()-game.viewport.width)
                                 game.viewport.x = chunk.right() - game.viewport.width;
 
-                              game.viewport.y -= e.localY-my;
+                              game.viewport.y -= (e.localY-my)/
+                                game.viewport.pixelsPerMeter;
 
                               if (game.viewport.y < chunk.top())
                                 game.viewport.y = chunk.top();
@@ -131,8 +141,7 @@ var csv =
                             }
                           });
 
-
-
+/*
     var sprites = new com.rocketshipgames.haxe.gfx.displaylist.DisplayListGraphicsContainer(game);
     game.addGraphicsContainer(sprites);
 
@@ -140,12 +149,13 @@ var csv =
     var walker = new com.rocketshipgames.haxe.component.ComponentContainer();
 
     walker.add(Kinematics2DComponent.create
-               ({  x: (chunk.right()-chunk.left())/2,
-                   y: (chunk.bottom()-chunk.top())/2,
+               ({  //x: (chunk.right()-chunk.left())/2,
+                   //y: (chunk.bottom()-chunk.top())/2,
+                 x: 0, y: 0,
                    xvel: 0, yvel: 0,
                    xvelMin: 2, yvelMin: 2,
                    xvelMax: 250, yvelMax: 250,
-                   ydrag: 5000, xdrag: 5000}));
+                   ydrag: 20, xdrag: 20}));
 
     walker.insert(new WalkerKeyboard());
 
@@ -158,6 +168,7 @@ var csv =
 
     sprites.add(walker);
     game.world.entities.add(walker);
+*/
 
     //-- Add the game to the display.  In a real game this would be
     //-- done using ScreenManager to transition between menus, etc.
@@ -203,14 +214,14 @@ private class WalkerKeyboard
     kinematics.xacc = kinematics.yacc = 0.0;
 
     if (Keyboard.isKeyDown(Keyboard.RIGHT))
-      kinematics.xacc = 1000;
+      kinematics.xacc = 42;
     else if (Keyboard.isKeyDown(Keyboard.LEFT))
-      kinematics.xacc = -1000;
+      kinematics.xacc = -42;
 
     if (Keyboard.isKeyDown(Keyboard.UP))
-      kinematics.yacc = -1000;
+      kinematics.yacc = -42;
     else if (Keyboard.isKeyDown(Keyboard.DOWN))
-      kinematics.yacc = 1000;
+      kinematics.yacc = 42;
 
     // end update
   }

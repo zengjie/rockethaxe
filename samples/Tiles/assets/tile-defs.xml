@@ -1,4 +1,4 @@
-<catalog title="Demo Tiles" width="32" height="32">
+<catalog title="Demo Tiles" pixelWidth="32" pixelHeight="32">
 
   <!--
       The TileCatalog XML format is described here:
@@ -8,13 +8,10 @@
   <collisionTags>
     <land />
     <water />
-    <deadly />
-    <pit code="32" />
   </collisionTags>
 
   <frames>
     <grid label="land" x="0" y="0" columns="16" rows="2"  />
-    <keyframe label="fire" frame="1" />
   </frames>
 
   <tiles>
@@ -40,29 +37,6 @@
     <tile/>
     <tile/>
     <tile label="water" />
-
-
-<!--
-    <tile frame="15"/>
-    <tile frame="14"/>
-    <tile frame="13"/>
-    <tile frame="12"/>
-
-    <tile frame="11"/>
-    <tile frame="10"/>
-    <tile frame="9"/>
-    <tile frame="8"/>
-
-    <tile frame="7"/>
-    <tile frame="6"/>
-    <tile frame="5"/>
-    <tile frame="4"/>
-
-    <tile frame="3"/>
-    <tile frame="2"/>
-    <tile frame="1"/>
-    <tile frame="0"/>
--->
 
     <!-- Grass/Sand -->
     <tile frame="31" label="unused" />

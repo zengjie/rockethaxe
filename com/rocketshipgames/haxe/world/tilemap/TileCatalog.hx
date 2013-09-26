@@ -50,8 +50,13 @@ class TileCatalog
 
   public static function load(descriptor:String,
                               spritesheet:SpritesheetContainer,
-                              pixelsPerMeter:Float):TileCatalog
+                              ?pixelsPerMeter:Float = 0):TileCatalog
   {
+
+    if (Math.isNaN(pixelsPerMeter) || pixelsPerMeter == 0)
+      pixelsPerMeter =
+        com.rocketshipgames.haxe.device.Display.defaultPixelsPerMeter;
+
     var catalog = new TileCatalog(spritesheet);
     catalog.parse(descriptor, pixelsPerMeter);
     return catalog;

@@ -34,6 +34,8 @@ class TileMapRenderer
     var r:Int, c:Int;
     var frame:Int;
 
+    // Should compute viewable min and max rather than going through whole map
+
     r = 0;
     while (r < map.rows) {
 
@@ -44,8 +46,10 @@ class TileMapRenderer
         if (frame >= 0) {
 
           container.drawFrame
-            (Math.floor(((map.x-viewport.x) + (c*map.catalog.width)) * viewport.pixelsPerMeter),
-             Math.floor(((map.y-viewport.y) + (r*map.catalog.height)) * viewport.pixelsPerMeter),
+            (Math.floor((map.x-viewport.x) * viewport.pixelsPerMeter) +
+               (c*map.catalog.pixelWidth),
+             Math.floor((map.y-viewport.y) * viewport.pixelsPerMeter) +
+             (r*map.catalog.pixelHeight),
              frame);
         }
 

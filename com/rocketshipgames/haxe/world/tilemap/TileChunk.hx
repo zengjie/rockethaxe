@@ -2,6 +2,8 @@ package com.rocketshipgames.haxe.world.tilemap;
 
 import com.rocketshipgames.haxe.debug.Debug;
 
+typedef TileChunkAutotiler = Array<Array<Int>>->Array<Array<Int>>->Void;
+
 
 class TileChunk
   implements com.rocketshipgames.haxe.physics.Extent2D
@@ -47,16 +49,18 @@ class TileChunk
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
-  public static function loadCSV(catalog:TileCatalog, csv:String):TileChunk
+  public static function loadCSV(catalog:TileCatalog,
+                                 csv:String,
+                                 ?autotiler:TileChunkAutotiler):TileChunk
   {
     var chunk = new TileChunk(catalog);
-    chunk.parseCSV(csv);
+    chunk.parseCSV(csv, autotiler);
     return chunk;
     // end loadCSV
   }
 
   //--------------------------------------------------------------------
-  public function parseCSV(csv:String):Void
+  public function parseCSV(csv:String, ?autotiler:TileChunkAutotiler):Void
   {
     csv = StringTools.trim(csv);
 
@@ -64,6 +68,7 @@ class TileChunk
 
     var map = new Array<Array<Int>>();
 
+    //-- Load map values from the text
     for (line in csv.split("\n")) {
       line = StringTools.trim(line);
 
@@ -124,40 +129,15 @@ class TileChunk
       }
     }
 
-    /*
+
+    //-- Convert map values into tile indices if it is not already
+    if (autotiler != null)
+      autotileRPG(map, bits);
+
+
+    //-- Convert tile indices into tile pointers
     for (row in 0...rows) {
       for (col in 0...columns) {
-        if (map[row][col] != 0) {
-          var index = 0;
-          if (map[row][col] > 1)
-            index = 16 << (map[row][col]-2);
-
-          if (row > 0) {
-            if (col > 0) bits[row-1][col-1] |= 8|index;
-            bits[row-1][col] |= 4|8|index;
-            if (col < columns-1) bits[row-1][col+1] |= 4|index;
-          }
-
-          if (col > 0) bits[row][col-1] |= 2|8|index;
-          bits[row][col] |= 15|index;
-          if (col < columns-1) bits[row][col+1] |= 1|4|index;
-
-          if (row < rows-1) {
-            if (col > 0) bits[row+1][col-1] |= 2|index;
-            bits[row+1][col] |= 1|2|index;
-            if (col < columns-1) bits[row+1][col+1] |= 1|index;
-          }
-
-        }
-
-        // end looping columns
-      }
-    }
-    */
-
-    for (row in 0...rows) {
-      for (col in 0...columns) {
-
 
         tile = catalog.get(bits[row][col]);
 
@@ -171,6 +151,45 @@ class TileChunk
     }
 
     // end parseCSV
+  }
+
+
+  //--------------------------------------------------------------------
+  //--------------------------------------------------------------------
+  public static function autotileRPG(map:Array<Array<Int>>,
+                                     tile:Array<Array<Int>>):Void
+  {
+
+    for (row in 0...map.length) {
+      for (col in 0...map[row].length) {
+        if (map[row][col] != 0) {
+          var index = 0;
+          if (map[row][col] > 1)
+            index = 16 << (map[row][col]-2);
+
+          if (row > 0) {
+            if (col > 0) tile[row-1][col-1] |= 8|index;
+            tile[row-1][col] |= 4|8|index;
+            if (col < map[row].length-1) tile[row-1][col+1] |= 4|index;
+          }
+
+          if (col > 0) tile[row][col-1] |= 2|8|index;
+          tile[row][col] |= 15|index;
+          if (col < map[row].length-1) tile[row][col+1] |= 1|4|index;
+
+          if (row < map.length-1) {
+            if (col > 0) tile[row+1][col-1] |= 2|index;
+            tile[row+1][col] |= 1|2|index;
+            if (col < map[row].length-1) tile[row+1][col+1] |= 1|index;
+          }
+
+        }
+
+        // end looping columns
+      }
+    }
+
+    // end autotileRPG
   }
 
   // end TileChunk

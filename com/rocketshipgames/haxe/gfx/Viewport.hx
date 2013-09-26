@@ -21,10 +21,10 @@ class Viewport
 
     x = y = 0.0;
 
-    width = Display.width;
-    height = Display.height;
+    width = Display.width/Display.defaultPixelsPerMeter;
+    height = Display.height/Display.defaultPixelsPerMeter;
 
-    pixelsPerMeter = 24;
+    pixelsPerMeter = Display.defaultPixelsPerMeter;
 
     // end new
   }

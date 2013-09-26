@@ -43,7 +43,7 @@ class Main
     colliders = new ImpulseColliderAggregator();
     colliders.add(new ImpulseObjectCollider());
     game.world.mechanics.add(colliders);
-    colliders.iterations = 12;
+    colliders.iterations = 16;
 
     //-- Create the container for the bouncers' graphics.  It takes a
     //-- flash.display.Sprite (which an ArcadeScreen ultimately is) as
