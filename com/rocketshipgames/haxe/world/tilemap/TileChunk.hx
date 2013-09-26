@@ -160,7 +160,9 @@ class TileChunk
                                      tile:Array<Array<Int>>):Void
   {
 
-    trace("Autotiling as RPG/RTS");
+    #if verbose_tiles
+      Debug.debug("Autotiling as RPG/RTS");
+    #end
 
     for (row in 0...map.length) {
       for (col in 0...map[row].length) {
@@ -199,7 +201,9 @@ class TileChunk
                                             tile:Array<Array<Int>>):Void
   {
 
-    trace("Autotiling as platformer");
+    #if verbose_tiles
+      Debug.debug("Autotiling as platformer");
+    #end
 
     for (row in 0...map.length) {
       for (col in 0...map[row].length) {
