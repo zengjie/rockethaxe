@@ -160,6 +160,8 @@ class TileChunk
                                      tile:Array<Array<Int>>):Void
   {
 
+    trace("Autotiling as RPG/RTS");
+
     for (row in 0...map.length) {
       for (col in 0...map[row].length) {
         if (map[row][col] != 0) {
@@ -197,29 +199,27 @@ class TileChunk
                                             tile:Array<Array<Int>>):Void
   {
 
-    trace("Platformer autotile");
+    trace("Autotiling as platformer");
 
     for (row in 0...map.length) {
       for (col in 0...map[row].length) {
-        trace("Map " + row + ","+col + " " + map[row][col]);
         if (map[row][col] != 0) {
 
-        var index = 0;
+          var index = 16*(map[row][col]-1);
 
-        if (row > 0 && map[row-1][col] != 0)
-          index |= 1;
+          if (row > 0 && map[row-1][col] != 0)
+            index |= 1;
 
-        if (row < map.length-1 && map[row+1][col] != 0)
-          index |= 4;
+          if (row < map.length-1 && map[row+1][col] != 0)
+            index |= 4;
 
-        if (col > 0 && map[row][col-1] != 0)
-          index |= 8;
+          if (col > 0 && map[row][col-1] != 0)
+            index |= 8;
 
-        if (col < map[row].length && map[row][col+1] != 0)
-          index |= 2;
+          if (col < map[row].length && map[row][col+1] != 0)
+            index |= 2;
 
-        tile[row][col] = index+1; // 0 tile is blank
-        trace("Tile " + row + ","+col + " " + index);
+          tile[row][col] = index+1; // 0 tile is blank
 
         }
 
