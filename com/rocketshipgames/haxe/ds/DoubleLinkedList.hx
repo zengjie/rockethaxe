@@ -11,7 +11,7 @@ class DoubleLinkedList<T>
   public var head(default,null):DoubleLinkedListHandle<T>;
   public var tail(default,null):DoubleLinkedListHandle<T>;
 
-  public var count(default,null):Int;
+  public var length(default,null):Int;
 
   private var handlePool:Deadpool<DoubleLinkedListHandle<T>>;
 
@@ -52,7 +52,7 @@ class DoubleLinkedList<T>
     tail = handle;
     handle.next = null;
 
-    count++;
+    length++;
 
     return handle;
     // end add
@@ -73,7 +73,7 @@ class DoubleLinkedList<T>
 
     handle.prev = null;
 
-    count++;
+    length++;
 
     return handle;
     // end add
@@ -104,7 +104,7 @@ class DoubleLinkedList<T>
 
     handlePool.returnObject(handle);
 
-    count--;
+    length--;
     // end remove
   }
 

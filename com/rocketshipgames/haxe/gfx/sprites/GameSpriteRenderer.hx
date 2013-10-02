@@ -58,12 +58,8 @@ class GameSpriteRenderer
   //--------------------------------------------------------------------
   public function add(entity:ComponentContainer, layer:Int=0):Void
   {
-    var x = entity.find(tag);
-    trace("Add x " + Type.getClassName(Type.getClass(x)));
-
     var gc = cast(entity.find(tag), GameSpriteComponent);
-    trace("Add " + Type.getClassName(Type.getClass(gc)));
-    addComponent(gc);
+    addComponent(gc, layer);
     // end add
   }
 
@@ -86,9 +82,6 @@ class GameSpriteRenderer
   //--------------------------------------------------------------------
   public function addComponent(sprite:GameSpriteComponent, layer:Int=0):Void
   {
-
-    trace("AddCmp " + Type.getClassName(Type.getClass(sprite)));
-
     sprite.layer = layer;
 
     while (layers.length <= layer)

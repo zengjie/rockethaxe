@@ -91,6 +91,10 @@ class KeyboardImpulseComponent
       impulseDown = (Std.is(d, String)) ? Std.parseFloat(d) : d;
     }
 
+    if ((d = Reflect.field(opts, "facing")) != null) {
+      facing = d;
+    }
+
     // end activate
   }
 

@@ -7,6 +7,10 @@ import com.rocketshipgames.haxe.component.CapabilityID;
 
 import com.rocketshipgames.haxe.world.behaviors.BehaviorCapabilities;
 import com.rocketshipgames.haxe.world.behaviors.Facing2D;
+import com.rocketshipgames.haxe.world.ScreenDirection2D;
+
+import com.rocketshipgames.haxe.physics.PhysicsCapabilities;
+import com.rocketshipgames.haxe.physics.Kinematics2D;
 
 
 class FacingGameSpriteComponent
@@ -14,23 +18,45 @@ class FacingGameSpriteComponent
 {
 
   private var facing:Facing2D;
+  private var prevFacing:ScreenDirection2D;
 
-  private var left:Int;
-  private var right:Int;
-  private var up:Int;
-  private var down:Int;
+  private var kinematics:Kinematics2D;
+
+  private var leftMove:GameSpriteAnimation;
+  private var rightMove:GameSpriteAnimation;
+  private var upMove:GameSpriteAnimation;
+  private var downMove:GameSpriteAnimation;
+
+  /*
+  private var leftIdle:GameSpriteAnimation;
+  private var rightIdle:GameSpriteAnimation;
+  private var upIdle:GameSpriteAnimation;
+  private var downIdle:GameSpriteAnimation;
+  */
+
+  private var idle:Bool;
 
   //--------------------------------------------------------------------
-  public function new(sprite:GameSprite, ?tag:CapabilityID):Void
+  public function new(sprite:GameSprite, ?tag:CapabilityID, ?idle:Bool):Void
   {
+
     super(sprite, tag);
 
-    left = sprite.keyframe("left");
-    right = sprite.keyframe("right");
-    up = sprite.keyframe("up");
-    down = sprite.keyframe("down");
+    leftMove = sprite.animation("left");
+    rightMove = sprite.animation("right");
+    upMove = sprite.animation("up");
+    downMove = sprite.animation("down");
 
-    trace("FACING New");
+    this.idle = idle;
+
+    /*
+    if (idle) {
+      leftIdle = sprite.animation("idle-left");
+      rightIdle = sprite.animation("idle-right");
+      upIdle = sprite.animation("idle-up");
+      downIdle = sprite.animation("idle-down");
+    }
+    */
 
     // end new
   }
@@ -43,6 +69,10 @@ class FacingGameSpriteComponent
     facing =
       cast(container.find(BehaviorCapabilities.CID_FACING2D), Facing2D);
 
+    if (idle)
+      kinematics =
+        cast(container.find(PhysicsCapabilities.CID_KINEMATICS2D), Kinematics2D);
+
     super.attach(container);
   }
 
@@ -52,24 +82,35 @@ class FacingGameSpriteComponent
   public override function render(viewport:Viewport):Void
   {
 
-    trace("Render");
+    if (facing.facing != prevFacing ||
+        (idle && (kinematics.xvel != 0 || kinematics.yvel != 0))) {
+      switch (facing.facing) {
+      case LEFT:
+        //      if (idle && kinematics.xvel == 0 && kinematics.xacc == 0)
+        //        play(leftIdle);
+        //      else
+        play(leftMove);
 
-    switch (facing.facing) {
-    case LEFT:
-      trace("Facing is left");
-      show(left);
+      case RIGHT:
+        //      if (idle && kinematics.xvel == 0 && kinematics.xacc == 0)
+        //        play(rightIdle);
+        //      else
+        play(rightMove);
 
-    case RIGHT:
-      trace("Facing is right");
-      show(right);
+      case UP:
+        //        if (idle && kinematics.yvel == 0 && kinematics.yacc == 0)
+        //          play(upIdle);
+        //        else
+        play(upMove);
 
-    case UP:
-      trace("Facing is up");
-      show(up);
+      case DOWN:
+        //        if (idle && kinematics.yvel == 0 && kinematics.yacc == 0)
+        //          play(downIdle);
+        //        else
+        play(downMove);
+      }
 
-    case DOWN:
-      trace("Facing is down");
-      show(down);
+      prevFacing = facing.facing;
     }
 
     super.render(viewport);

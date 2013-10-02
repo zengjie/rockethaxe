@@ -24,6 +24,8 @@ import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
 import com.rocketshipgames.haxe.world.behaviors.ViewportTrackerComponent;
 import com.rocketshipgames.haxe.world.behaviors.KeyboardImpulseComponent;
 
+import com.rocketshipgames.haxe.world.ScreenDirection2D;
+
 
 class Main
   extends com.rocketshipgames.haxe.Game
@@ -148,9 +150,9 @@ class Main
     //-- because they're dependent on the body's kinematics, but
     //-- they're inserted rather than added because we want them
     //-- processed each loop before the kinematics.
-    walker.insert(KeyboardImpulseComponent.create());
+    walker.insert(KeyboardImpulseComponent.create({facing: DOWN}));
 
-    var x = new FacingGameSpriteComponent(spriteCatalog.get("walker"));
+    var x = new FacingGameSpriteComponent(spriteCatalog.get("walker"), true);
     trace("Original " + Type.getClassName(Type.getClass(x)));
 
     walker.add(x);

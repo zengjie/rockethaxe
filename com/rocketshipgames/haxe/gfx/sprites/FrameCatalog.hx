@@ -7,6 +7,7 @@ class FrameCatalog
 {
 
   public var spritesheet(default,null):SpritesheetContainer;
+  public var baseFrameIndex(default,null):Int;
   public var frameCount(default,null):Int;
 
   public var title(default,null):String;
@@ -14,7 +15,6 @@ class FrameCatalog
   public var pixelWidth(default,null):Int;
   public var pixelHeight(default,null):Int;
 
-  public var baseFrameIndex(default,null):Int;
 
 
   //----------------------------------------------------
@@ -108,6 +108,7 @@ class FrameCatalog
 
       for (c in 0...columns) {
         spritesheet.addFrame(x, y, pixelWidth, pixelHeight, cx, cy);
+        frameCount++;
         x += pixelWidth;
         // end columns
       }

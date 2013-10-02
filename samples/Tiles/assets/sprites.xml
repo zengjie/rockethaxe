@@ -7,6 +7,27 @@
     <keyframe label="right" frame="3" />
     <keyframe label="up" frame="0" />
     <keyframe label="down" frame="6" />
+
+    <animation label="left">
+      <sequence start="left" end="12" interval="85" loop="false" />
+    </animation>
+    <animation label="idle-left"><cell frame="left" /></animation>
+
+    <animation label="right">
+      <sequence start="right" count="3" interval="85" loop="false" />
+    </animation>
+    <animation label="idle-right"><cell frame="right" /></animation>
+
+    <animation label="up">
+      <sequence start="up" end="right" interval="85" loop="false" />
+    </animation>
+    <animation label="idle-up"><cell frame="up" /></animation>
+
+    <animation label="down">
+      <sequence start="down" count="3" interval="85" loop="false" />
+    </animation>
+    <animation label="idle-down"><cell frame="down" /></animation>
+
   </sprite>
 
 </catalog>
