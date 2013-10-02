@@ -178,7 +178,7 @@ class TileCatalog
             c <= "9".charCodeAt(0)) {
           frame = baseFrameIndex + Std.parseInt(cmd.att.frame);
         } else {
-          frame = frameLabels.get(cmd.att.frame);
+          frame = keyframes.get(cmd.att.frame);
         }
       }
     }

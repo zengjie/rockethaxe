@@ -30,7 +30,7 @@ class DisplayListGraphicsContainer
 
     graphicsList = new DoubleLinkedList();
 
-    if (tag != ComponentContainer.CID_NULL)
+    if (tag != null)
       this.tag = tag;
     else
       this.tag = DisplayListGraphicComponent.CID;

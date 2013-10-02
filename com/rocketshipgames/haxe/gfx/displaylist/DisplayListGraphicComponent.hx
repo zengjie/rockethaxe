@@ -40,7 +40,7 @@ class DisplayListGraphicComponent
     this.graphic = graphic;
     active = true;
 
-    if (tag != ComponentContainer.CID_NULL)
+    if (tag != null)
       this.tag = tag;
     else
       this.tag = CID;

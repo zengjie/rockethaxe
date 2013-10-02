@@ -18,7 +18,7 @@ class FrameCatalog
 
 
   //----------------------------------------------------
-  private var frameLabels:Map<String, Int>;
+  private var keyframes:Map<String, Int>;
 
   private var defaultCentered:Bool;
 
@@ -30,11 +30,18 @@ class FrameCatalog
     this.spritesheet = spritesheet;
     this.title = "unnamed";
 
-    frameLabels = new Map();
+    keyframes = new Map();
 
     // end new
   }
 
+  public function keyframe(label:String):Int
+  {
+    var f:Int = keyframes.get(label);
+    if (f == 0)
+      f = baseFrameIndex;
+    return f;
+  }
 
   //--------------------------------------------------------------------
   private function extractFrames(root:haxe.xml.Fast):Void
@@ -74,7 +81,7 @@ class FrameCatalog
   {
 
     if (cmd.has.label)
-      frameLabels.set(cmd.att.label, spritesheet.getFrameCount());
+      keyframes.set(cmd.att.label, spritesheet.getFrameCount());
 
     var columns:Int = 1;
     var rows:Int = 1;
@@ -127,7 +134,7 @@ class FrameCatalog
     var frame:Int = spritesheet.getFrameCount();
     if (cmd.has.frame) frame = baseFrameIndex + Std.parseInt(cmd.att.frame);
 
-    frameLabels.set(cmd.att.label, frame);
+    keyframes.set(cmd.att.label, frame);
 
     #if (verbose_tiles || verbose_sprites)
       Debug.debug("  Keyframe " +  cmd.att.label + " frame " + frame);

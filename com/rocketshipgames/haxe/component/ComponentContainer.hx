@@ -199,6 +199,15 @@ class ComponentContainer
     #if verbose_cmp
       trace("Claim " + capability);
     #end
+
+    if (capability == CID_NULL || capability == 0)
+      Debug.error("Claiming NULL capability.");
+
+    if (capabilities.exists(capability)) {
+      Debug.error("Capability " + reverseID(capability) +
+                " (" + capability + ") already claimed.");
+    }
+
     capabilities.set(capability, component);
     // end claim
   }

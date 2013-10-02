@@ -43,14 +43,14 @@ class GameSpriteComponent
 
 
   //--------------------------------------------------------------------
-  public function new(sprite:GameSprite, ?tag:CapabilityID):Void
+  public function new(sprite:GameSprite, ?tag:CapabilityID=null):Void
   {
     active = true;
 
     this.sprite = sprite;
     frame = sprite.baseFrameIndex;
 
-    if (tag != ComponentContainer.CID_NULL)
+    if (tag != null)
       this.tag = tag;
     else
       this.tag = CID;
@@ -101,14 +101,25 @@ class GameSpriteComponent
 
   //--------------------------------------------------------------------
   //--------------------------------------------------------------------
+  public function show(frame:Int):Void
+  {
+    this.frame = frame;
+  }
+
+  public function showByLabel(label:String):Int
+  {
+    return this.frame = sprite.keyframe(label);
+  }
+
+
+  //--------------------------------------------------------------------
+  //--------------------------------------------------------------------
   public function render(viewport:Viewport):Void
   {
-
     spritesheet.drawFrame
       (Math.floor((position.x - viewport.x)*viewport.pixelsPerMeter),
        Math.floor((position.y - viewport.y)*viewport.pixelsPerMeter),
        frame);
-
     // end render
   }
 

@@ -17,6 +17,7 @@ import com.rocketshipgames.haxe.physics.impulse.ImpulseTileChunkCollider;
 
 import com.rocketshipgames.haxe.gfx.sprites.GameSpriteCatalog;
 import com.rocketshipgames.haxe.gfx.sprites.GameSpriteRenderer;
+import com.rocketshipgames.haxe.gfx.sprites.FacingGameSpriteComponent;
 
 import com.rocketshipgames.haxe.physics.core2d.RigidBody2DComponent;
 
@@ -131,8 +132,8 @@ class Main
     var sprite = spriteCatalog.get("walker");
 
     walker.add(RigidBody2DComponent.newBoxBody
-               (0.5*sprite.pixelWidth/game.viewport.pixelsPerMeter,
-                0.5*sprite.pixelHeight/game.viewport.pixelsPerMeter,
+               (0.75*sprite.pixelWidth/game.viewport.pixelsPerMeter,
+                0.75*sprite.pixelHeight/game.viewport.pixelsPerMeter,
                 {x: (chunk.right()-chunk.left())/2,
                     y: (chunk.bottom()-chunk.top())/2,
                    // x: 0, y: 0,
@@ -149,7 +150,10 @@ class Main
     //-- processed each loop before the kinematics.
     walker.insert(KeyboardImpulseComponent.create());
 
-    walker.add(spriteCatalog.get("walker").create());
+    var x = new FacingGameSpriteComponent(spriteCatalog.get("walker"));
+    trace("Original " + Type.getClassName(Type.getClass(x)));
+
+    walker.add(x);
 
     /*
     var shape = new flash.display.Shape();
@@ -163,8 +167,6 @@ class Main
     // walker.add(ViewportTrackerComponent.create(game.viewport));
 
     */
-
-    walker.add(sprite.create());
 
     sprites.add(walker);
 

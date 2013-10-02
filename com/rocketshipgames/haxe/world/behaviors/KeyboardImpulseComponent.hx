@@ -8,11 +8,17 @@ import com.rocketshipgames.haxe.component.ComponentHandle;
 import com.rocketshipgames.haxe.physics.PhysicsCapabilities;
 import com.rocketshipgames.haxe.physics.core2d.Kinematics2DComponent;
 
+import com.rocketshipgames.haxe.world.ScreenDirection2D;
+
 
 class KeyboardImpulseComponent
   implements com.rocketshipgames.haxe.component.Component
+  implements Facing2D
 {
 
+  public var facing:ScreenDirection2D;
+
+  //--------------------------------------------------------------------
   private var kinematics:Kinematics2DComponent;
 
   private var bindings:KeyboardImpulseBindings;
@@ -34,6 +40,8 @@ class KeyboardImpulseComponent
 
     impulseLeft = impulseRight = impulseUp = impulseDown = 83;
 
+    facing = RIGHT;
+
     // end new
   }
 
@@ -48,6 +56,8 @@ class KeyboardImpulseComponent
   //----------------------------------------------------
   public function attach(container:ComponentHandle):Void
   {
+    container.claim(BehaviorCapabilities.CID_FACING2D);
+
     kinematics = cast(container.find(PhysicsCapabilities.CID_KINEMATICS2D),
                       Kinematics2DComponent);
   }
@@ -96,15 +106,21 @@ class KeyboardImpulseComponent
 
     kinematics.xacc = kinematics.yacc = 0.0;
 
-    if (Keyboard.isKeyDown(bindings.left()))
+    if (Keyboard.isKeyDown(bindings.left())) {
       kinematics.xacc = -impulseLeft;
-    else if (Keyboard.isKeyDown(bindings.right()))
+      facing = LEFT;
+    } else if (Keyboard.isKeyDown(bindings.right())) {
       kinematics.xacc = impulseRight;
+      facing = RIGHT;
+    }
 
-    if (Keyboard.isKeyDown(bindings.up()))
+    if (Keyboard.isKeyDown(bindings.up())) {
       kinematics.yacc = -impulseUp;
-    else if (Keyboard.isKeyDown(bindings.down()))
+      facing = UP;
+    } else if (Keyboard.isKeyDown(bindings.down())) {
       kinematics.yacc = impulseDown;
+      facing = DOWN;
+    }
 
     // end update
   }
