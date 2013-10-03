@@ -32,13 +32,6 @@ class FacingGameSpriteComponent
   private var upFrame:Int;
   private var downFrame:Int;
 
-  /*
-  private var leftIdle:GameSpriteAnimation;
-  private var rightIdle:GameSpriteAnimation;
-  private var upIdle:GameSpriteAnimation;
-  private var downIdle:GameSpriteAnimation;
-  */
-
   private var idle:Bool;
 
   //--------------------------------------------------------------------
@@ -58,15 +51,6 @@ class FacingGameSpriteComponent
     downMove = sprite.animation("down");
 
     this.idle = idle;
-
-    /*
-    if (idle) {
-      leftIdle = sprite.animation("idle-left");
-      rightIdle = sprite.animation("idle-right");
-      upIdle = sprite.animation("idle-up");
-      downIdle = sprite.animation("idle-down");
-    }
-    */
 
     // end new
   }
