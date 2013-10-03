@@ -27,6 +27,11 @@ class FacingGameSpriteComponent
   private var upMove:GameSpriteAnimation;
   private var downMove:GameSpriteAnimation;
 
+  private var leftFrame:Int;
+  private var rightFrame:Int;
+  private var upFrame:Int;
+  private var downFrame:Int;
+
   /*
   private var leftIdle:GameSpriteAnimation;
   private var rightIdle:GameSpriteAnimation;
@@ -41,6 +46,11 @@ class FacingGameSpriteComponent
   {
 
     super(sprite, tag);
+
+    leftFrame = sprite.keyframe("left");
+    rightFrame = sprite.keyframe("right");
+    upFrame = sprite.keyframe("up");
+    downFrame = sprite.keyframe("down");
 
     leftMove = sprite.animation("left");
     rightMove = sprite.animation("right");
@@ -82,32 +92,34 @@ class FacingGameSpriteComponent
   public override function render(viewport:Viewport):Void
   {
 
-    if (facing.facing != prevFacing ||
-        (idle && (kinematics.xvel != 0 || kinematics.yvel != 0))) {
+    if (idle && (kinematics.xvel != 0 || kinematics.yvel != 0)) {
       switch (facing.facing) {
       case LEFT:
-        //      if (idle && kinematics.xvel == 0 && kinematics.xacc == 0)
-        //        play(leftIdle);
-        //      else
         play(leftMove);
 
       case RIGHT:
-        //      if (idle && kinematics.xvel == 0 && kinematics.xacc == 0)
-        //        play(rightIdle);
-        //      else
         play(rightMove);
 
       case UP:
-        //        if (idle && kinematics.yvel == 0 && kinematics.yacc == 0)
-        //          play(upIdle);
-        //        else
         play(upMove);
 
       case DOWN:
-        //        if (idle && kinematics.yvel == 0 && kinematics.yacc == 0)
-        //          play(downIdle);
-        //        else
         play(downMove);
+      }
+
+    } else if (facing.facing != prevFacing) {
+      switch (facing.facing) {
+      case LEFT:
+        show(leftFrame);
+
+      case RIGHT:
+        show(rightFrame);
+
+      case UP:
+        show(upFrame);
+
+      case DOWN:
+        show(downFrame);
       }
 
       prevFacing = facing.facing;

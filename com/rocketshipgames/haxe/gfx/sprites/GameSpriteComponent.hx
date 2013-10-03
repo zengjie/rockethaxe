@@ -110,6 +110,7 @@ class GameSpriteComponent
   //--------------------------------------------------------------------
   public function show(frame:Int):Void
   {
+    animating = false;
     this.frame = frame;
   }
 
